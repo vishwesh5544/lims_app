@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/login_bloc/login_bloc.dart';
 import 'package:lims_app/bloc/patient_bloc/patient_bloc.dart';
 import 'package:lims_app/bloc/test_bloc/test_bloc.dart';
+import 'package:lims_app/parth.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
 import 'package:lims_app/repositories/tests_repository.dart';
 import 'package:lims_app/repositories/user_repository.dart';
@@ -36,13 +37,12 @@ class MyApp extends StatelessWidget {
               create: (context) => PatientBloc(patientRepository: context.read<PatientRepository>()))
         ],
         child: MaterialApp(
-
           title: 'LIMS Application',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
           onGenerateRoute: LimsRouter.generateRoute,
-          home: const LoginScreen(),
+          home: const Parth_parth(),
         ),
       ),
     );

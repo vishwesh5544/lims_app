@@ -5,6 +5,15 @@ class TextUtility {
     return TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: color);
   }
 
+  static TextStyle getStyle(double fontSize, {Color color = Colors.black}) {
+    return TextStyle(fontWeight: FontWeight.w500, fontSize: fontSize, color: color);
+  }
+
+  static OutlineInputBorder getBorderStyle(){
+    return OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0), borderSide: const BorderSide(color: Colors.grey));
+  }
+
   static Widget getTextWithBoldAndPlain(String boldText, String plainText,
       {double boldTextSize = 15,
       double plainTextSize = 15,

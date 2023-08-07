@@ -77,7 +77,6 @@ class _AddTestState extends State<AddTest> {
               padding: const EdgeInsets.all(8.0),
               child: _createForm(),
             ),
-            redirectToTestMenu(),
           ],
         ),
       ),
