@@ -48,7 +48,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<List<Patient>>> getAllPatients() async {
-    Uri url = Uri.https(CommonStrings.apiAuthority, "/lms/api/Patient/getallpatient");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/getallpatient");
     ResponseCallback<List<Patient>> responseCallback = ResponseCallback();
     try {
       final response = await http.get(url, headers: _headers);

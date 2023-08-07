@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lims_app/bloc/lab_bloc/lab_bloc.dart';
 import 'package:lims_app/bloc/login_bloc/login_bloc.dart';
 import 'package:lims_app/bloc/patient_bloc/patient_bloc.dart';
 import 'package:lims_app/bloc/test_bloc/test_bloc.dart';
+import 'package:lims_app/repositories/lab_repository.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
 import 'package:lims_app/repositories/tests_repository.dart';
 import 'package:lims_app/repositories/user_repository.dart';
+import 'package:lims_app/screens/add_centre.dart';
+import 'package:lims_app/screens/lab_management.dart';
 import 'package:lims_app/screens/test_management.dart';
 import "package:lims_app/utils/router.dart";
 import 'package:lims_app/screens/login.dart';
@@ -27,22 +31,23 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<UserRepository>(create: (context) => UserRepository()),
         RepositoryProvider<TestRepository>(create: (context) => TestRepository()),
         RepositoryProvider<PatientRepository>(create: (context) => PatientRepository()),
+        RepositoryProvider<LabRepository>(create: (context) => LabRepository())
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<LoginBloc>(create: (context) => LoginBloc(userRepository: context.read<UserRepository>())),
           BlocProvider<TestBloc>(create: (context) => TestBloc(testRepository: context.read<TestRepository>())),
           BlocProvider<PatientBloc>(
-              create: (context) => PatientBloc(patientRepository: context.read<PatientRepository>()))
+              create: (context) => PatientBloc(patientRepository: context.read<PatientRepository>())),
+          BlocProvider<LabBloc>(create: (context) => LabBloc(labRepository: context.read<LabRepository>()),)
         ],
         child: MaterialApp(
-
           title: 'LIMS Application',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
           onGenerateRoute: LimsRouter.generateRoute,
-          home: const LoginScreen(),
+          home: const LabManagement(),
         ),
       ),
     );

@@ -50,7 +50,6 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(lab.labName)),
       DataCell(Text(lab.emailId)),
       DataCell(Text(lab.contactNumber)),
-      DataCell(Text(lab.totalTests)),
       DataCell(_actionsRow())
     ]);
   }

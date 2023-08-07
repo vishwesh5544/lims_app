@@ -1,4 +1,11 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:lims_app/bloc/lab_bloc/lab_bloc.dart";
+import "package:lims_app/bloc/lab_bloc/lab_event.dart";
+import "package:lims_app/bloc/test_bloc/test_bloc.dart";
+import "package:lims_app/bloc/test_bloc/test_event.dart";
+import "package:lims_app/bloc/test_bloc/test_state.dart";
+import "package:lims_app/models/lab_test_detail.dart";
 import "package:lims_app/models/test.dart";
 import "package:lims_app/test_items/test_data.dart";
 import "package:lims_app/utils/color_provider.dart";
@@ -16,6 +23,25 @@ class AddCentre extends StatefulWidget {
 class _AddCentreState extends State<AddCentre> {
   final BoxConstraints _commonBoxConstraint =
       const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45);
+  late final LabBloc bloc;
+  final TextEditingController _labNameController = TextEditingController();
+  final TextEditingController _emailIdController = TextEditingController();
+  final TextEditingController _contactNumberController = TextEditingController();
+  final TextEditingController _addressOneController = TextEditingController();
+  final TextEditingController _addressTwoController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  List<LabTestDetail> selectedTestDetails = [];
+  String unitTypeValue = "";
+
+  @override
+  void initState() {
+    BlocProvider.of<TestBloc>(context).add(FetchAllTests());
+    bloc = context.read<LabBloc>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +90,12 @@ class _AddCentreState extends State<AddCentre> {
                 .toList(),
           ),
           Row(
-            children: [_addressOneField(), _addressTwoField(), _selectCityDropdown()]
+            children: [_addressOneField(), _addressTwoField(), _cityField()]
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
                 .toList(),
           ),
           Row(
-            children: [_postalCodeField(), _selectStateDropdown(), _selectCountryDropdown()]
+            children: [_postalCodeField(), _stateField(), _countryField()]
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
                 .toList(),
           ),
@@ -90,7 +116,8 @@ class _AddCentreState extends State<AddCentre> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [_addCentreButton()].map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+            children: [_addCentreButton()]
+                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
                 .toList(),
           )
         ],
@@ -101,8 +128,8 @@ class _AddCentreState extends State<AddCentre> {
   /// form components
   Widget _labNameField() {
     var textField = TextField(
+        controller: _labNameController,
         onChanged: (value) => {},
-        maxLines: 10,
         decoration: InputDecoration(
             constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
 
@@ -111,8 +138,8 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _emailIdField() {
     var textField = TextField(
+        controller: _emailIdController,
         onChanged: (value) => {},
-        maxLines: 10,
         decoration: InputDecoration(
             constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Email"));
 
@@ -121,8 +148,8 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _contactNumberField() {
     var textField = TextField(
+        controller: _contactNumberController,
         onChanged: (value) => {},
-        maxLines: 10,
         decoration: InputDecoration(
             constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter number"));
 
@@ -131,8 +158,8 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _addressOneField() {
     var textField = TextField(
+        controller: _addressOneController,
         onChanged: (value) => {},
-        maxLines: 10,
         decoration: InputDecoration(
             constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
 
@@ -141,8 +168,8 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _addressTwoField() {
     var textField = TextField(
+        controller: _addressTwoController,
         onChanged: (value) => {},
-        maxLines: 10,
         decoration: InputDecoration(
             constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
 
@@ -151,75 +178,45 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _postalCodeField() {
     var textField = TextField(
+        controller: _postalCodeController,
         onChanged: (value) => {},
-        maxLines: 10,
         decoration: InputDecoration(
             constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Code"));
 
     return _getColumnAndFormInput("Postal Code", textField);
   }
 
+  Widget _cityField() {
+    var textField = TextField(
+        controller: _cityController,
+        onChanged: (value) => {},
+        decoration: InputDecoration(
+            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
+
+    return _getColumnAndFormInput("City", textField);
+  }
+
+  Widget _stateField() {
+    var textField = TextField(
+        controller: _stateController,
+        onChanged: (value) => {},
+        decoration: InputDecoration(
+            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
+
+    return _getColumnAndFormInput("State", textField);
+  }
+
+  Widget _countryField() {
+    var textField = TextField(
+        controller: _countryController,
+        onChanged: (value) => {},
+        decoration: InputDecoration(
+            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
+
+    return _getColumnAndFormInput("Country", textField);
+  }
+
   /// form dropdowns
-  Widget _selectCityDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        border: const OutlineInputBorder(),
-        hintText: "Select",
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "Ahmedabad", child: Text('Ahmedabad')),
-        DropdownMenuItem(value: "Hyderabad", child: Text('Hyderabad'))
-      ],
-      onChanged: (value) {
-        setState(() {});
-      },
-    );
-
-    return _getColumnAndFormInput("Select City", dropdown);
-  }
-
-  Widget _selectStateDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        border: const OutlineInputBorder(),
-        hintText: "Select",
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "Gujarat", child: Text('Gujarat')),
-        DropdownMenuItem(value: "Uttarakhand", child: Text('Uttarakhand'))
-      ],
-      onChanged: (value) {
-        setState(() {});
-      },
-    );
-
-    return _getColumnAndFormInput("Select State", dropdown);
-  }
-
-  Widget _selectCountryDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        border: const OutlineInputBorder(),
-        hintText: "Select",
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "India", child: Text('India')),
-        DropdownMenuItem(value: "UK", child: Text('United Kingdom'))
-      ],
-      onChanged: (value) {
-        setState(() {});
-      },
-    );
-
-    return _getColumnAndFormInput("Select Country", dropdown);
-  }
-
   Widget _collectionCentreDropdown() {
     var dropdown = DropdownButtonFormField(
       icon: IconStore.downwardArrow,
@@ -229,11 +226,14 @@ class _AddCentreState extends State<AddCentre> {
         hintText: "Select",
       ),
       items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "amd-unit", child: Text('Ahmedabad Unit')),
-        DropdownMenuItem(value: "hyd-unit", child: Text('Hyderabad Unit'))
+        DropdownMenuItem(value: "collection", child: Text('Collection Unit')),
+        DropdownMenuItem(value: "processing", child: Text('Processing Unit')),
+        DropdownMenuItem(value: "both", child: Text('Both')),
       ],
       onChanged: (value) {
-        setState(() {});
+        setState(() {
+          unitTypeValue = value;
+        });
       },
     );
 
@@ -241,19 +241,26 @@ class _AddCentreState extends State<AddCentre> {
   }
 
   Widget _selectTestDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: const InputDecoration(
-        constraints: BoxConstraints(maxWidth: 400, minWidth: 400, minHeight: 40, maxHeight: 45),
-        border: OutlineInputBorder(),
-        hintText: "Select Test",
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "test-one", child: Text('Test One')),
-        DropdownMenuItem(value: "test-two", child: Text('Test Two'))
-      ],
-      onChanged: (value) {
-        setState(() {});
+    var dropdown = BlocBuilder<TestBloc, TestState>(
+      builder: (context, state) {
+        return DropdownButtonFormField(
+          icon: IconStore.downwardArrow,
+          decoration: const InputDecoration(
+            constraints: BoxConstraints(maxWidth: 400, minWidth: 400, minHeight: 40, maxHeight: 45),
+            border: OutlineInputBorder(),
+            hintText: "Select Test",
+          ),
+          items: state.testsList.map((e) {
+            return DropdownMenuItem(value: e, child: Text(e.testName));
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              if (value != null) {
+                selectedTestDetails.add(LabTestDetail(value.testName, value.testCode));
+              }
+            });
+          },
+        );
       },
     );
 
@@ -286,20 +293,17 @@ class _AddCentreState extends State<AddCentre> {
       headingTextStyle: const TextStyle(color: Colors.white),
       dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
       columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
-      rows: TestData.testsList().map((value) {
-        var currentIndex = TestData.testsList().indexOf(value) + 1;
-        return _buildDataRowForTest(value, currentIndex);
+      rows: selectedTestDetails.map((value) {
+        var currentIndex = selectedTestDetails.indexOf(value) + 1;
+        return _buildDataRowForTestDetail(value, currentIndex);
       }).toList(),
       showBottomBorder: true,
     );
   }
 
-  DataRow _buildDataRowForTest(Test test, int currentIndex) {
-    return DataRow(cells: [
-      DataCell(Text("${currentIndex.toString()}")),
-      DataCell(Text(test.testCode)),
-      DataCell(Text(test.testName))
-    ]);
+  DataRow _buildDataRowForTestDetail(LabTestDetail test, int currentIndex) {
+    return DataRow(
+        cells: [DataCell(Text(currentIndex.toString())), DataCell(Text(test.testCode)), DataCell(Text(test.name))]);
   }
 
   /// buttons
@@ -314,12 +318,24 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _addCentreButton() {
     return ElevatedButton(
-        child: const Text('Add Centre'),
-        onPressed: () {},
+        onPressed: () {
+          bloc.add(AddCentreFormSubmitted(
+              contactNumber: _contactNumberController.text,
+              emailId: _emailIdController.text,
+              labName: _labNameController.text,
+              addressOne: _addressOneController.text,
+              addressTwo: _addressTwoController.text,
+              city: _cityController.text,
+              country: _countryController.text,
+              state: _stateController.text,
+              testDetails: selectedTestDetails,
+              unitType: unitTypeValue));
+        },
         style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(10),
             fixedSize: const Size(120, 60),
             shape: const ContinuousRectangleBorder(),
-            backgroundColor: ColorProvider.blueDarkShade));
+            backgroundColor: ColorProvider.blueDarkShade),
+        child: const Text('Add Centre'));
   }
 }

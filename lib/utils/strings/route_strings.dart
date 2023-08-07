@@ -5,6 +5,7 @@ class RouteStrings {
   static const String viewTests = "/tests";
   static const String addPatient = "/patient/add";
   static const String addTest = "/test/add";
+  static const String addLab = "/lab/add";
 
   static const String testMenu = "/test-menu";
 }
