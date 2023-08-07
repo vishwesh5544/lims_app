@@ -17,6 +17,8 @@ import 'package:lims_app/screens/patient_management.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:side_navigation/side_navigation.dart';
 
+import 'dashboard.dart';
+
 Future<void> main() async {
   SharedPreferences value = await SharedPreferences.getInstance();
   runApp( MyApp(value));

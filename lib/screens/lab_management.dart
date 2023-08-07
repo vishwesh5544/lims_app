@@ -41,13 +41,17 @@ class _LabManagementState extends State<LabManagement> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    RedirectButton(buttonText: "Add New Centre", routeName: RouteStrings.addLab),
+                    RedirectButton(buttonText: "Add New Centre", routeName: RouteStrings.addLab, onClick: (){
+
+                    },),
                   ],
                 ),
-                const SearchHeader(headerTitle: "List of Labs", placeholder: "Seach Lab"),
+                SearchHeader(headerTitle: "List of Labs", placeholder: "Seach Lab", onClickSearch: (){
+                  
+                },),
                 BlocConsumer<LabBloc, LabState>(
                   listener: (context, state) {},
                   builder: (context, state) {
@@ -55,7 +59,7 @@ class _LabManagementState extends State<LabManagement> {
                     return LimsTable(columnNames: columnsList, rowData: state.labsList);
                   },
                 ),
-                redirectToTestMenu(),
+                // redirectToTestMenu(),
               ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
             ),
           ),
