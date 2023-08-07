@@ -4,6 +4,11 @@ abstract class LabEvent {}
 
 class FetchAllLabs extends LabEvent {}
 
+class OnAddCenter extends LabEvent {
+  final bool value;
+  OnAddCenter({this.value = false});
+}
+
 class AddCentreFormSubmitted extends LabEvent {
   final String labName;
   final String emailId;

@@ -45,15 +45,17 @@ class _AddCentreState extends State<AddCentre> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-          child: SingleChildScrollView(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [_headerStrip(), _createForm()],
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [_headerStrip(), _createForm()],
+              ),
             ),
           ),
         ),
@@ -313,7 +315,9 @@ class _AddCentreState extends State<AddCentre> {
           Icons.arrow_back,
           color: Colors.white,
         ),
-        onTap: () => {});
+        onTap: () {
+        BlocProvider.of<LabBloc>(context).add(OnAddCenter());
+        });
   }
 
   Widget _addCentreButton() {

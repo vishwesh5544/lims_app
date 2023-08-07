@@ -2,10 +2,13 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/test.dart';
+import 'package:lims_app/screens/lab_management.dart';
+import 'package:lims_app/screens/login.dart';
 import 'package:lims_app/screens/patient_management.dart';
 import 'package:lims_app/screens/test_management.dart';
 import 'package:lims_app/utils/text_utility.dart';
 import 'package:lims_app/utils/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -73,7 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               InkWell(
                 onTap: (){
-                  showToast(msg: "Logout...");
+                  SharedPreferences.getInstance().then((value) {
+                    value.clear();
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),);
                 },
                 child: Container(
                     margin: EdgeInsets.all(20),
@@ -126,13 +134,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             items: [
               sideMenuItem(index: 0, title: "Patient\n Management", isSelected: sideMenu.currentPage == 0),
-              sideMenuItem(index: 1, title: "Test\n Management", isSelected: sideMenu.currentPage == 1)
+              sideMenuItem(index: 1, title: "Test\n Management", isSelected: sideMenu.currentPage == 1),
+              sideMenuItem(index: 2, title: "Lab\n Management", isSelected: sideMenu.currentPage == 2),
             ],
           ),
           Expanded(
             child: PageView(
               controller: pageController,
-              children: const [PatientManagement(), TestManagement()],
+              children: const [PatientManagement(), TestManagement(), LabManagement()],
             ),
           ),
         ],

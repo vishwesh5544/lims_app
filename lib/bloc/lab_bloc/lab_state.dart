@@ -15,6 +15,7 @@ class LabState {
   final String unitType;
   final List<LabTestDetail> testDetails;
   final FormSubmissionStatus formStatus;
+  bool isAddNewCenter = false;
   final List<Lab> labsList;
 
   LabState(
@@ -30,6 +31,7 @@ class LabState {
       this.unitType = '',
       this.testDetails = const [],
       this.labsList = const [],
+        this.isAddNewCenter = false,
       this.formStatus = const InitialFormStatus()});
 
   LabState copyWith(
@@ -45,6 +47,7 @@ class LabState {
       String? unitType,
       List<LabTestDetail>? testDetails,
       FormSubmissionStatus? formStatus,
+        bool? isAddNewCenter,
       List<Lab>? labsList}) {
     return LabState(
         id: id ?? this.id,
@@ -59,6 +62,7 @@ class LabState {
         unitType: unitType ?? this.unitType,
         testDetails: testDetails ?? this.testDetails,
         formStatus: formStatus ?? this.formStatus,
+        isAddNewCenter: isAddNewCenter ?? this.isAddNewCenter,
         labsList: labsList ?? this.labsList);
   }
 }

@@ -51,5 +51,9 @@ class LabBloc extends Bloc<LabEvent, LabState> {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
     }
+    else if (event is OnAddCenter) {
+
+      yield state.copyWith(isAddNewCenter: event.value);
+    }
   }
 }

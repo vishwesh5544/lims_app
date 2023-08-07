@@ -22,7 +22,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<Patient>> addPatient(Patient patient) async {
-    Uri url = Uri.https(CommonStrings.apiAuthority, "/lms/api/Patient/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/add");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var req = patient.toJson();
@@ -79,7 +79,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<List<InvoiceMapping>>> addInvoice(List<InvoiceMapping> invoiceMappingList) async {
-    Uri url = Uri.https(CommonStrings.apiAuthority, "lms/api/testpatient/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/add");
     ResponseCallback<List<InvoiceMapping>> responseCallback = ResponseCallback();
 
     try {

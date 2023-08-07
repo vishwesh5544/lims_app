@@ -12,6 +12,8 @@ import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
 
+import "add_centre.dart";
+
 class LabManagement extends StatefulWidget {
   const LabManagement({Key? key}) : super(key: key);
 
@@ -35,36 +37,42 @@ class _LabManagementState extends State<LabManagement> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RedirectButton(buttonText: "Add New Centre", routeName: RouteStrings.addLab, onClick: (){
-
-                    },),
-                  ],
-                ),
-                SearchHeader(headerTitle: "List of Labs", placeholder: "Seach Lab", onClickSearch: (){
-                  
-                },),
-                BlocConsumer<LabBloc, LabState>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    final columnsList = ["#", "Lab Name", "Email Id", "Contact Number", "Action"];
-                    return LimsTable(columnNames: columnsList, rowData: state.labsList);
-                  },
-                ),
-                // redirectToTestMenu(),
-              ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
-            ),
-          ),
-        ),
+      body: BlocConsumer<LabBloc, LabState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: state.isAddNewCenter ? const AddCentre() : lagWidget(state)
+          );
+        }
       ),
     ));
+  }
+
+  lagWidget(LabState state) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              RedirectButton(buttonText: "Add Centre", routeName: RouteStrings.addLab, onClick: (){
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true));
+              },),
+            ],
+          ),
+          SearchHeader(headerTitle: "List of Labs", placeholder: "Seach Lab", onClickSearch: (){
+
+          },),
+          LimsTable(columnNames: const ["#", "Lab Name", "Email Id", "Contact Number", "Action"],
+              tableType: TableType.lab,
+              onEditClick: (value){
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true));
+              },
+              rowData: state.labsList),
+          // redirectToTestMenu(),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
+      ),
+    );
   }
 }

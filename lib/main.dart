@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           onGenerateRoute: LimsRouter.generateRoute,
-          home: Dashboard()/*instance.getBool("isLogin") == true ? const Dashboard() : const LoginScreen(),*/
+          home: instance.getBool("isLogin") == true ? const Dashboard() : const LoginScreen(),
         ),
       ),
     );
