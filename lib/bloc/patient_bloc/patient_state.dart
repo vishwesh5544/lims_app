@@ -18,12 +18,18 @@ class PatientState {
   final String invoiceNumber;
   final FormSubmissionStatus formStatus;
   final List<Patient> patientsList;
+  final List<Patient> searchPatientsList;
   final List<Test> selectedTests;
   final Patient? createdPatient;
+
+  bool isAddPatient = false;
+  bool isPatient = true;
 
   PatientState(
       {this.invoiceNumber = "",
       this.selectedTests = const [],
+        this.isAddPatient = false,
+        this.isPatient = true,
       this.createdPatient,
       this.umrNumber = "",
       this.firstName = "",
@@ -38,6 +44,7 @@ class PatientState {
       this.insuranceNumber = "",
       this.consultedDoctor = "",
       this.patientsList = const [],
+      this.searchPatientsList = const [],
       this.formStatus = const InitialFormStatus()});
 
   PatientState copyWith(
@@ -56,7 +63,10 @@ class PatientState {
       String? consultedDoctor,
       String? invoiceNumber,
       List<Patient>? patientsList,
+      List<Patient>? searchPatientsList,
       List<Test>? selectedTests,
+        bool? isAddPatient,
+        bool? isPatient,
       FormSubmissionStatus? formStatus}) {
     return PatientState(
         invoiceNumber: invoiceNumber ?? this.invoiceNumber,
@@ -67,6 +77,8 @@ class PatientState {
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
         middleName: middleName ?? this.middleName,
+        isAddPatient: isAddPatient?? this.isAddPatient,
+        isPatient: isPatient?? this.isPatient,
         dob: dob ?? this.dob,
         age: age ?? this.age,
         gender: gender ?? this.gender,
@@ -75,6 +87,7 @@ class PatientState {
         insuranceProvider: insuranceProvider ?? this.insuranceProvider,
         insuranceNumber: insuranceNumber ?? this.insuranceNumber,
         patientsList: patientsList ?? this.patientsList,
+        searchPatientsList: searchPatientsList ?? this.searchPatientsList,
         formStatus: formStatus ?? this.formStatus);
   }
 }

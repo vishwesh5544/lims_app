@@ -3,6 +3,21 @@ import 'package:lims_app/models/test.dart';
 
 abstract class PatientEvent {}
 
+class OnSearch extends PatientEvent {
+  final String value;
+  OnSearch({this.value = ''});
+}
+
+class OnAddPatient extends PatientEvent {
+  final bool value;
+  OnAddPatient({this.value = false});
+}
+
+class IsPatient extends PatientEvent {
+  final bool value;
+  IsPatient({this.value = false});
+}
+
 class FetchAllPatients extends PatientEvent {}
 
 class GenerateUmrNumber extends PatientEvent {}

@@ -27,8 +27,8 @@ class LimsRouter {
       case RouteStrings.addTest:
         return LimsRouteFactory.createRoute(const AddTest());
 
-      case RouteStrings.testMenu:
-        return LimsRouteFactory.createRoute(const TestWidget());
+      // case RouteStrings.testMenu:
+      //   return LimsRouteFactory.createRoute(const TestWidget());
 
       case RouteStrings.addLab:
         return LimsRouteFactory.createRoute(const AddCentre());

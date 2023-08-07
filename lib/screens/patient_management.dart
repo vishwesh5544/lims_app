@@ -12,6 +12,8 @@ import 'package:lims_app/utils/strings/button_strings.dart';
 import 'package:lims_app/utils/strings/route_strings.dart';
 import 'package:lims_app/utils/strings/search_header_strings.dart';
 
+import 'add_patient/add_patient.dart';
+
 class PatientManagement extends StatefulWidget {
   const PatientManagement({Key? key}) : super(key: key);
 
@@ -42,34 +44,50 @@ class _PatientManagementState extends State<PatientManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RedirectButton(buttonText: ButtonStrings.addPatient, routeName: RouteStrings.addPatient),
-                  ],
-                ),
-                const SearchHeader(
-                    headerTitle: SearchHeaderStrings.patientsListTitle,
-                    placeholder: SearchHeaderStrings.searchPatientsPlaceholder),
-                BlocBuilder<PatientBloc, PatientState>(
-                  builder: (context, state) {
-                    return LimsTable(columnNames: TestData.patientsColumnsList(), rowData: state.patientsList);
-                  },
-                ),
-                redirectToTestMenu(),
-              ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
-            ),
+    return BlocConsumer<PatientBloc, PatientState>(
+        listener: (context, state) {
+
+        },
+        builder: (context, state) {
+        return WillPopScope(
+            onWillPop: () async {
+              BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+              return true;
+            },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: state.isAddPatient? const AddPatient() : patientWidget(state)
           ),
-        ),
+        );
+      }
+    );
+  }
+
+  patientWidget(PatientState state) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              RedirectButton(buttonText: ButtonStrings.addPatient, routeName: RouteStrings.addPatient, onClick: (){
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => AddPatient()),);
+
+              }),
+            ],
+          ),
+          SearchHeader(
+              headerTitle: SearchHeaderStrings.patientsListTitle,
+              placeholder: SearchHeaderStrings.searchPatientsPlaceholder,
+              onClickSearch: (text){
+                BlocProvider.of<PatientBloc>(context).add(OnSearch(value: text));
+              }),
+          LimsTable(columnNames: TestData.patientsColumnsList(), rowData: state.searchPatientsList),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
-    ));
+    );
   }
 }
