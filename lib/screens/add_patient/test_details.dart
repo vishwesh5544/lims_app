@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_svg/svg.dart";
+import "package:intl/intl.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
@@ -8,6 +10,13 @@ import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
 import "package:lims_app/models/test.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
+
+import "../../bloc/patient_bloc/patient_state.dart";
+import "../../components/lims_table.dart";
+import "../../utils/barcode_utility.dart";
+import "../../utils/color_provider.dart";
+import "../../utils/text_utility.dart";
+import "../../utils/utils.dart";
 
 class TestDetails extends StatefulWidget {
   const TestDetails({Key? key}) : super(key: key);
@@ -48,7 +57,12 @@ class _TestDetailsState extends State<TestDetails> {
         SingleChildScrollView(child: _selectedTestsTable()),
         Row(
           children: [Text("Total Price: \$${totalPrice.toString()}")],
-        )
+        ),
+        commonBtn(text: "Preview Invoice", isEnable: true, calll: (){
+
+          BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
+          _showInvoiceDialog();
+        }),
       ]
           .map((el) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -57,6 +71,121 @@ class _TestDetailsState extends State<TestDetails> {
           .toList(),
     ));
   }
+
+
+  /// invoice dialog
+  Future<void> _showInvoiceDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocBuilder<PatientBloc, PatientState>(
+          builder: (context, state) {
+            return AlertDialog(
+                insetPadding: EdgeInsets.zero,
+                titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
+                titlePadding: EdgeInsets.zero,
+                title: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(),
+                      const Text('Invoice'),
+                      InkWell(
+                        child: const Icon(Icons.cancel_rounded, color: Colors.white),
+                        onTap: () => Navigator.pop(context, "Cancel"),
+                      )
+                    ],
+                  ),
+                ),
+                content: Container(
+                  height: 500,
+                  width: 800,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(15))],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextUtility.getTextWithBoldAndPlain("Invoice Number", state.invoiceNumber),
+                                TextUtility.getTextWithBoldAndPlain("UMR Number", state.umrNumber),
+                                TextUtility.getTextWithBoldAndPlain(
+                                    "Date", DateFormat("yyyy-MM-dd").format(DateTime.now())),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextUtility.getTextWithBoldAndPlain(
+                                    "Patient Name", "${state.firstName} ${state.lastName}"),
+                                TextUtility.getTextWithBoldAndPlain("Age/Sex", "${state.age}/${state.gender}"),
+                                TextUtility.getTextWithBoldAndPlain("MobileNumber", state.mobileNumber.toString()),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black,
+                                      width: 2
+                                  ),
+                                  borderRadius: const BorderRadius.all(Radius.circular(5))
+                              ),
+                              child: SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
+                                  "${state.createdPatient?.id}${state.invoiceNumber}"), width: 150, height: 75),
+                            )
+                          ],
+                        ),
+                        // Row(
+                        //   children: [
+                        //     SingleChildScrollView(
+                        //         child: SizedBox(
+                        //           height: 200,
+                        //           width: 400,
+                        //           child: ListView(
+                        //             shrinkWrap: true,
+                        //             children: state.selectedTests.map((e) {
+                        //               return Padding(padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        //                 child: Row(
+                        //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //                   children: [
+                        //                     Text("${e.testName} => ${e.id}"),
+                        //                     SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
+                        //                         "${state.createdPatient?.id}${state.invoiceNumber}${e.id}")),
+                        //                   ],
+                        //                 ),);
+                        //             }).toList(),
+                        //           ),
+                        //         ))
+                        //   ],
+                        // ),
+
+                        LimsTable(columnNames: ["#","Names of the Test", "Sample Type",
+                          "Test Code", "Cost", "Tax %", "Total", "action"], rowData: state.selectedTests),
+                        commonBtn(text: "Generate Invoice", isEnable: true, calll: (){
+                          BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
+                        })// SvgPicture.string(barcodeOne)
+                      ],
+                    ),
+                  ),
+                ));
+          },
+        );
+      },
+    );
+  }
+
+
 
   /// dropdown
   Widget _selectTestDropdown() {
@@ -80,6 +209,7 @@ class _TestDetailsState extends State<TestDetails> {
               }).toList(),
               onChanged: (value) {
                 setState(() {
+                  totalPrice = 0;
                   selectedTests.add(value!);
                   patientBloc.add(SelectedTestsUpdated(selectedTests));
                   for (var test in selectedTests) {

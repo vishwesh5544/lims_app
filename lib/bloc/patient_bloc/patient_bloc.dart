@@ -19,7 +19,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   Stream<PatientState> mapEventToState(PatientEvent event) async* {
     if (event is FetchAllPatients) {
       final response = await patientRepository.getAllPatients();
-      yield state.copyWith(patientsList: response.data);
+      yield state.copyWith(patientsList: response.data, searchPatientsList: response.data);
     } else if (event is GenerateUmrNumber) {
       var random = Random();
       var next = random.nextDouble() * 1000000;
@@ -77,7 +77,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
-    } else if (event is SelectedTestsUpdated) {
+    }
+    else if (event is SelectedTestsUpdated) {
       yield state.copyWith(selectedTests: event.selectedTests);
     } else if (event is GenerateInvoiceNumber) {
       var random = Random();
@@ -88,7 +89,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
 
       String generatedInvoiceNumber = "IN${next.ceil()}";
       yield state.copyWith(invoiceNumber: generatedInvoiceNumber);
-    } else if (event is GenerateInvoice) {
+    }
+    else if (event is GenerateInvoice) {
       List<InvoiceMapping> invoices = [];
 
       for (Test test in state.selectedTests) {
@@ -97,6 +99,26 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       }
 
       patientRepository.addInvoice(invoices);
+    }
+    else if (event is OnSearch) {
+      List<Patient> data = [];
+
+      for (Patient patient in state.patientsList) {
+
+        if("${patient.lastName} ${patient.firstName}".toLowerCase().contains(event.value.trim())){
+          data.add(patient);
+        }
+      }
+
+      yield state.copyWith(searchPatientsList: data);
+    }
+    else if (event is OnAddPatient) {
+
+      yield state.copyWith(isAddPatient: event.value);
+    }
+    else if (event is IsPatient) {
+
+      yield state.copyWith(isPatient: event.value);
     }
   }
 }

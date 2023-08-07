@@ -44,34 +44,49 @@ class _PatientManagementState extends State<PatientManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                RedirectButton(buttonText: ButtonStrings.addPatient, routeName: RouteStrings.addPatient, onClick: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddPatient()),);
+    return BlocConsumer<PatientBloc, PatientState>(
+        listener: (context, state) {
 
-                }),
-              ],
-            ),
-            SearchHeader(
-                headerTitle: SearchHeaderStrings.patientsListTitle,
-                placeholder: SearchHeaderStrings.searchPatientsPlaceholder, onClickSearch: (){
+        },
+        builder: (context, state) {
+        return WillPopScope(
+            onWillPop: () async {
+              BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+              return true;
+            },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: state.isAddPatient? const AddPatient() : patientWidget(state)
+          ),
+        );
+      }
+    );
+  }
 
-            }),
-            BlocBuilder<PatientBloc, PatientState>(
-              builder: (context, state) {
-                return LimsTable(columnNames: TestData.patientsColumnsList(), rowData: state.patientsList);
-              },
-            ),
-          ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
-        ),
+  patientWidget(PatientState state) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              RedirectButton(buttonText: ButtonStrings.addPatient, routeName: RouteStrings.addPatient, onClick: (){
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => AddPatient()),);
+
+              }),
+            ],
+          ),
+          SearchHeader(
+              headerTitle: SearchHeaderStrings.patientsListTitle,
+              placeholder: SearchHeaderStrings.searchPatientsPlaceholder,
+              onClickSearch: (text){
+                BlocProvider.of<PatientBloc>(context).add(OnSearch(value: text));
+              }),
+          LimsTable(columnNames: TestData.patientsColumnsList(), rowData: state.searchPatientsList),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
     );
   }

@@ -14,6 +14,10 @@ import "package:lims_app/utils/strings/add_patient_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/text_utility.dart";
 
+import "../../components/buttons/redirect_button.dart";
+import "../../utils/strings/button_strings.dart";
+import "../../utils/utils.dart";
+
 class AddPatient extends StatefulWidget {
   const AddPatient({Key? key}) : super(key: key);
 
@@ -25,7 +29,7 @@ class _AddPatientState extends State<AddPatient> {
   late final PatientBloc bloc;
 
   final barcode = Barcode.code128(useCode128A: false, useCode128C: false);
-  late final barcodeOne = barcode.toSvg("kai bi lakhi didhu", width: 200, height: 100, drawText: false);
+  late final barcodeOne = barcode.toSvg("hello LIMS", width: 200, height: 100, drawText: false);
 
   @override
   void initState() {
@@ -35,91 +39,58 @@ class _AddPatientState extends State<AddPatient> {
     super.initState();
   }
 
-  int _currentStep = 0;
-  final BoxConstraints _commonBoxConstraint =
-      const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-            child: Column(
-              children: [
-                _header(),
-                Expanded(
-                  child: _getFormStepper(),
-                )
-              ],
-            ),
-          ),
+        body: BlocBuilder<PatientBloc, PatientState>(
+            builder: (context, state) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric( vertical: 20),
+                child: Column(
+                  children: [
+                    _header(state),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        children: [
+                          commonBtn(text: "Patient Details ", isEnable: state.isPatient,calll: (){
+                            BlocProvider.of<PatientBloc>(context).add(IsPatient(value: true));
+                          }),
+                          commonBtn(text: "Add Test ", isEnable: !state.isPatient, calll: (){
+                            BlocProvider.of<PatientBloc>(context).add(IsPatient());
+                          }),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _getFormStepper(state),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         ),
       ),
     );
   }
 
   /// form stepper
-  Stepper _getFormStepper() {
-    return Stepper(
-      physics: const ScrollPhysics(),
-      type: StepperType.horizontal,
-      currentStep: _currentStep,
-      onStepCancel: _onStepCancelHandler,
-      onStepContinue: _onStepContinueHandler,
-      onStepTapped: (int index) => _onStepTappedHandler(index),
-      controlsBuilder: (context, details) {
-        if (details.currentStep == 0) {
-          return _getStepperButtonWithText("Next", _onStepContinueHandler);
-        } else if (details.currentStep == 1) {
-          return _getStepperButtonWithText("Submit", () {
-            bloc.add(GenerateInvoiceNumber());
-            _showInvoiceDialog();
-          });
-        } else {
-          return Container();
-        }
-      },
-      steps: [
-        Step(
-            title: const Text('Add Patient'),
-            content: BlocBuilder<PatientBloc, PatientState>(
-              builder: (context, state) {
-                return const PatientDetailsForm();
-              },
-            )),
-        const Step(title: Text('Add New details'), content: TestDetails())
-      ],
+  _getFormStepper(PatientState state) {
+    // Step(title: const Text('Add Patient'), content: const PatientDetailsForm());
+    //
+    // const Step(title: Text('Add New details'), content: TestDetails());
+    return SingleChildScrollView(
+       child: state.isPatient? PatientDetailsForm() : TestDetails(),
     );
   }
 
-  /// Stepper form handlers
-  void _onStepCancelHandler() {
-    if (_currentStep > 0) {
-      setState(() {
-        _currentStep -= 1;
-      });
-    }
-  }
-
-  void _onStepContinueHandler() {
-    if (_currentStep <= 0) {
-      bloc.add(AddPatientFormSubmitted());
-      setState(() {
-        _currentStep += 1;
-      });
-    }
-  }
-
-  void _onStepTappedHandler(int index) {
-    setState(() {
-      _currentStep = index;
-    });
-  }
 
   /// header strip
-  Widget _header() {
+  Widget _header(PatientState state) {
     return Container(
       decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
       child: Padding(
@@ -127,12 +98,16 @@ class _AddPatientState extends State<AddPatient> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _backButton(),
+            _backButton(state),
             Text(
               AddPatientStrings.headerText,
               style: TextUtility.getBoldStyle(15.0, color: Colors.white),
             ),
-            _deleteButton()
+            Text(
+              "",
+              style: TextUtility.getBoldStyle(15.0, color: Colors.white),
+            ),
+            // _deleteButton()
           ],
         ),
       ),
@@ -140,13 +115,18 @@ class _AddPatientState extends State<AddPatient> {
   }
 
   /// buttons
-  InkWell _backButton() {
+  InkWell _backButton(PatientState state) {
     return InkWell(
         child: const Icon(
           Icons.arrow_back,
           color: Colors.white,
         ),
-        onTap: () => Navigator.pushReplacementNamed(context, RouteStrings.viewPatients));
+        onTap: () {
+          // setState(() {
+          //   state.isAddPatient = false;
+          // });
+          BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+        });
   }
 
   ElevatedButton _deleteButton() {
@@ -159,14 +139,22 @@ class _AddPatientState extends State<AddPatient> {
 
   Widget _getStepperButtonWithText(String buttonLabel, Function() handler) {
     final buttonStyle = ElevatedButton.styleFrom(
-        shape: const ContinuousRectangleBorder(), backgroundColor: ColorProvider.blueDarkShade);
-    return SizedBox(
-      child: ElevatedButton(
-        style: buttonStyle,
-        onPressed: handler,
-        child: Text(buttonLabel),
-      ),
-    );
+        shape: const ContinuousRectangleBorder(),
+        backgroundColor: ColorProvider.blueDarkShade);
+    return RedirectButton(buttonText: buttonLabel, routeName: RouteStrings.addPatient, onClick: (){
+      // BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => AddPatient()),);
+      handler();
+    });
+    // return SizedBox(
+    //   child: ElevatedButton(
+    //     style: buttonStyle,
+    //     onPressed: handler,
+    //     child: Text(buttonLabel),
+    //   ),
+    // );
   }
 
   /// invoice dialog
@@ -259,11 +247,14 @@ class _AddPatientState extends State<AddPatient> {
                             ))
                           ],
                         ),
-                        ElevatedButton(
-                            onPressed: () {
-                              bloc.add(GenerateInvoice());
-                            },
-                            child: const Text("Generate Invoice"))
+                        commonBtn(text: "Generate Invoice", isEnable: true, calll: (){
+                          bloc.add(GenerateInvoice());
+                        }),
+                        // ElevatedButton(
+                        //     onPressed: () {
+                        //       bloc.add(GenerateInvoice());
+                        //     },
+                        //     child: const Text("Generate Invoice"))
                         // SvgPicture.string(barcodeOne)
                       ],
                     ),

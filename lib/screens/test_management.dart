@@ -41,33 +41,48 @@ class _TestManagementState extends State<TestManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                RedirectButton(buttonText: ButtonStrings.addTest, routeName: RouteStrings.addTest, onClick: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddTest()),);
-                }),
-              ],
-            ),
-             SearchHeader(
-                headerTitle: SearchHeaderStrings.testsListTitle,
-                placeholder: SearchHeaderStrings.searchTestsPlaceholder, onClickSearch: (){
+    return BlocConsumer<TestBloc, TestState>(
+        listener: (context, state) {
 
-             }),
-            BlocBuilder<TestBloc, TestState>(
-              builder: (context, state) {
-                return LimsTable(columnNames: columnNames, rowData: state.testsList);
-              },
-            ),
-          ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
-        ),
+        },
+        builder: (context, state) {
+        return WillPopScope(
+          onWillPop: () async {
+            BlocProvider.of<TestBloc>(context).add(OnAddTest());
+            return true;
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: state.isAddTest? const AddTest(): testWidget(state)
+          ),
+        );
+      }
+    );
+  }
+
+  testWidget(TestState state) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              RedirectButton(buttonText: ButtonStrings.addTest, routeName: RouteStrings.addTest, onClick: (){
+                BlocProvider.of<TestBloc>(context).add(OnAddTest(value: true));
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => AddTest()));
+              }),
+            ],
+          ),
+          SearchHeader(
+              headerTitle: SearchHeaderStrings.testsListTitle,
+              placeholder: SearchHeaderStrings.searchTestsPlaceholder,
+              onClickSearch: (text){
+                BlocProvider.of<TestBloc>(context).add(OnSearch(value: text));
+              }),
+          LimsTable(columnNames: columnNames, rowData: state.searchTestsList),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
     );
   }

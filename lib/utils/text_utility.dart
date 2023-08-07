@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextUtility {
-  static TextStyle getBoldStyle(double fontSize, {Color color = Colors.black}) {
+  static TextStyle getBoldStyle(double fontSize, {Color color = Colors.white}) {
     return TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: color);
   }
 

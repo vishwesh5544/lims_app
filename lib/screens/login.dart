@@ -8,6 +8,8 @@ import "package:lims_app/utils/form_submission_status.dart";
 import 'package:lims_app/utils/strings/route_strings.dart';
 import "package:lims_app/utils/text_utility.dart";
 
+import "../dashboard.dart";
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -118,7 +120,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         // if (state.formStatus is SubmissionSuccess) {
-        Navigator.pushReplacementNamed(context, RouteStrings.testMenu);
+        // Navigator.pushReplacementNamed(context, RouteStrings.testMenu);
+        // Parth_parth
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),);
         // }
       },
       builder: (context, state) {

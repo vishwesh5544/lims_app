@@ -9,6 +9,8 @@ import "package:lims_app/utils/icons/icon_store.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
 import 'package:age_calculator/age_calculator.dart';
 
+import "../../utils/utils.dart";
+
 class PatientDetailsForm extends StatefulWidget {
   const PatientDetailsForm({Key? key}) : super(key: key);
 
@@ -50,7 +52,8 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
   Form _patientDetailsForm() {
     return Form(
       child: Column(
-        children: <Row>[
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Row(
             children: [_firstNameField(), _middleNameField(), _lastNameField()]
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
@@ -76,6 +79,12 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
                 .toList(),
           ),
+
+          commonBtn(text: "Next", isEnable: true,calll: (){
+
+            BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted());
+            BlocProvider.of<PatientBloc>(context).add(IsPatient());
+          }),
         ],
       ),
     );

@@ -5,9 +5,10 @@ import 'package:lims_app/models/test.dart';
 import 'package:lims_app/screens/patient_management.dart';
 import 'package:lims_app/screens/test_management.dart';
 import 'package:lims_app/utils/text_utility.dart';
+import 'package:lims_app/utils/utils.dart';
 
-class Parth_parth extends StatelessWidget {
-  const Parth_parth({Key? key}) : super(key: key);
+class Dashboard extends StatelessWidget {
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 500),
-        child: Padding(
+        child: Container(
+          color: Colors.blue,
           padding: EdgeInsets.symmetric(
             horizontal: 8.0,
           ),
@@ -57,20 +59,30 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    'LIMS',
-                    style: TextUtility.getBoldStyle(28),
-                  )),
-              Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    'LOGOUT',
-                    style: TextUtility.getBoldStyle(28),
-                  )),
+              InkWell(
+                onTap: (){
+                  showToast(msg: "LIMS");
+                },
+                child: Container(
+                    margin: EdgeInsets.all(20),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      'LIMS',
+                      style: TextUtility.getBoldStyle(28),
+                    )),
+              ),
+              InkWell(
+                onTap: (){
+                  showToast(msg: "Logout...");
+                },
+                child: Container(
+                    margin: EdgeInsets.all(20),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      'LOGOUT',
+                      style: TextUtility.getBoldStyle(28),
+                    )),
+              ),
             ],
           ),
         ),
@@ -90,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
               selectedColor: Colors.lightBlue,
               selectedTitleTextStyle: const TextStyle(color: Colors.white),
               selectedIconColor: Colors.white,
+              backgroundColor: Colors.blue,
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.all(Radius.circular(10)),
               // ),
@@ -112,8 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             items: [
-              sideMenuItem(index: 0, title: "Patient\n Management", ),
-              sideMenuItem(index: 1, title: "Test\n Management", )
+              sideMenuItem(index: 0, title: "Patient\n Management", isSelected: sideMenu.currentPage == 0),
+              sideMenuItem(index: 1, title: "Test\n Management", isSelected: sideMenu.currentPage == 1)
             ],
           ),
           Expanded(
@@ -127,23 +140,29 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  sideMenuItem({required int index, required String title}) {
+  sideMenuItem({required int index, required String title, bool isSelected = false}) {
     return SideMenuItem(
       builder: (context, displayMode) {
         return InkWell(
           onTap: () {
-            sideMenu.changePage(index);
+            setState(() {
+              sideMenu.changePage(index);
+            });
           },
           child: Container(
-            margin: const EdgeInsets.all(5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(Icons.home),
-                Text(title,
-                    style: TextUtility.getBoldStyle(18),
-                    textAlign: TextAlign.center),
-              ],
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            color: isSelected ? Colors.black: Colors.transparent,
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.home, size: 40, color: Colors.white,),
+                  Text(title,
+                      style: TextUtility.getStyle(18, color: Colors.white),
+                      textAlign: TextAlign.center),
+                ],
+              ),
             ),
           ),
         );

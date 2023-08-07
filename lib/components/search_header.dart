@@ -14,6 +14,8 @@ class SearchHeader extends StatefulWidget {
 }
 
 class _SearchHeaderState extends State<SearchHeader> {
+  TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,6 +38,10 @@ class _SearchHeaderState extends State<SearchHeader> {
                 textAlignVertical: TextAlignVertical.bottom,
                 maxLines: 1,
                 minLines: 1,
+                onChanged: (text){
+                  widget.onClickSearch.call(text.trim());
+                },
+                controller: textController,
                 decoration: InputDecoration(
                     fillColor: Colors.white,
                     border: InputBorder.none,
@@ -44,7 +50,7 @@ class _SearchHeaderState extends State<SearchHeader> {
                     hintText: widget.placeholder,
                     suffixIcon: InkWell(
                       onTap: (){
-                        widget.onClickSearch.call();
+                        widget.onClickSearch.call(textController.text.trim().toString());
                       },
                         child: const Icon(Icons.search)),
                     enabledBorder: TextUtility.getBorderStyle(),

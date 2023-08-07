@@ -17,7 +17,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
   Stream<TestState> mapEventToState(TestEvent event) async* {
     if (event is FetchAllTests) {
       final responseCallback = await _testRepository.getAllTests();
-      yield state.copyWith(testsList: responseCallback.data);
+      yield state.copyWith(testsList: responseCallback.data, searchTestsList: responseCallback.data);
     } else if (event is TestCodeUpdated) {
       yield state.copyWith(testCode: event.testCode);
     } else if (event is TestNameUpdated) {
@@ -78,6 +78,22 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
+    }
+
+    else if (event is OnSearch) {
+      List<Test> data = [];
+
+      for (Test patient in state.testsList) {
+        if(patient.testName.toLowerCase().contains(event.value.trim())){
+          data.add(patient);
+        }
+      }
+
+      yield state.copyWith(searchTestsList: data);
+    }
+    else if (event is OnAddTest) {
+
+      yield state.copyWith(isAddTest: event.value);
     }
   }
 }
