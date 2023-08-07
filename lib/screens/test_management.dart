@@ -6,6 +6,7 @@ import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
+import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
@@ -40,34 +41,49 @@ class _TestManagementState extends State<TestManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RedirectButton(buttonText: ButtonStrings.addTest, routeName: RouteStrings.addTest),
-                  ],
-                ),
-                const SearchHeader(
-                    headerTitle: SearchHeaderStrings.testsListTitle,
-                    placeholder: SearchHeaderStrings.searchTestsPlaceholder),
-                BlocBuilder<TestBloc, TestState>(
-                  builder: (context, state) {
-                    return LimsTable(columnNames: columnNames, rowData: state.testsList);
-                  },
-                ),
-                redirectToTestMenu(),
-              ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
-            ),
+    return BlocConsumer<TestBloc, TestState>(
+        listener: (context, state) {
+
+        },
+        builder: (context, state) {
+        return WillPopScope(
+          onWillPop: () async {
+            BlocProvider.of<TestBloc>(context).add(OnAddTest());
+            return true;
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: state.isAddTest? const AddTest(): testWidget(state)
           ),
-        ),
+        );
+      }
+    );
+  }
+
+  testWidget(TestState state) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              RedirectButton(buttonText: ButtonStrings.addTest, routeName: RouteStrings.addTest, onClick: (){
+                BlocProvider.of<TestBloc>(context).add(OnAddTest(value: true));
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => AddTest()));
+              }),
+            ],
+          ),
+          SearchHeader(
+              headerTitle: SearchHeaderStrings.testsListTitle,
+              placeholder: SearchHeaderStrings.searchTestsPlaceholder,
+              onClickSearch: (text){
+                BlocProvider.of<TestBloc>(context).add(OnSearch(value: text));
+              }),
+          LimsTable(columnNames: columnNames, rowData: state.searchTestsList),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
-    ));
+    );
   }
 }

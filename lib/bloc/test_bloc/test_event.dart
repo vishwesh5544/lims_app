@@ -8,6 +8,16 @@ class TestCodeUpdated extends TestEvent {
   TestCodeUpdated(this.testCode);
 }
 
+class OnSearch extends TestEvent {
+  final String value;
+  OnSearch({this.value = ''});
+}
+
+class OnAddTest extends TestEvent {
+  final bool value;
+  OnAddTest({this.value = false});
+}
+
 class TestNameUpdated extends TestEvent {
   final String testName;
 

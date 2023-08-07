@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/login_bloc/login_bloc.dart';
 import 'package:lims_app/bloc/patient_bloc/patient_bloc.dart';
 import 'package:lims_app/bloc/test_bloc/test_bloc.dart';
+import 'package:lims_app/dashboard.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
 import 'package:lims_app/repositories/tests_repository.dart';
 import 'package:lims_app/repositories/user_repository.dart';
@@ -10,16 +11,18 @@ import 'package:lims_app/screens/test_management.dart';
 import "package:lims_app/utils/router.dart";
 import 'package:lims_app/screens/login.dart';
 import 'package:lims_app/screens/patient_management.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:side_navigation/side_navigation.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  SharedPreferences value = await SharedPreferences.getInstance();
+  runApp( MyApp(value));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  SharedPreferences instance;
+  MyApp(this.instance, {super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -36,13 +39,12 @@ class MyApp extends StatelessWidget {
               create: (context) => PatientBloc(patientRepository: context.read<PatientRepository>()))
         ],
         child: MaterialApp(
-
           title: 'LIMS Application',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
           onGenerateRoute: LimsRouter.generateRoute,
-          home: const LoginScreen(),
+          home: Dashboard()/*instance.getBool("isLogin") == true ? const Dashboard() : const LoginScreen(),*/
         ),
       ),
     );

@@ -8,6 +8,8 @@ import "package:lims_app/utils/form_submission_status.dart";
 import 'package:lims_app/utils/strings/route_strings.dart';
 import "package:lims_app/utils/text_utility.dart";
 
+import "../dashboard.dart";
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -16,9 +18,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(text: "admin@gmail.com");
 
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController(text: "12345678");
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -37,7 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   size: const Size(500, 650),
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40.0, vertical: 20.0),
                       // Form Column
                       child: Form(
                         key: _formKey,
@@ -48,7 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Form heading
                             Text('LIMS', style: TextUtility.getBoldStyle(40.0)),
                             // Form sub heading
-                            Text('Welcome Back', style: TextUtility.getBoldStyle(30.0)),
+                            Text('Welcome Back',
+                                style: TextUtility.getBoldStyle(30.0)),
                             // Form instructions
                             const Text('Please enter your details to sign in'),
                             // Username/Email input field
@@ -60,7 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Forgot password section
                             _getForgetPasswordSection()
                           ]
-                              .map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 5.0), child: el))
+                              .map((el) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
+                                  child: el))
                               .toList(),
                         ),
                       ),
@@ -80,9 +87,12 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, state) {
         return TextFormField(
           controller: _emailController,
-          onChanged: (value) => context.read<LoginBloc>().add(LoginEmailChanged(email: value)),
+          onChanged: (value) =>
+              context.read<LoginBloc>().add(LoginEmailChanged(email: value)),
           decoration: const InputDecoration(
-              labelText: "Username or Email", border: OutlineInputBorder(), hintText: "Enter username or email"),
+              labelText: "Username or Email",
+              border: OutlineInputBorder(),
+              hintText: "Enter username or email"),
         );
       },
     );
@@ -93,17 +103,30 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, state) {
         return TextFormField(
           controller: _passwordController,
-          onChanged: (value) => context.read<LoginBloc>().add(LoginPasswordChanged(password: value)),
+          onChanged: (value) => context
+              .read<LoginBloc>()
+              .add(LoginPasswordChanged(password: value)),
           obscureText: true,
-          decoration:
-              const InputDecoration(labelText: "Password", border: OutlineInputBorder(), hintText: "Enter password"),
+          decoration: const InputDecoration(
+              labelText: "Password",
+              border: OutlineInputBorder(),
+              hintText: "Enter password"),
         );
       },
     );
   }
 
   Widget _loginButton(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (context, state) {
+        // if (state.formStatus is SubmissionSuccess) {
+        // Navigator.pushReplacementNamed(context, RouteStrings.testMenu);
+        // Parth_parth
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),);
+        // }
+      },
       builder: (context, state) {
         return state.formStatus is FormSubmitting
             ? const CircularProgressIndicator()
@@ -111,7 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade700),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade700),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text('LOGIN', style: TextUtility.getBoldStyle(15.0)),
@@ -119,12 +143,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     var formState = _formKey.currentState;
                     if (formState != null && formState.validate()) {
-                      context
-                          .read<LoginBloc>()
-                          .add(LoginSubmitted(email: _emailController.text, password: _passwordController.text));
-                      // if (state.formStatus is SubmissionSuccess) {
-                        Navigator.pushReplacementNamed(context, RouteStrings.testMenu);
-                      // }
+                      context.read<LoginBloc>().add(LoginSubmitted(
+                          email: _emailController.text,
+                          password: _passwordController.text));
                     }
                   },
                 ),
@@ -139,14 +160,18 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         RichText(
             text: TextSpan(children: [
-          TextSpan(text: "Forgot Password?", style: TextUtility.getBoldStyle(15.0)),
+          TextSpan(
+              text: "Forgot Password?", style: TextUtility.getBoldStyle(15.0)),
           const WidgetSpan(
               child: SizedBox(
             width: 4,
           )),
           TextSpan(
               text: "Reset now",
-              style: const TextStyle(color: Colors.blue, fontSize: 15.0, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.blue,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               recognizer: TapGestureRecognizer()..onTap = () {})
         ]))
       ],

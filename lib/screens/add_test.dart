@@ -53,7 +53,7 @@ class _AddTestState extends State<AddTest> {
     return Scaffold(
         body: Center(
             child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -62,11 +62,15 @@ class _AddTestState extends State<AddTest> {
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _backButton(),
                     Text(
                       AddTestStrings.title,
+                      style: TextUtility.getBoldStyle(15.0, color: Colors.white),
+                    ),
+                    Text(
+                      "",
                       style: TextUtility.getBoldStyle(15.0, color: Colors.white),
                     )
                   ],
@@ -77,7 +81,6 @@ class _AddTestState extends State<AddTest> {
               padding: const EdgeInsets.all(8.0),
               child: _createForm(),
             ),
-            redirectToTestMenu(),
           ],
         ),
       ),
@@ -91,7 +94,9 @@ class _AddTestState extends State<AddTest> {
           Icons.arrow_back,
           color: Colors.white,
         ),
-        onTap: () => Navigator.pushReplacementNamed(context, RouteStrings.viewTests));
+        onTap: () {
+          BlocProvider.of<TestBloc>(context).add(OnAddTest());
+        });
   }
 
   /// form element
