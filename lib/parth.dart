@@ -98,14 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
             footer: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.lightBlue[100],
-                    borderRadius: BorderRadius.circular(12)),
+                // decoration: BoxDecoration(
+                //     color: Colors.lightBlue[100],
+                //     borderRadius: BorderRadius.circular(12)),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                   child: Text(
-                    'mohada',
+                    '',
                     style: TextStyle(fontSize: 15, color: Colors.grey[800]),
                   ),
                 ),
