@@ -5,7 +5,11 @@ import 'package:lims_app/models/test.dart';
 import 'package:lims_app/screens/lab_management.dart';
 import 'package:lims_app/screens/login.dart';
 import 'package:lims_app/screens/patient_management.dart';
+import 'package:lims_app/screens/process_management.dart';
+import 'package:lims_app/screens/sample_management.dart';
 import 'package:lims_app/screens/test_management.dart';
+import 'package:lims_app/screens/test_status.dart';
+import 'package:lims_app/screens/transit_management.dart';
 import 'package:lims_app/utils/text_utility.dart';
 import 'package:lims_app/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,23 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextUtility.getBoldStyle(28),
                     )),
               ),
-              InkWell(
-                onTap: (){
-                  SharedPreferences.getInstance().then((value) {
-                    value.clear();
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),);
-                },
-                child: Container(
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      'LOGOUT',
-                      style: TextUtility.getBoldStyle(28),
-                    )),
-              ),
+              logoutWidget()
             ],
           ),
         ),
@@ -135,13 +123,24 @@ class _MyHomePageState extends State<MyHomePage> {
             items: [
               sideMenuItem(index: 0, title: "Patient\n Management", isSelected: sideMenu.currentPage == 0),
               sideMenuItem(index: 1, title: "Test\n Management", isSelected: sideMenu.currentPage == 1),
-              sideMenuItem(index: 2, title: "Lab\n Management", isSelected: sideMenu.currentPage == 2),
+              sideMenuItem(index: 2, title: "Sample\n Management", isSelected: sideMenu.currentPage == 2),
+              sideMenuItem(index: 3, title: "In Transit\n Management", isSelected: sideMenu.currentPage == 3),
+              sideMenuItem(index: 4, title: "Process\n Management", isSelected: sideMenu.currentPage == 4),
+              sideMenuItem(index: 5, title: "Lab\n Management", isSelected: sideMenu.currentPage == 5),
+              sideMenuItem(index: 6, title: "Test\n Status", isSelected: sideMenu.currentPage == 6),
             ],
           ),
           Expanded(
             child: PageView(
               controller: pageController,
-              children: const [PatientManagement(), TestManagement(), LabManagement()],
+              children: const [
+                PatientManagement(),
+                TestManagement(),
+                SampleManagement(),
+                TransitManagement(),
+                ProcessManagement(),
+                LabManagement(),
+                TestStatus()],
             ),
           ),
         ],
@@ -176,6 +175,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
       },
+    );
+  }
+
+  logoutWidget() {
+    return Row(
+      children: [
+        const Icon(Icons.notifications, size: 30, color: Colors.white,),
+        InkWell(
+          onTap: (){
+            SharedPreferences.getInstance().then((value) {
+              value.clear();
+            });
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),);
+          },
+          child: Container(
+              margin: EdgeInsets.all(20),
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                'LOGOUT',
+                style: TextUtility.getBoldStyle(28),
+              )),
+        ),
+      ],
     );
   }
 }
