@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/models/lab.dart";
 import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
@@ -9,7 +12,7 @@ import "../utils/barcode_utility.dart";
 import "../utils/icons/icon_store.dart";
 import "../utils/strings/add_patient_strings.dart";
 
-enum TableType { addPatient, addTest, viewPatient, lab, tansit, process, testStatus, sample }
+enum TableType { addPatient, addTest, viewPatient, lab, inTransit, process, testStatus, sample }
 
 class LimsTable extends StatelessWidget {
   LimsTable(
@@ -52,14 +55,14 @@ class LimsTable extends StatelessWidget {
                   return _buildDataRowForLab(value, currentIndex);
                 } else if (tableType == TableType.viewPatient) {
                   return _buildDataRowForTestBarCode(value, currentIndex);
-                } else if (tableType == TableType.tansit) {
+                } else if (tableType == TableType.inTransit) {
                   return _buildDataRowForTransit(value, currentIndex);
                 } else if (tableType == TableType.process) {
                   return _buildDataRowForProcess(value, currentIndex);
                 } else if (tableType == TableType.testStatus) {
                   return _buildDataRowForTestStatus(value, currentIndex);
                 } else if (tableType == TableType.sample) {
-                  return _buildDataRowForSampleManagement(value, currentIndex);
+                  return _buildDataRowForSampleManagement(value, currentIndex, context);
                 } else {
                   throw Exception(
                       "*** Invalid type provided for ${value.toString()}");
@@ -212,7 +215,7 @@ class LimsTable extends StatelessWidget {
   }
 
   ///Sample Management
-  DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
+  DataRow _buildDataRowForSampleManagement(Test test, int currentIndex, BuildContext context) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
       DataCell(_barCodeWidget(
@@ -232,12 +235,10 @@ class LimsTable extends StatelessWidget {
               DropdownMenuItem(value: "Completed", child: Text('Completed'))
             ],
             onChanged: (value) {
-
             },
           )
       ),
       DataCell(commonBtn(text: "Collect Sample", isEnable: true, calll: (){
-
       }))
     ]);
   }

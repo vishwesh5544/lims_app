@@ -126,7 +126,7 @@ class _TestStatusState extends State<TestStatus> {
                       ),
 
                       LimsTable(columnNames: columnNames,
-                          tableType: TableType.tansit,
+                          tableType: TableType.inTransit,
                           onEditClick: (value){
 
                           },

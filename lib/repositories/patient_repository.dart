@@ -26,11 +26,9 @@ class PatientRepository implements IPatientRepository {
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var req = patient.toJson();
-      print(jsonEncode(req));
       final response = await http.post(url, headers: _headers, body: jsonEncode(req));
       responseCallback.code = response.statusCode;
       var responseMap = jsonDecode(response.body);
-      print(responseMap);
       LimsLogger.log("*** Patient created successfully => $responseMap");
       responseCallback.data = Patient.fromJson(responseMap["data"][0]);
     } on http.ClientException catch (e) {
@@ -54,9 +52,9 @@ class PatientRepository implements IPatientRepository {
       final response = await http.get(url, headers: _headers);
       List<Patient> patients = [];
       var body = jsonDecode(response.body);
-      for (var patient in body) {
-        print(patient.runtimeType);
-      }
+      // for (var patient in body) {
+      //   print(patient.runtimeType);
+      // }
 
       for (var patient in body) {
 

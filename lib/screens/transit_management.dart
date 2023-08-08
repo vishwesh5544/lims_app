@@ -132,7 +132,7 @@ class _TransitManagementState extends State<TransitManagement> {
                     ),
 
                     LimsTable(columnNames: columnNames,
-                        tableType: TableType.tansit,
+                        tableType: TableType.inTransit,
                         onEditClick: (value){
 
                         },

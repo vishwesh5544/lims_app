@@ -1,13 +1,21 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_svg/svg.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
+import "package:lims_app/models/in_transit.dart";
+import "package:lims_app/models/invoice_mapping.dart";
+import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
+import "package:lims_app/utils/barcode_utility.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
@@ -26,27 +34,22 @@ class SampleManagement extends StatefulWidget {
 
 class _SampleManagementState extends State<SampleManagement> {
   TextEditingController textController = TextEditingController();
-  static List<String> columnNames = [
-    "#",
-    "Name of the Test",
-    "Process Unit",
-    "Actions"
-  ];
+  late final InTransitBloc bloc;
+  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions"];
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
+      bloc = context.read<InTransitBloc>();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TestBloc, TestState>(
-        listener: (context, state) {
-
-        },
+    return BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
         builder: (context, state) {
           return WillPopScope(
               onWillPop: () async {
@@ -54,7 +57,7 @@ class _SampleManagementState extends State<SampleManagement> {
                 return true;
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -68,7 +71,8 @@ class _SampleManagementState extends State<SampleManagement> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("In Transit Management",
+                              Text(
+                                "In Transit Management",
                                 style: TextUtility.getBoldStyle(18.0, color: Colors.white),
                               ),
                             ],
@@ -81,14 +85,15 @@ class _SampleManagementState extends State<SampleManagement> {
                           child: commonSearchArea(
                               title: "UMR No./Patient Name",
                               hint: "Search by URM No./Patient Name",
-                              textController: textController, onSubmit: (value){
-                            showToast(msg: value);
-                          })
-                      ),
+                              textController: textController,
+                              onSubmit: (value) {
+                                showToast(msg: value);
+                                bloc.add(SearchPatient(value));
+                              })),
 
                       Container(
                         margin: EdgeInsets.only(bottom: 15),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -99,10 +104,11 @@ class _SampleManagementState extends State<SampleManagement> {
                                 TextField(
                                   enabled: false,
                                   decoration: InputDecoration(
-                                    constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
+                                    constraints:
+                                        BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                     border: OutlineInputBorder(),
                                     fillColor: Colors.grey,
-                                    hintText: "fhasdjfgaksjhdfghks",
+                                    hintText: state.patient?.umrNumber ?? "",
                                   ),
                                 )
                               ],
@@ -117,10 +123,12 @@ class _SampleManagementState extends State<SampleManagement> {
                                 TextField(
                                   enabled: false,
                                   decoration: InputDecoration(
-                                    constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
+                                    constraints:
+                                        BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                     border: OutlineInputBorder(),
                                     fillColor: Colors.grey,
-                                    hintText: "Parth Pitroda",
+                                    hintText:
+                                        "${state.patient?.firstName} ${state.patient?.middleName} ${state.patient?.lastName}",
                                   ),
                                 )
                               ],
@@ -132,24 +140,52 @@ class _SampleManagementState extends State<SampleManagement> {
                       LimsTable(columnNames: columnNames,
                           tableType: TableType.sample,
                           onEditClick: (value){
-
+                            print(value);
                           },
-                          rowData: state.searchTestsList),
+                          rowData: state.testsList!),
+
 
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 10),
-                        child: commonBtn(text: "Update", isEnable: true, calll: (){
-                          showToast(msg: "Update");
-                        }),
-                      )
-                      ,
+                        child: commonBtn(
+                            text: "Update",
+                            isEnable: true,
+                            calll: (value) {
+                              showToast(msg: "Update");
+
+                              // BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit());
+                            }),
+                      ),
                     ],
                   ),
                 ),
-              )
-          );
-        }
-    );
+              ));
+        });
   }
 
+
+  Widget _barCodeWidget({required String text, required String barCode}) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(text),
+          Container(
+            padding: EdgeInsets.all(6),
+            margin: EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Colors.black,
+                    width: 2
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(5))
+            ),
+            child: SvgPicture.string(
+              BarcodeUtility.getBarcodeSvgString(barCode),
+              width: 80,
+              height: 40,
+            ),
+          )
+        ]);
+  }
 }

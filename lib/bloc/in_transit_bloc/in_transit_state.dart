@@ -1,46 +1,30 @@
+import 'package:lims_app/models/invoice_mapping.dart';
+import 'package:lims_app/models/patient.dart';
+import 'package:lims_app/models/test.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
 
 class InTransitState {
-  final int? userId;
-  final int? invoiceId;
-  final int? patientId;
-  final int? testId;
-  final String? invoiceNo;
-  final String? processingUnit;
-  final String? collectionUnit;
-  final int? status;
+  final Patient? patient;
+  final List<Test>? testsList;
+  final List<InvoiceMapping>? invoiceMappings;
   final FormSubmissionStatus formStatus;
 
   InTransitState(
-      {this.userId,
-      this.invoiceId,
-      this.patientId,
-      this.testId,
-      this.invoiceNo,
-      this.processingUnit,
-      this.collectionUnit,
-      this.status,
+      {this.testsList = const [],
+      this.invoiceMappings = const [],
+      this.patient,
       this.formStatus = const InitialFormStatus()});
 
   InTransitState copyWith({
-    int? userId,
-    int? invoiceId,
-    int? patientId,
-    int? testId,
-    String? invoiceNo,
-    String? processingUnit,
-    String? collectionUnit,
-    int? status,
+    List<Test>? testsList,
+    List<InvoiceMapping>? invoiceMappings,
+    Patient? patient,
     FormSubmissionStatus? formStatus,
   }) {
     return InTransitState(
-        userId: userId ?? this.userId,
-        patientId: patientId ?? this.patientId,
-        invoiceNo: invoiceNo ?? this.invoiceNo,
-        testId: testId ?? this.testId,
-        processingUnit: processingUnit ?? this.processingUnit,
-        collectionUnit: collectionUnit ?? this.collectionUnit,
-        status: status ?? this.status,
+        invoiceMappings: invoiceMappings ?? this.invoiceMappings,
+        testsList: testsList ?? this.testsList,
+        patient: patient ?? this.patient,
         formStatus: formStatus ?? this.formStatus);
   }
 }

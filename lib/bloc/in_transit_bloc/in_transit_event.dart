@@ -2,6 +2,13 @@ abstract class InTransitEvent {}
 
 class FetchAllInvoiceMapping extends InTransitEvent{}
 
+
+class SearchPatient extends InTransitEvent {
+  final String searchString;
+
+  SearchPatient(this.searchString);
+}
+
 class UpdateInTransit extends InTransitEvent{
   final int userId;
   final int? invoiceId;
