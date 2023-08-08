@@ -55,8 +55,14 @@ class _TestDetailsState extends State<TestDetails> {
       children: [
         _selectTestDropdown(),
         SingleChildScrollView(child: _selectedTestsTable()),
-        Row(
-          children: [Text("Total Price: \$${totalPrice.toString()}")],
+        Container(
+          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          width: double.infinity,
+          color: Colors.black,
+          child: Row(
+            children: [Text("Total Price: \$${totalPrice.toString()}", style: TextUtility.getStyle(16, color: Colors.white),)],
+          ),
         ),
         commonBtn(text: "Preview Invoice", isEnable: true, calll: (){
 
@@ -101,15 +107,15 @@ class _TestDetailsState extends State<TestDetails> {
                   ),
                 ),
                 content: Container(
-                  height: 500,
-                  width: 800,
+                  height: 700,
+                  width: 1200,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(15))],
+                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18,color: Colors.black))],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,6 +140,7 @@ class _TestDetailsState extends State<TestDetails> {
                             ),
                             Container(
                               padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   border: Border.all(
                                       color: Colors.black,
@@ -170,11 +177,27 @@ class _TestDetailsState extends State<TestDetails> {
                         //   ],
                         // ),
 
-                        LimsTable(columnNames: ["#","Names of the Test", "Sample Type",
-                          "Test Code", "Cost", "Tax %", "Total", "action"], rowData: state.selectedTests),
-                        commonBtn(text: "Generate Invoice", isEnable: true, calll: (){
-                          BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
-                        })// SvgPicture.string(barcodeOne)
+                        LimsTable(columnNames: const ["#","Names of the Test", "Sample Type",
+                          "Test Code", "Cost", "Tax %", "Total", "action"],
+                            tableType: TableType.viewPatient,
+                            rowData: state.selectedTests, onEditClick: (value){
+
+                            }),
+                        Container(
+                          height: 50,
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          width: double.infinity,
+                          color: Colors.black,
+                          child: Row(
+                            children: [Text("Total Price: \$${totalPrice.toString()}", style: TextUtility.getStyle(16, color: Colors.white),)],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: commonBtn(text: "Generate Invoice", isEnable: true, calll: (){
+                            BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
+                          }),
+                        )// SvgPicture.string(barcodeOne)
                       ],
                     ),
                   ),

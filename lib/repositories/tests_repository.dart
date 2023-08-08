@@ -19,9 +19,8 @@ class TestRepository implements ITestRepository {
   Future<ResponseCallback<Test>> addTest(Test test) async {
     ResponseCallback<Test> responseCallback = ResponseCallback();
     //TODO: make api call to add test
-    Uri url = Uri.https(CommonStrings.apiAuthority, "/lms/api/tests/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/add");
     try {
-
       final response = await http.post(url, body: jsonEncode(test.toJson()), headers: _headers);
       // final body = JsonUtils.jsonStringToMap(response.body);
       responseCallback.code = response.statusCode;
@@ -42,7 +41,7 @@ class TestRepository implements ITestRepository {
   @override
   Future<ResponseCallback<List<Test>>> getAllTests() async {
     ResponseCallback<List<Test>> responseCallback = ResponseCallback();
-    Uri url = Uri.https(CommonStrings.apiAuthority, "/lms/api/tests/getalltests");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/getalltests");
     try {
       final response = await http.get(url, headers: _headers);
       List<Test> allTests = [];
