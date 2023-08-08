@@ -7,7 +7,7 @@ import "package:lims_app/utils/utils.dart";
 
 import "../utils/barcode_utility.dart";
 
-enum TableType { addPatient, addTest, viewPatient, lab }
+enum TableType { addPatient, addTest, viewPatient, lab, tansit, process, testStatus }
 
 class LimsTable extends StatelessWidget {
   LimsTable(
@@ -32,7 +32,7 @@ class LimsTable extends StatelessWidget {
           shrinkWrap: true,
           children: [
             DataTable(
-              dataRowHeight: 80,
+              dataRowHeight: 85,
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
               dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
@@ -50,6 +50,8 @@ class LimsTable extends StatelessWidget {
                   return _buildDataRowForLab(value, currentIndex);
                 } else if (tableType == TableType.viewPatient) {
                   return _buildDataRowForTestBarCode(value, currentIndex);
+                } else if (tableType == TableType.tansit) {
+                  return _buildDataRowForTransit(value, currentIndex);
                 } else {
                   throw Exception(
                       "*** Invalid type provided for ${value.toString()}");
@@ -78,10 +80,21 @@ class LimsTable extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(text),
-          SvgPicture.string(
-            BarcodeUtility.getBarcodeSvgString(barCode),
-            width: 100,
-            height: 50,
+          Container(
+            padding: EdgeInsets.all(6),
+            margin: EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Colors.black,
+                    width: 2
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(5))
+            ),
+            child: SvgPicture.string(
+              BarcodeUtility.getBarcodeSvgString(barCode),
+              width: 80,
+              height: 40,
+            ),
           )
         ]);
   }
@@ -122,6 +135,38 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.sampleType)),
       DataCell(Text(test.turnAroundTime)),
       DataCell(Text(test.price.toString())),
+    ]);
+  }
+
+  ///in tansit managment
+  DataRow _buildDataRowForTransit(Test test, int currentIndex) {
+    return DataRow(cells: [
+      DataCell(Text(currentIndex.toString())),
+      DataCell(_barCodeWidget(
+        text: test.testName,
+        barCode: "${test.id}",
+      )),
+      DataCell(Text(test.testCode)),
+      DataCell(Text(test.testName)),
+      DataCell(Text("Processing unit")),
+      DataCell( commonBtn(text: "Approve Transit", isEnable: true, calll: (){
+
+      })),
+    ]);
+  }
+
+  ///Process managment
+  DataRow _buildDataRowForProcess(Test test, int currentIndex) {
+    return DataRow(cells: [
+      DataCell(Text(currentIndex.toString())),
+      DataCell(_barCodeWidget(
+        text: test.testName,
+        barCode: "${test.id}",
+      )),
+      DataCell(Text(test.testCode)),
+      DataCell(Text(test.testName)),
+      DataCell(Text("Processing unit")),
+      // DataCell(),
     ]);
   }
 
