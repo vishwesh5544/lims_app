@@ -121,13 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             items: [
-              sideMenuItem(index: 0, title: "Patient\n Management", isSelected: sideMenu.currentPage == 0),
-              sideMenuItem(index: 1, title: "Test\n Management", isSelected: sideMenu.currentPage == 1),
-              sideMenuItem(index: 2, title: "Sample\n Management", isSelected: sideMenu.currentPage == 2),
-              sideMenuItem(index: 3, title: "In Transit\n Management", isSelected: sideMenu.currentPage == 3),
-              sideMenuItem(index: 4, title: "Process\n Management", isSelected: sideMenu.currentPage == 4),
-              sideMenuItem(index: 5, title: "Lab\n Management", isSelected: sideMenu.currentPage == 5),
-              sideMenuItem(index: 6, title: "Test\n Status", isSelected: sideMenu.currentPage == 6),
+              sideMenuItem(index: 0, title: "Patient\n Management", iconName: "ic_management",isSelected: sideMenu.currentPage == 0),
+              sideMenuItem(index: 1, title: "Test\n Management", iconName: "ic_Layer",isSelected: sideMenu.currentPage == 1),
+              sideMenuItem(index: 2, title: "Sample\n Management", iconName: "ic_chemistry", isSelected: sideMenu.currentPage == 2),
+              sideMenuItem(index: 3, title: "In Transit\n Management", iconName: "", isSelected: sideMenu.currentPage == 3),
+              sideMenuItem(index: 4, title: "Process\n Management",iconName: "", isSelected: sideMenu.currentPage == 4),
+              sideMenuItem(index: 5, title: "Lab\n Management", iconName: "ic_Lab_Report",isSelected: sideMenu.currentPage == 5),
+              sideMenuItem(index: 6, title: "Test\n Status", iconName: "ic_processing_time",isSelected: sideMenu.currentPage == 6),
             ],
           ),
           Expanded(
@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  sideMenuItem({required int index, required String title, bool isSelected = false}) {
+  sideMenuItem({required int index, String iconName = "ic_home",required String title, bool isSelected = false}) {
     return SideMenuItem(
       builder: (context, displayMode) {
         return InkWell(
@@ -165,7 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(Icons.home, size: 40, color: Colors.white,),
+                  Image.asset("assets/$iconName.png",
+                  height: 26, width: 26, color: Colors.transparent,),
+                  // const Icon(Icons.home, size: 40, color: Colors.white,),
                   Text(title,
                       style: TextUtility.getStyle(18, color: Colors.white),
                       textAlign: TextAlign.center),
