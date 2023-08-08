@@ -6,8 +6,10 @@ import "package:lims_app/models/test.dart";
 import "package:lims_app/utils/utils.dart";
 
 import "../utils/barcode_utility.dart";
+import "../utils/icons/icon_store.dart";
+import "../utils/strings/add_patient_strings.dart";
 
-enum TableType { addPatient, addTest, viewPatient, lab, tansit, process, testStatus }
+enum TableType { addPatient, addTest, viewPatient, lab, tansit, process, testStatus, sample }
 
 class LimsTable extends StatelessWidget {
   LimsTable(
@@ -52,6 +54,12 @@ class LimsTable extends StatelessWidget {
                   return _buildDataRowForTestBarCode(value, currentIndex);
                 } else if (tableType == TableType.tansit) {
                   return _buildDataRowForTransit(value, currentIndex);
+                } else if (tableType == TableType.process) {
+                  return _buildDataRowForProcess(value, currentIndex);
+                } else if (tableType == TableType.testStatus) {
+                  return _buildDataRowForTestStatus(value, currentIndex);
+                } else if (tableType == TableType.sample) {
+                  return _buildDataRowForSampleManagement(value, currentIndex);
                 } else {
                   throw Exception(
                       "*** Invalid type provided for ${value.toString()}");
@@ -166,7 +174,71 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
       DataCell(Text("Processing unit")),
-      // DataCell(),
+      DataCell(
+          DropdownButtonFormField(
+            icon: IconStore.downwardArrow,
+            decoration: const InputDecoration(
+              constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
+              border: OutlineInputBorder(),
+              hintText: "Select Status",
+            ),
+            items: const <DropdownMenuItem>[
+              DropdownMenuItem(value: "Process", child: Text('Process')),
+              DropdownMenuItem(value: "Completed", child: Text('Completed'))
+            ],
+            onChanged: (value) {
+
+            },
+          )
+      ),
+    ]);
+  }
+
+  ///test status
+  DataRow _buildDataRowForTestStatus(Patient patient, int currentIndex) {
+    return DataRow(cells: [
+      DataCell(Text(currentIndex.toString())),
+      DataCell(Text("${patient.firstName} ${patient.middleName} ${patient.lastName}")),
+      DataCell(Text(patient.umrNumber)),
+      DataCell(Text("Test Name")),
+      DataCell(Text("Test Code")),
+      DataCell(Text("Sample Collection center")),
+      DataCell(Text("Proc.. unit")),
+      DataCell(Text("Status")),
+      DataCell(commonBtn(text: "Report", isEnable: true, calll: (){
+
+      }))
+    ]);
+  }
+
+  ///Sample Management
+  DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
+    return DataRow(cells: [
+      DataCell(Text(currentIndex.toString())),
+      DataCell(_barCodeWidget(
+        text: test.testName,
+        barCode: "${test.id}",
+      )),
+      DataCell(
+          DropdownButtonFormField(
+            icon: IconStore.downwardArrow,
+            decoration: const InputDecoration(
+              constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
+              border: OutlineInputBorder(),
+              hintText: "Select Processing Unit",
+            ),
+            items: const <DropdownMenuItem>[
+              DropdownMenuItem(value: "Process", child: Text('Process')),
+              DropdownMenuItem(value: "Completed", child: Text('Completed'))
+            ],
+            onChanged: (value) {
+
+            },
+          )
+      ),
+      DataCell(commonBtn(text: "Collect Sample", isEnable: true, calll: (){
+
+      }))
     ]);
   }
 

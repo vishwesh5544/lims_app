@@ -31,7 +31,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
   final TextEditingController _umrNumberController = TextEditingController();
   final BoxConstraints _commonBoxConstraint =
       const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
-  final String _dateFormat = "yyyy-MM-dd";
+
 
   @override
   void initState() {
@@ -305,7 +305,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     final DateTime? pickedDate = await showDatePicker(
         context: context, initialDate: DateTime.now(), firstDate: DateTime(1995), lastDate: DateTime.now());
     if (pickedDate != null) {
-      _datePickerTextController.text = DateFormat(_dateFormat).format(pickedDate);
+      _datePickerTextController.text = DateFormat(dateFormat).format(pickedDate);
       String dateText = _datePickerTextController.text;
       bloc.add(DobUpdated(dateText));
       var age = AgeCalculator.age(pickedDate).years;
