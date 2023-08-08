@@ -90,7 +90,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
 
                       Container(
                         margin: EdgeInsets.only(bottom: 15),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,

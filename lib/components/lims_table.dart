@@ -20,12 +20,14 @@ class LimsTable extends StatelessWidget {
       required this.rowData,
       required this.tableType,
         required this.onEditClick,
+        this.onSubmit,
       super.key});
 
   final List<String> columnNames;
   final List<dynamic> rowData;
   TableType tableType;
   Function onEditClick;
+  Function? onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -231,14 +233,16 @@ class LimsTable extends StatelessWidget {
               hintText: "Select Processing Unit",
             ),
             items: const <DropdownMenuItem>[
-              DropdownMenuItem(value: "Process", child: Text('Process')),
-              DropdownMenuItem(value: "Completed", child: Text('Completed'))
+              DropdownMenuItem(value: "processing-unit", child: Text('Processing Unit')),
+              DropdownMenuItem(value: "both", child: Text('Both'))
             ],
             onChanged: (value) {
+              onEditClick.call(value);
             },
           )
       ),
       DataCell(commonBtn(text: "Collect Sample", isEnable: true, calll: (){
+        onSubmit!.call(test);
       }))
     ]);
   }

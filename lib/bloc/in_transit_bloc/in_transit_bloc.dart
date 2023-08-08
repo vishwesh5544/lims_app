@@ -27,14 +27,15 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
 
       try {
         InTransit inTransit = InTransit(
-            patientId: event.patientId,
+            patientId: state.patient!.id,
             invoiceNo: event.invoiceNo,
+            id: event.invoiceId,
             testId: event.testId,
             processingUnit: event.processingUnit,
             collectionUnit: event.collectionUnit,
             status: event.status);
 
-        final response = await inTransitRepository.updateInvoiceMapping(inTransit, event.userId);
+        final response = await inTransitRepository.updateInvoiceMapping(inTransit, event.invoiceId!);
         final data = response.data;
         print(data);
       } on Exception catch (e) {

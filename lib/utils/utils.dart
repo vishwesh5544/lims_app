@@ -54,6 +54,9 @@ commonSearchArea({required String title, String hint = "Next", required TextEdit
             maxLines: 1,
             minLines: 1,
             onChanged: (text){
+              // onSubmit.call(textController.text.trim());
+            },
+            onSubmitted: (text){
               onSubmit.call(textController.text.trim());
             },
             controller: textController,

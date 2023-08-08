@@ -33,9 +33,11 @@ class SampleManagement extends StatefulWidget {
 }
 
 class _SampleManagementState extends State<SampleManagement> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
   late final InTransitBloc bloc;
   static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions"];
+
+  String processingUnit = "";
 
   @override
   void initState() {
@@ -113,22 +115,20 @@ class _SampleManagementState extends State<SampleManagement> {
                                 )
                               ],
                             ),
-                            Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+                            const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Patient Name"),
-                                SizedBox(height: 10),
+                                const Text("Patient Name"),
+                                const SizedBox(height: 10),
                                 TextField(
                                   enabled: false,
                                   decoration: InputDecoration(
-                                    constraints:
-                                        BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
+                                    constraints: const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                     border: OutlineInputBorder(),
                                     fillColor: Colors.grey,
-                                    hintText:
-                                        "${state.patient?.firstName} ${state.patient?.middleName} ${state.patient?.lastName}",
+                                    hintText: "${state.patient?.firstName??''} ${state.patient?.middleName??''} ${state.patient?.lastName??''}",
                                   ),
                                 )
                               ],
@@ -140,7 +140,21 @@ class _SampleManagementState extends State<SampleManagement> {
                       LimsTable(columnNames: columnNames,
                           tableType: TableType.sample,
                           onEditClick: (value){
-                            print(value);
+                            showToast(msg: value);
+                            processingUnit = value;
+                          },
+                          onSubmit: (test){
+                            if(processingUnit.isNotEmpty){
+                              int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+
+                              BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
+                                  invoiceId: invoiceId,
+                                  userId: state.patient!.id!,
+                                  processingUnit: processingUnit
+                              ));
+                            }else{
+                              showToast(msg: "Please select Processing Unit first!");
+                            }
                           },
                           rowData: state.testsList!),
 

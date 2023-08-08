@@ -90,12 +90,12 @@ class _TransitManagementState extends State<TransitManagement> {
 
                     Container(
                       margin: EdgeInsets.only(bottom: 15),
-                      child: const Row(
+                      child: Row(
                         children: [
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: const [
                               Text("UMR NUMBER"),
                               SizedBox(height: 10),
                               TextField(
@@ -109,11 +109,11 @@ class _TransitManagementState extends State<TransitManagement> {
                               )
                             ],
                           ),
-                          Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+                          const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: const [
                               Text("Patient Name"),
                               SizedBox(height: 10),
                               TextField(

@@ -61,7 +61,7 @@ class InTransitRepository implements IInTransitRepository {
     Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/${invoiceId.toString()}");
     ResponseCallback<InvoiceMapping> responseCallback = ResponseCallback();
     try {
-      final response = await http.post(url, body: jsonEncode(invoiceMapping.toJson()), headers: _headers);
+      final response = await http.put(url, body: jsonEncode(invoiceMapping.toJson()), headers: _headers);
       responseCallback.code = response.statusCode;
       responseCallback.data = jsonDecode(response.body)["data"][0];
     } on http.ClientException catch (e) {
