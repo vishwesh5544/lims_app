@@ -11,6 +11,7 @@ import 'package:lims_app/test_items/test_data.dart';
 import 'package:lims_app/utils/strings/button_strings.dart';
 import 'package:lims_app/utils/strings/route_strings.dart';
 import 'package:lims_app/utils/strings/search_header_strings.dart';
+import 'package:lims_app/utils/utils.dart';
 
 import 'add_patient/add_patient.dart';
 
@@ -85,7 +86,13 @@ class _PatientManagementState extends State<PatientManagement> {
               onClickSearch: (text){
                 BlocProvider.of<PatientBloc>(context).add(OnSearch(value: text));
               }),
-          LimsTable(columnNames: TestData.patientsColumnsList(), rowData: state.searchPatientsList),
+          LimsTable(columnNames: TestData.patientsColumnsList(),
+              tableType: TableType.addPatient,
+              onEditClick: (value){
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+
+              },
+              rowData: state.searchPatientsList),
         ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
     );

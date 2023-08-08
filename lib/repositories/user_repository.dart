@@ -15,7 +15,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<ResponseCallback<User>> loginUser(String email, String password) async {
     ResponseCallback<User> responseCallback = ResponseCallback();
-    final url = Uri.https("tomcat.queotech.in", "/lms/api/login/log");
+    final url = Uri.http("tomcat.queotech.in", "/lms/api/login/log");
     var body = {"username": email, "password": password, "role": 1};
 
     try {

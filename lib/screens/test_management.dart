@@ -81,7 +81,12 @@ class _TestManagementState extends State<TestManagement> {
               onClickSearch: (text){
                 BlocProvider.of<TestBloc>(context).add(OnSearch(value: text));
               }),
-          LimsTable(columnNames: columnNames, rowData: state.searchTestsList),
+          LimsTable(columnNames: columnNames,
+              tableType: TableType.addTest,
+              onEditClick: (value){
+                BlocProvider.of<TestBloc>(context).add(OnAddTest(value: true));
+              },
+              rowData: state.searchTestsList),
         ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
     );

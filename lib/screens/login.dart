@@ -27,8 +27,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 60.0),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/login_bg.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -49,10 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Form heading
-                            Text('LIMS', style: TextUtility.getBoldStyle(40.0)),
+                            Text('LIMS', style: TextUtility.getBoldStyle(40.0, color: Colors.black)),
                             // Form sub heading
                             Text('Welcome Back',
-                                style: TextUtility.getBoldStyle(30.0)),
+                                style: TextUtility.getBoldStyle(30.0, color: Colors.black)),
                             // Form instructions
                             const Text('Please enter your details to sign in'),
                             // Username/Email input field
@@ -161,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
         RichText(
             text: TextSpan(children: [
           TextSpan(
-              text: "Forgot Password?", style: TextUtility.getBoldStyle(15.0)),
+              text: "Forgot Password?", style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
           const WidgetSpan(
               child: SizedBox(
             width: 4,
