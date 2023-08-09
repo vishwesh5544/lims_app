@@ -47,22 +47,18 @@ class _PatientManagementState extends State<PatientManagement> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PatientBloc, PatientState>(
-        listener: (context, state) {
-
-        },
+        listener: (context, state) {},
         builder: (context, state) {
-        return WillPopScope(
+          return WillPopScope(
             onWillPop: () async {
               BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
               return true;
             },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: state.isAddPatient? const AddPatient() : patientWidget(state)
-          ),
-        );
-      }
-    );
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: state.isAddPatient ? const AddPatient() : patientWidget(state)),
+          );
+        });
   }
 
   patientWidget(PatientState state) {
@@ -72,35 +68,37 @@ class _PatientManagementState extends State<PatientManagement> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              RedirectButton(buttonText: ButtonStrings.addPatient, routeName: RouteStrings.addPatient, onClick: (){
-                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => AddPatient()),);
-
-              }),
+              RedirectButton(
+                  buttonText: ButtonStrings.addPatient,
+                  routeName: RouteStrings.addPatient,
+                  onClick: () {
+                    BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => AddPatient()),);
+                  }),
             ],
           ),
           SearchHeader(
               headerTitle: SearchHeaderStrings.patientsListTitle,
               placeholder: SearchHeaderStrings.searchPatientsPlaceholder,
-              onClickSearch: (text){
+              onClickSearch: (text) {
                 BlocProvider.of<PatientBloc>(context).add(OnSearch(value: text));
               }),
-          LimsTable(columnNames: TestData.patientsColumnsList(),
+          LimsTable(
+              columnNames: TestData.patientsColumnsList(),
               tableType: TableType.addPatient,
-              onEditClick: (value){
-                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true,currentSelectedPriview: value));
+              onEditClick: (value) {
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true, currentSelectedPriview: value));
               },
-              onViewClick: (value){
-              _showPreviewDialog(value);
+              onViewClick: (value) {
+                _showPreviewDialog(value);
               },
               rowData: state.searchPatientsList),
         ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
     );
   }
-
 
   /// invoice dialog
   Future<void> _showPreviewDialog(value) async {
@@ -109,8 +107,7 @@ class _PatientManagementState extends State<PatientManagement> {
       builder: (BuildContext context) {
         return AlertDialog(
             insetPadding: EdgeInsets.zero,
-            titleTextStyle: const TextStyle(color: Colors.white,
-                fontWeight: FontWeight.bold, fontSize: 20.0),
+            titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
             titlePadding: EdgeInsets.zero,
             title: Container(
               padding: const EdgeInsets.all(10.0),
@@ -132,18 +129,12 @@ class _PatientManagementState extends State<PatientManagement> {
               // height: 600,
               width: 600,
               decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Colors.grey,
-                      width: 1
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))
-              ),
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                  ],
+                  children: [],
                 ),
               ),
             ));

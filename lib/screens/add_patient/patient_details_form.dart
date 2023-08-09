@@ -1,4 +1,3 @@
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
@@ -32,14 +31,13 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
   final BoxConstraints _commonBoxConstraint =
       const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
 
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<PatientBloc>();
       bloc.add(GenerateUmrNumber());
 
-      if(bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1){
+      if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
         bloc.add(GenderUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
 
         bloc.add(FirstNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].firstName));
@@ -108,12 +106,21 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
                 .toList(),
           ),
+          commonBtn(
+              text: "Next",
+              isEnable: true,
+              calll: () {
+                if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
+                  int userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id!;
+                  // update?
+                  BlocProvider.of<PatientBloc>(context)
+                      .add(AddPatientFormSubmitted(isUpdate: true, userId: userId));
+                } else {
+                  BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: false));
+                }
 
-          commonBtn(text: "Next", isEnable: true,calll: (){
-
-            BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted());
-            BlocProvider.of<PatientBloc>(context).add(IsPatient());
-          }),
+                BlocProvider.of<PatientBloc>(context).add(IsPatient());
+              }),
         ],
       ),
     );

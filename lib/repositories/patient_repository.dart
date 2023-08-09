@@ -14,11 +14,38 @@ abstract class IPatientRepository {
   Future<ResponseCallback<Patient>> addPatient(Patient patient);
 
   Future<ResponseCallback<List<InvoiceMapping>>> addInvoice(List<InvoiceMapping> invoiceMapping);
+
+  Future<ResponseCallback<Patient>> updatePatient(Patient patient, int id);
 }
 
 class PatientRepository implements IPatientRepository {
   final _repositoryName = "Patient Repository";
   final _headers = LimsHttpClient.headers;
+
+  @override
+  Future<ResponseCallback<Patient>> updatePatient(Patient patient, int id) async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/${id.toString()}");
+    ResponseCallback<Patient> responseCallback = ResponseCallback();
+    try {
+      var req = patient.toJson();
+      print(req);
+      final response = await http.put(url, headers: _headers, body: jsonEncode(req));
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      LimsLogger.log("*** Patient updated successfully => $responseMap");
+      responseCallback.data = patient;
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in Patient Repository addPatient().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
+  }
 
   @override
   Future<ResponseCallback<Patient>> addPatient(Patient patient) async {
@@ -57,7 +84,6 @@ class PatientRepository implements IPatientRepository {
       // }
 
       for (var patient in body) {
-
         patients.add(Patient.fromJson(patient));
       }
       responseCallback.data = patients;

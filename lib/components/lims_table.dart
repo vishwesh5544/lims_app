@@ -19,9 +19,9 @@ class LimsTable extends StatelessWidget {
       {required this.columnNames,
       required this.rowData,
       required this.tableType,
-        required this.onEditClick,
-        this.onViewClick,
-        this.onSubmit,
+      required this.onEditClick,
+      this.onViewClick,
+      this.onSubmit,
       super.key});
 
   final List<String> columnNames;
@@ -45,9 +45,7 @@ class LimsTable extends StatelessWidget {
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
               dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
-              columns: columnNames
-                  .map((name) => DataColumn(label: Text(name)))
-                  .toList(),
+              columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
               rows: rowData.map((value) {
                 var currentIndex = rowData.indexOf(value) + 1;
                 // TODO: bring value type check to top level
@@ -68,8 +66,7 @@ class LimsTable extends StatelessWidget {
                 } else if (tableType == TableType.sample) {
                   return _buildDataRowForSampleManagement(value, currentIndex, context);
                 } else {
-                  throw Exception(
-                      "*** Invalid type provided for ${value.toString()}");
+                  throw Exception("*** Invalid type provided for ${value.toString()}");
                 }
               }).toList(),
               showBottomBorder: true,
@@ -82,40 +79,35 @@ class LimsTable extends StatelessWidget {
 
   Widget _actionsRow(int currentIndex, dynamic value) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      InkWell(onTap: () {
-        onEditClick.call(currentIndex);
-      }, child: Icon(Icons.note_alt_outlined)),
       InkWell(
-        onTap: (){
-          onViewClick!.call(value);
-        },
+          onTap: () {
+            onEditClick.call(currentIndex);
+          },
+          child: Icon(Icons.note_alt_outlined)),
+      InkWell(
+          onTap: () {
+            onViewClick!.call(value);
+          },
           child: Icon(Icons.remove_red_eye_outlined))
     ]);
   }
 
   Widget _barCodeWidget({required String text, required String barCode}) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text),
-          Container(
-            padding: EdgeInsets.all(6),
-            margin: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.black,
-                    width: 2
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(5))
-            ),
-            child: SvgPicture.string(
-              BarcodeUtility.getBarcodeSvgString(barCode),
-              width: 80,
-              height: 40,
-            ),
-          )
-        ]);
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(text),
+      Container(
+        padding: EdgeInsets.all(6),
+        margin: EdgeInsets.all(3),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 2),
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
+        child: SvgPicture.string(
+          BarcodeUtility.getBarcodeSvgString(barCode),
+          width: 80,
+          height: 40,
+        ),
+      )
+    ]);
   }
 
   DataRow _buildDataRowForLab(Lab lab, int currentIndex) {
@@ -168,10 +160,12 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
       DataCell(Text("Processing unit")),
-      DataCell( commonBtn(text: "Approve Transit", isEnable: true, calll: (){
-        onSubmit!.call(test);
-
-      })),
+      DataCell(commonBtn(
+          text: "Approve Transit",
+          isEnable: true,
+          calll: () {
+            onSubmit!.call(test);
+          })),
     ]);
   }
 
@@ -186,34 +180,35 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
       DataCell(Text("Processing unit")),
-      DataCell(
-          DropdownButtonFormField(
-            icon: IconStore.downwardArrow,
-            decoration: const InputDecoration(
-              constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
-              border: OutlineInputBorder(),
-              hintText: "Select Status",
-            ),
-            items: const <DropdownMenuItem>[
-              DropdownMenuItem(value: "processing", child: Text('Processing')),
-              DropdownMenuItem(value: "completed", child: Text('Completed'))
-            ],
-            onChanged: (value) {
-              int intValue;
-              if(value == "processing") {
-                intValue = 4;
-              } else if (value == "completed"){
-                intValue = 5;
-              } else {
-                intValue = 2;
-              }
-              onEditClick.call("$intValue");
-            },
-          )
-      ),
-      DataCell(commonBtn(text: "Submit", isEnable: true, calll: (){
-        onSubmit!.call(test);
-      })),
+      DataCell(DropdownButtonFormField(
+        icon: IconStore.downwardArrow,
+        decoration: const InputDecoration(
+          constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
+          border: OutlineInputBorder(),
+          hintText: "Select Status",
+        ),
+        items: const <DropdownMenuItem>[
+          DropdownMenuItem(value: "processing", child: Text('Processing')),
+          DropdownMenuItem(value: "completed", child: Text('Completed'))
+        ],
+        onChanged: (value) {
+          int intValue;
+          if (value == "processing") {
+            intValue = 4;
+          } else if (value == "completed") {
+            intValue = 5;
+          } else {
+            intValue = 2;
+          }
+          onEditClick.call("$intValue");
+        },
+      )),
+      DataCell(commonBtn(
+          text: "Submit",
+          isEnable: true,
+          calll: () {
+            onSubmit!.call(test);
+          })),
     ]);
   }
 
@@ -228,9 +223,7 @@ class LimsTable extends StatelessWidget {
       DataCell(Text("Sample Collection center")),
       DataCell(Text("Proc.. unit")),
       DataCell(Text("Status")),
-      DataCell(commonBtn(text: "Report", isEnable: true, calll: (){
-
-      }))
+      DataCell(commonBtn(text: "Report", isEnable: true, calll: () {}))
     ]);
   }
 
@@ -242,26 +235,27 @@ class LimsTable extends StatelessWidget {
         text: test.testName,
         barCode: "${test.id}",
       )),
-      DataCell(
-          DropdownButtonFormField(
-            icon: IconStore.downwardArrow,
-            decoration: const InputDecoration(
-              constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
-              border: OutlineInputBorder(),
-              hintText: "Select Processing Unit",
-            ),
-            items: const <DropdownMenuItem>[
-              DropdownMenuItem(value: "processing-unit", child: Text('Processing Unit')),
-              DropdownMenuItem(value: "both", child: Text('Both'))
-            ],
-            onChanged: (value) {
-              onEditClick.call(value);
-            },
-          )
-      ),
-      DataCell(commonBtn(text: "Collect Sample", isEnable: true, calll: (){
-        onSubmit!.call(test);
-      }))
+      DataCell(DropdownButtonFormField(
+        icon: IconStore.downwardArrow,
+        decoration: const InputDecoration(
+          constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
+          border: OutlineInputBorder(),
+          hintText: "Select Processing Unit",
+        ),
+        items: const <DropdownMenuItem>[
+          DropdownMenuItem(value: "processing-unit", child: Text('Processing Unit')),
+          DropdownMenuItem(value: "both", child: Text('Both'))
+        ],
+        onChanged: (value) {
+          onEditClick.call(value);
+        },
+      )),
+      DataCell(commonBtn(
+          text: "Collect Sample",
+          isEnable: true,
+          calll: () {
+            onSubmit!.call(test);
+          }))
     ]);
   }
 
