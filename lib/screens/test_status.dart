@@ -2,12 +2,16 @@ import "package:age_calculator/age_calculator.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
+import "package:lims_app/models/invoice_mapping.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
@@ -28,126 +32,187 @@ class TestStatus extends StatefulWidget {
 }
 
 class _TestStatusState extends State<TestStatus> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
+  late final InTransitBloc bloc;
 
   TextEditingController _fromDatePickerTextController = TextEditingController();
   TextEditingController _toDatePickerTextController = TextEditingController();
+
   static List<String> columnNames = [
     "#",
     "Patient Name",
-    "UMR Number"
+    "UMR Number",
     "Test Name",
     "Test Code",
-    "Sample Collection Code",
-    "Process Unit",
+    // "Sample Collection Code",
+    // "Process Unit",
     "Status",
-    ""
+    "action"
   ];
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
+      bloc = context.read<InTransitBloc>();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TestBloc, TestState>(
-        listener: (context, state) {
-
-        },
-        builder: (context, state) {
-          return WillPopScope(
-              onWillPop: () async {
-                BlocProvider.of<TestBloc>(context).add(OnAddTest());
-                return true;
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
-                        // margin: EdgeInsets.only(bottom: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("In Transit Management",
-                                style: TextUtility.getBoldStyle(18.0, color: Colors.white),
-                              ),
-                            ],
+    return BlocConsumer<InTransitBloc, InTransitState>(listener: (context, state) {
+      print(state.invoiceMappings.toString());
+    }, builder: (context, state) {
+      return WillPopScope(
+          onWillPop: () async {
+            BlocProvider.of<TestBloc>(context).add(OnAddTest());
+            return true;
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
+                    // margin: EdgeInsets.only(bottom: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "In Transit Management",
+                            style: TextUtility.getBoldStyle(18.0, color: Colors.white),
                           ),
-                        ),
+                        ],
                       ),
+                    ),
+                  ),
 
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            ///search
-                            commonSearchArea(
-                                title: "Search Status",
-                                hint: "Search by Patient Name/UMR/ Test/ Processing Unit/ Sample Collection Centre",
-                                textController: textController, onSubmit: (value){
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        ///search
+                        commonSearchArea(
+                            title: "Search Status",
+                            hint: "Search by Patient Name/UMR/ Test/ Processing Unit/ Sample Collection Centre",
+                            textController: textController,
+                            onSubmit: (value) {
                               showToast(msg: value);
+                              bloc.add(SearchPatient(value));
                             }),
-                            ///from date
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              child: datePicker(
-                                  onClick: (){
-                                    _selectDate();
-                              },datePickerTextController: _fromDatePickerTextController),
-                            ),
 
-                            ///to date
-                            datePicker(datePickerTextController: _toDatePickerTextController, title: "To Date",
-                            onClick: (){
+                        ///from date
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: datePicker(
+                              onClick: () {
+                                _selectDate();
+                              },
+                              datePickerTextController: _fromDatePickerTextController),
+                        ),
+
+                        ///to date
+                        datePicker(
+                            datePickerTextController: _toDatePickerTextController,
+                            title: "To Date",
+                            onClick: () {
                               _selectDate();
                             }),
 
                         Container(
                           margin: EdgeInsets.only(left: 10),
-                          child: commonBtn(text: "Search", isEnable: true, calll: (){
-
-                          }),
+                          child: commonBtn(text: "Search", isEnable: true, calll: () {}),
                         ),
-                          ],
-                        ),
-                      ),
-
-                      LimsTable(columnNames: columnNames,
-                          tableType: TableType.inTransit,
-                          onEditClick: (value){
-
-                          },
-                          rowData: state.searchTestsList),
-
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        child: commonBtn(text: "Update", isEnable: true, calll: (){
-                          showToast(msg: "Update");
-                        }),
-                      )
-                      ,
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
-          );
-        }
-    );
-  }
 
+                  // LimsTable(columnNames: columnNames,
+                  //     tableType: TableType.inTransit,
+                  //     onEditClick: (value){
+                  //
+                  //     },
+                  //     rowData: state.searchTestsList),
+
+                  Container(
+                    width: double.infinity,
+                    child: ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      children: [
+                        Column(
+                          children: [
+                            DataTable(
+                                dataRowHeight: 85,
+                                headingRowColor: MaterialStateProperty.all(Colors.black),
+                                headingTextStyle: const TextStyle(color: Colors.white),
+                                dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
+                                columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
+                                rows: state.invoiceMappings!.map((InvoiceMapping mapping) {
+                                  var invoiceId = mapping.id;
+                                  var patientName =
+                                      "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} "
+                                      "${state.patient?.lastName ?? ''}";
+                                  var umrNumber = state.patient?.umrNumber ?? "";
+                                  var test = state.testsList?.firstWhere((test) => test.id == mapping.testId);
+                                  var testName = test?.testName;
+                                  var testCode = test?.testName;
+                                  var statusText = "";
+                                  if (mapping.status == 0) {
+                                    statusText = "Patient Created";
+                                  } else if (mapping.status == 1) {
+                                    statusText = "Initiated";
+                                  } else if (mapping.status == 2) {
+                                    statusText = "Collected";
+                                  } else if (mapping.status == 3) {
+                                    statusText = "In Transit";
+                                  } else if (mapping.status == 4) {
+                                    statusText = "Processing";
+                                  } else if (mapping.status == 5) {
+                                    statusText = "Completed";
+                                  }
+
+                                  print("*** => $patientName");
+
+                                  return DataRow(cells: [
+                                    DataCell(Text("$invoiceId")),
+                                    DataCell(Text(patientName)),
+                                    DataCell(Text(umrNumber)),
+                                    DataCell(Text("$testName")),
+                                    DataCell(Text("$testCode")),
+                                    DataCell(Text(statusText)),
+                                    DataCell(Text("hi")),
+                                  ]);
+                                }).toList()),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+
+                  // Container(
+                  //   margin: EdgeInsets.symmetric(vertical: 10),
+                  //   child: commonBtn(
+                  //       text: "Update",
+                  //       isEnable: true,
+                  //       calll: () {
+                  //         showToast(msg: "Update");
+                  //       }),
+                  // ),
+                ],
+              ),
+            ),
+          ));
+    });
+  }
 
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(

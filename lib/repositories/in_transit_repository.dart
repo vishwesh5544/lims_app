@@ -12,7 +12,6 @@ import 'package:lims_app/utils/strings/common_strings.dart';
 import "package:http/http.dart" as http;
 
 abstract class IInTransitRepository {
-
   Future<ResponseCallback<PatientAndTests>> getPatientByEmail(String emailId);
 
   Future<ResponseCallback<InvoiceMapping>> updateInvoiceMapping(InTransit invoiceMapping, int invoiceId);
@@ -58,53 +57,28 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<InvoiceMapping>> updateInvoiceMapping(InTransit invoiceMapping, int invoiceId) async {
-    // Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/${invoiceId.toString()}");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/${invoiceId.toString()}");
     ResponseCallback<InvoiceMapping> responseCallback = ResponseCallback();
-    // try {
-    //   var requestJson = {
-    //     "processing_unit" : invoiceMapping.processingUnit,
-    //     "collection_unit": invoiceMapping.collectionUnit,
-    //     "status": invoiceMapping.status ?? 2
-    //   };
-    //   var req = jsonEncode(requestJson);
-    //   print(req);
-    //   final response = await http.put(url, body: req, headers: _headers);
-    //   responseCallback.code = response.statusCode;
-    //   responseCallback.data = jsonDecode(response.body)["data"][0];
-    // } on http.ClientException catch (e) {
-    //   LimsLogger.log("*** http.ClientException in Test Repository addTest().");
-    //   LimsLogger.log("Message => ${e.message}");
-    //   LimsLogger.log("Uri => ${e.uri}");
-    //   responseCallback.message = e.message;
-    //   responseCallback.uri = e.uri;
-    // } on Exception catch (e) {
-    //   responseCallback.message = e.toString();
-    // }
-
-    var headers = {
-      'Content-Type': 'application/json'
-    };
-    var request = http.Request('PUT', Uri.parse('http://103.174.102.117:8080/lms/api/testpatient/34'));
-    request.body = json.encode({
-      "processing_unit": "both",
-      "collection_unit": null,
-      "status": 2
-    });
-    request.headers.addAll(headers);
-
-    // http.StreamedResponse response = await
-    request.send().
-    then((value) => print(value)).
-    onError((error, stackTrace) => throw Exception(error));
-    // print(response);
-    //
-    // if (response.statusCode == 200) {
-    //   print(await response.stream.bytesToString());
-    // }
-    // else {
-    //   print(response.reasonPhrase);
-    // }
-
+    try {
+      var requestJson = {
+        "processing_unit": invoiceMapping.processingUnit,
+        "collection_unit": invoiceMapping.collectionUnit,
+        "status": invoiceMapping.status
+      };
+      var req = jsonEncode(requestJson);
+      final response = await http.put(url, body: req, headers: _headers);
+      responseCallback.code = response.statusCode;
+      var updatedMapping = InvoiceMapping.fromJson(jsonDecode(response.body)["data"][0]);
+      responseCallback.data = updatedMapping;
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in Test Repository addTest().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
     return responseCallback;
   }
 
@@ -114,13 +88,12 @@ class InTransitRepository implements IInTransitRepository {
     ResponseCallback<List<InvoiceMapping>> responseCallback = ResponseCallback();
     try {
       var requestBody = {"invoice_no": userId.toString()};
-      print(requestBody);
       final response = await http.post(url, body: jsonEncode(requestBody), headers: _headers);
       // if (response.statusCode >= 200 && response.statusCode <= 299) {
       responseCallback.code = response.statusCode;
       var decodedJson = jsonDecode(response.body);
       List<InvoiceMapping> invoiceMappings = [];
-      for( var mapping in decodedJson["data"]) {
+      for (var mapping in decodedJson["data"]) {
         invoiceMappings.add(InvoiceMapping.fromJson(mapping));
       }
       responseCallback.data = invoiceMappings;

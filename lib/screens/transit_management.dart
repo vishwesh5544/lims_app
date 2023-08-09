@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
@@ -11,6 +14,7 @@ import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
+import "package:lims_app/utils/update_status.dart";
 import "package:lims_app/utils/utils.dart";
 
 import "../utils/color_provider.dart";
@@ -25,7 +29,8 @@ class TransitManagement extends StatefulWidget {
 }
 
 class _TransitManagementState extends State<TransitManagement> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
+  late final InTransitBloc bloc;
   static List<String> columnNames = [
     "#",
     "Name of the Test",
@@ -39,14 +44,18 @@ class _TransitManagementState extends State<TransitManagement> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
+      bloc = context.read<InTransitBloc>();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TestBloc, TestState>(
+    return BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {
+          if(state.updateStatus is Updated) {
+            showToast(msg: "thai gayu");
+          }
 
         },
         builder: (context, state) {
@@ -84,6 +93,7 @@ class _TransitManagementState extends State<TransitManagement> {
                             title: "UMR No./Patient Name",
                             hint: "Search by URM No./Patient Name",
                             textController: textController, onSubmit: (value){
+                              bloc.add(SearchPatient(value));
                           showToast(msg: value);
                         })
                     ),
@@ -95,7 +105,7 @@ class _TransitManagementState extends State<TransitManagement> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text("UMR NUMBER"),
                               SizedBox(height: 10),
                               TextField(
@@ -104,7 +114,7 @@ class _TransitManagementState extends State<TransitManagement> {
                                   constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                   border: OutlineInputBorder(),
                                   fillColor: Colors.grey,
-                                  hintText: "fhasdjfgaksjhdfghks",
+                                  hintText: state.patient?.umrNumber ?? "",
                                 ),
                               )
                             ],
@@ -113,7 +123,7 @@ class _TransitManagementState extends State<TransitManagement> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text("Patient Name"),
                               SizedBox(height: 10),
                               TextField(
@@ -122,7 +132,7 @@ class _TransitManagementState extends State<TransitManagement> {
                                   constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                   border: OutlineInputBorder(),
                                   fillColor: Colors.grey,
-                                  hintText: "Parth Pitroda",
+                                  hintText: "${state.patient?.firstName??''} ${state.patient?.middleName??''} ${state.patient?.lastName??''}",
                                 ),
                               )
                             ],
@@ -136,7 +146,14 @@ class _TransitManagementState extends State<TransitManagement> {
                         onEditClick: (value){
 
                         },
-                        rowData: state.searchTestsList),
+                        onSubmit: (test) {
+                          int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                          BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
+                              invoiceId: invoiceId,
+                              userId: state.patient!.id!,
+                              status: 3));
+                        },
+                        rowData: state.testsList!),
 
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),

@@ -2,8 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_event.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_state.dart';
 import 'package:lims_app/models/in_transit.dart';
+import 'package:lims_app/models/invoice_mapping.dart';
 import 'package:lims_app/repositories/in_transit_repository.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
+import 'package:lims_app/utils/update_status.dart';
 
 class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
   InTransitRepository inTransitRepository;
@@ -23,7 +25,7 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
     } else if (event is UpdateInTransit) {
       // TODO: Update invoice mapping using user ID from repository, set state
 
-      yield state.copyWith(formStatus: FormSubmitting());
+      yield state.copyWith(formStatus: FormSubmitting(), updateStatus: Updating());
 
       try {
         InTransit inTransit = InTransit(
@@ -37,9 +39,14 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
 
         final response = await inTransitRepository.updateInvoiceMapping(inTransit, event.invoiceId!);
         final data = response.data;
-        print(data);
+        List<InvoiceMapping> oldMappings = state.invoiceMappings ?? [];
+        if (data != null) {
+          oldMappings.removeWhere((element) => element.id == data.id);
+          oldMappings.add(data);
+        }
+        yield state.copyWith(invoiceMappings: oldMappings, updateStatus: Updated());
       } on Exception catch (e) {
-        yield state.copyWith(formStatus: SubmissionFailed(e));
+        yield state.copyWith(formStatus: SubmissionFailed(e), updateStatus: UpdatingFailed(exception: e));
       }
     }
   }

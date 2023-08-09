@@ -163,6 +163,7 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.testName)),
       DataCell(Text("Processing unit")),
       DataCell( commonBtn(text: "Approve Transit", isEnable: true, calll: (){
+        onSubmit!.call(test);
 
       })),
     ]);
@@ -188,14 +189,25 @@ class LimsTable extends StatelessWidget {
               hintText: "Select Status",
             ),
             items: const <DropdownMenuItem>[
-              DropdownMenuItem(value: "Process", child: Text('Process')),
-              DropdownMenuItem(value: "Completed", child: Text('Completed'))
+              DropdownMenuItem(value: "processing", child: Text('Processing')),
+              DropdownMenuItem(value: "completed", child: Text('Completed'))
             ],
             onChanged: (value) {
-
+              int intValue;
+              if(value == "processing") {
+                intValue = 4;
+              } else if (value == "completed"){
+                intValue = 5;
+              } else {
+                intValue = 2;
+              }
+              onEditClick.call("$intValue");
             },
           )
       ),
+      DataCell(commonBtn(text: "Submit", isEnable: true, calll: (){
+        onSubmit!.call(test);
+      })),
     ]);
   }
 

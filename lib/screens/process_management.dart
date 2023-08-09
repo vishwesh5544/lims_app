@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
@@ -25,27 +28,31 @@ class ProcessManagement extends StatefulWidget {
 }
 
 class _ProcessManagementState extends State<ProcessManagement> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
+  late final InTransitBloc bloc;
+  String status = "";
   static List<String> columnNames = [
     "#",
     "Name of the Test",
     "Test Code",
     "Sample type",
     "Process Unit",
-    "Status"
+    "Status",
+    "Submit"
   ];
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
+      bloc = context.read<InTransitBloc>();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TestBloc, TestState>(
+    return BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {
 
         },
@@ -84,6 +91,8 @@ class _ProcessManagementState extends State<ProcessManagement> {
                               title: "UMR No./Patient Name",
                               hint: "Search by URM No./Patient Name",
                               textController: textController, onSubmit: (value){
+                            bloc.add(SearchPatient(value));
+
                             showToast(msg: value);
                           })
                       ),
@@ -104,7 +113,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                                     constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                     border: OutlineInputBorder(),
                                     fillColor: Colors.grey,
-                                    hintText: "fhasdjfgaksjhdfghks",
+                                    hintText: state.patient?.umrNumber ?? "",
                                   ),
                                 )
                               ],
@@ -122,7 +131,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                                     constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
                                     border: OutlineInputBorder(),
                                     fillColor: Colors.grey,
-                                    hintText: "Parth Pitroda",
+                                    hintText: "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}",
                                   ),
                                 )
                               ],
@@ -134,9 +143,18 @@ class _ProcessManagementState extends State<ProcessManagement> {
                       LimsTable(columnNames: columnNames,
                           tableType: TableType.process,
                           onEditClick: (value){
+                        status = value;
 
                           },
-                          rowData: state.searchTestsList),
+                          onSubmit: (test){
+                            int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+
+                            bloc.add(UpdateInTransit(
+                            invoiceId: invoiceId,
+                            userId: state.patient!.id!,
+                            status: int.parse(status)));
+                          },
+                          rowData: state.testsList!),
 
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 10),
