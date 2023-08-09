@@ -81,7 +81,7 @@ class LimsTable extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       InkWell(
           onTap: () {
-            onEditClick.call(currentIndex);
+            onEditClick.call(currentIndex-1);
           },
           child: Icon(Icons.note_alt_outlined)),
       InkWell(

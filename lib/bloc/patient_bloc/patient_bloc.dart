@@ -73,7 +73,6 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
             age: state.age);
         ResponseCallback<Patient> response;
         if (event.isUpdate) {
-          print(event.userId!);
           response = await patientRepository.updatePatient(newPatient, event.userId!);
         } else {
           response = await patientRepository.addPatient(newPatient);

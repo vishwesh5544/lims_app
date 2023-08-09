@@ -28,7 +28,7 @@ class PatientRepository implements IPatientRepository {
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var req = patient.toJson();
-      print(req);
+      print(jsonEncode(req));
       final response = await http.put(url, headers: _headers, body: jsonEncode(req));
       responseCallback.code = response.statusCode;
       var responseMap = jsonDecode(response.body);
