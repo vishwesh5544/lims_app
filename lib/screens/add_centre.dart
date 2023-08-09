@@ -288,7 +288,7 @@ class _AddCentreState extends State<AddCentre> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(sectionName, style: TextUtility.getBoldStyle(15)),
+        Text(sectionName, style: TextUtility.getBoldStyle(15, color: Colors.black)),
         const SizedBox(height: 10),
         widget,
       ],
