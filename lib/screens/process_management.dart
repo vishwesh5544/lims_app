@@ -9,8 +9,10 @@ import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
+import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
+import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
@@ -38,7 +40,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
     "Sample type",
     "Process Unit",
     "Status",
-    "Submit"
+    "Submit", ""
   ];
 
   @override
@@ -153,6 +155,16 @@ class _ProcessManagementState extends State<ProcessManagement> {
                             invoiceId: invoiceId,
                             userId: state.patient!.id!,
                             status: int.parse(status)));
+                          },
+                          onPrintPdf: (Test test) {
+                            var testId = test.id;
+                            var userId = state.patient?.id;
+                            var invoiceId = state.invoiceMappings
+                                ?.firstWhere(
+                                    (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                                .id;
+                            var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                            PdfUtility.savePdf(context, barcodeString.toString());
                           },
                           rowData: state.testsList!),
 

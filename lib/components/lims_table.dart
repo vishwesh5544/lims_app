@@ -6,7 +6,9 @@ import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/models/lab.dart";
 import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
+import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/utils.dart";
+import "package:printing/printing.dart";
 
 import "../utils/barcode_utility.dart";
 import "../utils/icons/icon_store.dart";
@@ -22,6 +24,7 @@ class LimsTable extends StatelessWidget {
       required this.onEditClick,
       this.onViewClick,
       this.onSubmit,
+      this.onPrintPdf,
       super.key});
 
   final List<String> columnNames;
@@ -30,6 +33,7 @@ class LimsTable extends StatelessWidget {
   Function onEditClick;
   Function? onViewClick;
   Function? onSubmit;
+  Function? onPrintPdf;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +85,7 @@ class LimsTable extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       InkWell(
           onTap: () {
-            onEditClick.call(currentIndex-1);
+            onEditClick.call(currentIndex - 1);
           },
           child: Icon(Icons.note_alt_outlined)),
       InkWell(
@@ -160,12 +164,20 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
       DataCell(Text("Processing unit")),
+      DataCell(
+        commonBtn(
+            text: "Approve Transit",
+            isEnable: true,
+            calll: () {
+              onSubmit!.call(test);
+            }),
+      ),
       DataCell(commonBtn(
-          text: "Approve Transit",
+          text: "To Pdf",
           isEnable: true,
           calll: () {
-            onSubmit!.call(test);
-          })),
+            onPrintPdf!.call(test);
+          }))
     ]);
   }
 
@@ -209,6 +221,12 @@ class LimsTable extends StatelessWidget {
           calll: () {
             onSubmit!.call(test);
           })),
+      DataCell(commonBtn(
+          text: "To Pdf",
+          isEnable: true,
+          calll: () {
+            onPrintPdf!.call(test);
+          }))
     ]);
   }
 
@@ -255,6 +273,12 @@ class LimsTable extends StatelessWidget {
           isEnable: true,
           calll: () {
             onSubmit!.call(test);
+          })),
+      DataCell(commonBtn(
+          text: "To Pdf",
+          isEnable: true,
+          calll: () {
+            onPrintPdf!.call(test);
           }))
     ]);
   }

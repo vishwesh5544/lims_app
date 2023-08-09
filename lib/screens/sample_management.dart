@@ -1,3 +1,5 @@
+import "dart:convert";
+
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
@@ -16,6 +18,7 @@ import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/barcode_utility.dart";
+import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
@@ -36,7 +39,7 @@ class SampleManagement extends StatefulWidget {
 class _SampleManagementState extends State<SampleManagement> {
   TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
   late final InTransitBloc bloc;
-  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions"];
+  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions", ""];
 
   String processingUnit = "";
 
@@ -158,18 +161,17 @@ class _SampleManagementState extends State<SampleManagement> {
                           showToast(msg: "Please select Processing Unit first!");
                         }
                       },
+                      onPrintPdf: (Test test) {
+                        var testId = test.id;
+                        var userId = state.patient?.id;
+                        var invoiceId = state.invoiceMappings
+                            ?.firstWhere(
+                                (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                            .id;
+                        var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                        PdfUtility.savePdf(context, barcodeString.toString());
+                      },
                       rowData: state.testsList!),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    child: commonBtn(
-                        text: "Update",
-                        isEnable: true,
-                        calll: (value) {
-                          showToast(msg: "Update");
-
-                          // BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit());
-                        }),
-                  ),
                 ],
               ),
             ),

@@ -85,7 +85,7 @@ class _TestStatusState extends State<TestStatus> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "In Transit Management",
+                            "Test Status",
                             style: TextUtility.getBoldStyle(18.0, color: Colors.white),
                           ),
                         ],
@@ -189,7 +189,15 @@ class _TestStatusState extends State<TestStatus> {
                                     DataCell(Text("$testName")),
                                     DataCell(Text("$testCode")),
                                     DataCell(Text(statusText)),
-                                    DataCell(Text("hi")),
+                                    DataCell(ElevatedButton.icon(
+                                      onPressed: () {},
+                                      label: Text("Report"),
+                                      icon: Icon(Icons.print_outlined),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: mapping.status == 5 ? ColorProvider.blueDarkShade : Colors
+                                            .grey.shade800
+                                      ),
+                                    )),
                                   ]);
                                 }).toList()),
                           ],
