@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/test_bloc/test_event.dart';
 import 'package:lims_app/bloc/test_bloc/test_state.dart';
+import 'package:lims_app/models/response_callback.dart';
 import 'package:lims_app/models/test.dart';
 import 'package:lims_app/repositories/tests_repository.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
@@ -55,7 +56,8 @@ class TestBloc extends Bloc<TestEvent, TestState> {
 
       try {
         Test test = Test(
-          testCode: state.testCode,
+          id: event.id,
+          testCode: event.testCode,
           testName: event.testName,
           department: event.department,
           temperature: event.temperature,
@@ -72,8 +74,14 @@ class TestBloc extends Bloc<TestEvent, TestState> {
           indications: event.indications,
         );
 
-        final res = await _testRepository.addTest(test);
-        LimsLogger.log("*** Test Added Successfully => ${res.data}");
+        ResponseCallback<Test> response;
+        if(event.isUpdate) {
+          response = await _testRepository.updateTest(test, test.id!);
+        } else {
+          response = await _testRepository.addTest(test);
+        }
+
+        LimsLogger.log("*** Test Added Successfully => ${response.data}");
         yield state.copyWith(formStatus: SubmissionSuccess());
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));

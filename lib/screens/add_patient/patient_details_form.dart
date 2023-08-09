@@ -28,6 +28,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
   final TextEditingController _insuranceProviderController = TextEditingController();
   final TextEditingController _insuranceNumberController = TextEditingController();
   final TextEditingController _umrNumberController = TextEditingController();
+  final TextEditingController _consultedDoctorController = TextEditingController();
   final BoxConstraints _commonBoxConstraint =
       const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
 
@@ -102,7 +103,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                 .toList(),
           ),
           Row(
-            children: [_consultantDoctorDropdown(), _umrNumberField()]
+            children: [_consultedDoctorField(), _umrNumberField()]
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
                 .toList(),
           ),
@@ -251,6 +252,25 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
 
     return _buildBlocComponent(widget);
   }
+
+  Widget _consultedDoctorField() {
+    var widget =
+    Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Text('Consulted Doctor'),
+      const SizedBox(height: 10),
+      TextField(
+        controller: _consultedDoctorController,
+        onChanged: (value) => bloc.add(ConsultedDoctorUpdated(value)),
+        decoration: InputDecoration(
+            constraints: _commonBoxConstraint,
+            border: const OutlineInputBorder(),
+            hintText: "Enter Doctor Name"),
+      )
+    ]);
+
+    return _buildBlocComponent(widget);
+  }
+
 
   /// bloc builder
   Widget _buildBlocComponent(Widget widget) {

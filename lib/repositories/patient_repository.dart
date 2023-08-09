@@ -27,9 +27,21 @@ class PatientRepository implements IPatientRepository {
     Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/${id.toString()}");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
-      var req = patient.toJson();
-      print(jsonEncode(req));
-      final response = await http.put(url, headers: _headers, body: jsonEncode(req));
+      // patch to remove userId and UmrNumber from request body
+      var patch = {
+        "firstname": patient.firstName,
+        "middlename": patient.middleName,
+        "lastname": patient.lastName,
+        "DOB": patient.dob,
+        "age": patient.age,
+        "gender": patient.gender,
+        "mobilenumber": patient.mobileNumber,
+        "emailID": patient.emailId,
+        "insuranceProvider": patient.insuraceProvider,
+        "insuranceNumber": patient.insuraceNumber,
+        "consultantDoctor": patient.consultedDoctor
+      };
+      final response = await http.put(url, headers: _headers, body: jsonEncode(patch));
       responseCallback.code = response.statusCode;
       var responseMap = jsonDecode(response.body);
       LimsLogger.log("*** Patient updated successfully => $responseMap");

@@ -45,7 +45,7 @@ class _AddTestState extends State<AddTest> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<TestBloc>();
 
-      if(bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1){
+      if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
         bloc.add(TestCodeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].testCode));
         bloc.add(TestNameUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].testName));
         bloc.add(SampleTypeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType));
@@ -63,9 +63,9 @@ class _AddTestState extends State<AddTest> {
 
         sampleTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
         departmentValue = bloc.state.testsList[bloc.state.currentSelectedPriview].department;
-        temperatureTypeValue= bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
-        volumeTypeValue= bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
-        tatValue= bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        temperatureTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        volumeTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
+        tatValue = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
 
         testCodeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].testCode;
         testNameEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].testName;
@@ -74,11 +74,13 @@ class _AddTestState extends State<AddTest> {
         volumeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].volume;
         temperatureEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
         methodEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
-        turnAroundTimeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
-        priceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].method;
-        taxPercentageEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].turnAroundTime;
-        totalPriceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].price.toString();
-        indicationsEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
+        turnAroundTimeEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        priceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].price.toString();
+        taxPercentageEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
+        totalPriceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].totalPrice.toString();
+        indicationsEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
       }
     });
     super.initState();
@@ -196,22 +198,48 @@ class _AddTestState extends State<AddTest> {
               int price = int.parse(priceEditingController.text);
               int tax = int.parse(taxPercentageEditingController.text);
               int totalPrice = (price + (price * tax / 100)).ceil();
-              bloc.add(AddTestFormSubmitted(
-                  testCode: testCodeEditingController.text,
-                  testName: testNameEditingController.text,
-                  department: departmentValue,
-                  temperature: temperatureEditingController.text,
-                  typeOfTemperature: temperatureTypeValue,
-                  sampleType: sampleTypeValue,
-                  vacutainer: vacutainerEditingController.text,
-                  volume: volumeEditingController.text,
-                  typeOfVolume: volumeTypeValue,
-                  method: methodEditingController.text,
-                  turnAroundTime: turnAroundTimeEditingController.text,
-                  price: price,
-                  taxPercentage: tax,
-                  totalPrice: totalPrice,
-                  indications: indicationsEditingController.text));
+
+              AddTestFormSubmitted submitEvent;
+              if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
+                submitEvent = AddTestFormSubmitted(
+                    isUpdate: true,
+                    id: bloc.state.testsList[bloc.state.currentSelectedPriview].id,
+                    testCode: testCodeEditingController.text,
+                    testName: testNameEditingController.text,
+                    department: departmentValue,
+                    temperature: temperatureEditingController.text,
+                    typeOfTemperature: temperatureTypeValue,
+                    sampleType: sampleTypeValue,
+                    vacutainer: vacutainerEditingController.text,
+                    volume: volumeEditingController.text,
+                    typeOfVolume: volumeTypeValue,
+                    method: methodEditingController.text,
+                    turnAroundTime: turnAroundTimeEditingController.text,
+                    price: price,
+                    taxPercentage: tax,
+                    totalPrice: totalPrice,
+                    indications: indicationsEditingController.text);
+              } else {
+                submitEvent = AddTestFormSubmitted(
+                    isUpdate: false,
+                    testCode: testCodeEditingController.text,
+                    testName: testNameEditingController.text,
+                    department: departmentValue,
+                    temperature: temperatureEditingController.text,
+                    typeOfTemperature: temperatureTypeValue,
+                    sampleType: sampleTypeValue,
+                    vacutainer: vacutainerEditingController.text,
+                    volume: volumeEditingController.text,
+                    typeOfVolume: volumeTypeValue,
+                    method: methodEditingController.text,
+                    turnAroundTime: turnAroundTimeEditingController.text,
+                    price: price,
+                    taxPercentage: tax,
+                    totalPrice: totalPrice,
+                    indications: indicationsEditingController.text);
+              }
+
+              bloc.add(submitEvent);
 
               // if (state.formStatus is SubmissionSuccess) {
               Navigator.pushReplacementNamed(context, RouteStrings.viewTests);

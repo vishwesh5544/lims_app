@@ -10,12 +10,14 @@ class TestCodeUpdated extends TestEvent {
 
 class OnSearch extends TestEvent {
   final String value;
+
   OnSearch({this.value = ''});
 }
 
 class OnAddTest extends TestEvent {
   final bool value;
   int currentSelectedPriview;
+
   OnAddTest({this.value = false, this.currentSelectedPriview = 0});
 }
 
@@ -110,6 +112,7 @@ class TestSearchUpdated extends TestEvent {
 }
 
 class AddTestFormSubmitted extends TestEvent {
+  final int? id;
   final String testCode;
   final String testName;
   final String department;
@@ -125,9 +128,12 @@ class AddTestFormSubmitted extends TestEvent {
   final int taxPercentage;
   final int totalPrice;
   final String indications;
+  final bool isUpdate;
 
   AddTestFormSubmitted(
-      {required this.testCode,
+      {this.id,
+      required this.isUpdate,
+      required this.testCode,
       required this.testName,
       required this.department,
       required this.temperature,
