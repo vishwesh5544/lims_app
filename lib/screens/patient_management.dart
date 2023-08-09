@@ -93,7 +93,7 @@ class _PatientManagementState extends State<PatientManagement> {
                 BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true,currentSelectedPriview: value));
               },
               onViewClick: (value){
-            showToast(msg: value);
+              _showPreviewDialog(value);
               },
               rowData: state.searchPatientsList),
         ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
