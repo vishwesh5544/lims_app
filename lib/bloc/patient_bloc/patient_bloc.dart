@@ -114,7 +114,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     }
     else if (event is OnAddPatient) {
 
-      yield state.copyWith(isAddPatient: event.value);
+      yield state.copyWith(isAddPatient: event.value,  currentSelectedPriview: event.currentSelectedPriview);
     }
     else if (event is IsPatient) {
 

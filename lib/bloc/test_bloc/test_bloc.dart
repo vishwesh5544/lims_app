@@ -93,7 +93,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     }
     else if (event is OnAddTest) {
 
-      yield state.copyWith(isAddTest: event.value);
+      yield state.copyWith(isAddTest: event.value, currentSelectedPriview: event.currentSelectedPriview);
     }
   }
 }

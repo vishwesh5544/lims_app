@@ -20,6 +20,7 @@ class LimsTable extends StatelessWidget {
       required this.rowData,
       required this.tableType,
         required this.onEditClick,
+        this.onViewClick,
         this.onSubmit,
       super.key});
 
@@ -27,6 +28,7 @@ class LimsTable extends StatelessWidget {
   final List<dynamic> rowData;
   TableType tableType;
   Function onEditClick;
+  Function? onViewClick;
   Function? onSubmit;
 
   @override
@@ -78,12 +80,16 @@ class LimsTable extends StatelessWidget {
     );
   }
 
-  Widget _actionsRow(int currentIndex) {
+  Widget _actionsRow(int currentIndex, dynamic value) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       InkWell(onTap: () {
         onEditClick.call(currentIndex);
       }, child: Icon(Icons.note_alt_outlined)),
-      Icon(Icons.remove_red_eye_outlined)
+      InkWell(
+        onTap: (){
+          onViewClick!.call(value);
+        },
+          child: Icon(Icons.remove_red_eye_outlined))
     ]);
   }
 
@@ -118,7 +124,7 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(lab.labName)),
       DataCell(Text(lab.emailId)),
       DataCell(Text(lab.contactNumber)),
-      DataCell(_actionsRow(currentIndex))
+      DataCell(_actionsRow(currentIndex, currentIndex))
     ]);
   }
 
@@ -131,7 +137,7 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(test.sampleType)),
       DataCell(Text(test.turnAroundTime)),
       DataCell(Text(test.price.toString())),
-      DataCell(_actionsRow(currentIndex))
+      DataCell(_actionsRow(currentIndex, test))
     ]);
   }
 
@@ -268,7 +274,7 @@ class LimsTable extends StatelessWidget {
       DataCell(Text(patient.insuraceNumber)),
       DataCell(Text(patient.mobileNumber.toString())),
       DataCell(Text(patient.emailId)),
-      DataCell(_actionsRow(currentIndex))
+      DataCell(_actionsRow(currentIndex, patient))
     ]);
   }
 }

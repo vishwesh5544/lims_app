@@ -44,6 +44,42 @@ class _AddTestState extends State<AddTest> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<TestBloc>();
+
+      if(bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1){
+        bloc.add(TestCodeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].testCode));
+        bloc.add(TestNameUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].testName));
+        bloc.add(SampleTypeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType));
+        bloc.add(VacutainerUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].vacutainer));
+        bloc.add(VolumeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].volume));
+        bloc.add(TypeOfVolumeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume));
+        bloc.add(TemperatureUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].temperature));
+        bloc.add(TypeOfTemperatureUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature));
+        bloc.add(MethodUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].method));
+        bloc.add(TurnAroundTimeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].turnAroundTime));
+        bloc.add(PriceUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].price));
+        bloc.add(TaxPercentageUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage));
+        bloc.add(TotalPriceUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].totalPrice));
+        bloc.add(IndicationsUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].indications));
+
+        sampleTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
+        departmentValue = bloc.state.testsList[bloc.state.currentSelectedPriview].department;
+        temperatureTypeValue= bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        volumeTypeValue= bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
+        tatValue= bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+
+        testCodeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].testCode;
+        testNameEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].testName;
+        sampleTypeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
+        vacutainerEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].vacutainer;
+        volumeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].volume;
+        temperatureEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
+        methodEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
+        turnAroundTimeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        priceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].method;
+        taxPercentageEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].turnAroundTime;
+        totalPriceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].price.toString();
+        indicationsEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
+      }
     });
     super.initState();
   }
@@ -335,7 +371,7 @@ class _AddTestState extends State<AddTest> {
         maxLines: 10,
         decoration: const InputDecoration(
             constraints: BoxConstraints(minWidth: 300, maxWidth: 350, minHeight: 100, maxHeight: 150),
-            labelText: AddTestStrings.typeObservations,
+            // labelText: AddTestStrings.typeObservations,
             border: OutlineInputBorder(),
             hintText: AddTestStrings.typeObservations));
     var blocComponent = _buildBlocComponent(textField);
@@ -416,7 +452,7 @@ class _AddTestState extends State<AddTest> {
       icon: IconStore.downwardArrow,
       decoration: InputDecoration(
         constraints: _commonBoxConstraint,
-        labelText: AddTestStrings.selectDepartment,
+        // labelText: AddTestStrings.selectDepartment,
         border: const OutlineInputBorder(),
         hintText: AddTestStrings.selectDepartment,
       ),

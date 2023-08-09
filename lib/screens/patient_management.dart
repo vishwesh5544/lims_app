@@ -13,6 +13,7 @@ import 'package:lims_app/utils/strings/route_strings.dart';
 import 'package:lims_app/utils/strings/search_header_strings.dart';
 import 'package:lims_app/utils/utils.dart';
 
+import '../utils/color_provider.dart';
 import 'add_patient/add_patient.dart';
 
 class PatientManagement extends StatefulWidget {
@@ -89,12 +90,64 @@ class _PatientManagementState extends State<PatientManagement> {
           LimsTable(columnNames: TestData.patientsColumnsList(),
               tableType: TableType.addPatient,
               onEditClick: (value){
-                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
-
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true,currentSelectedPriview: value));
+              },
+              onViewClick: (value){
+            showToast(msg: value);
               },
               rowData: state.searchPatientsList),
         ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
+    );
+  }
+
+
+  /// invoice dialog
+  Future<void> _showPreviewDialog(value) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            insetPadding: EdgeInsets.zero,
+            titleTextStyle: const TextStyle(color: Colors.white,
+                fontWeight: FontWeight.bold, fontSize: 20.0),
+            titlePadding: EdgeInsets.zero,
+            title: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(),
+                  const Text('Test Details'),
+                  InkWell(
+                    child: const Icon(Icons.cancel_rounded, color: Colors.white),
+                    onTap: () => Navigator.pop(context, "Cancel"),
+                  )
+                ],
+              ),
+            ),
+            content: Container(
+              // height: 600,
+              width: 600,
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.grey,
+                      width: 1
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                  ],
+                ),
+              ),
+            ));
+      },
     );
   }
 }

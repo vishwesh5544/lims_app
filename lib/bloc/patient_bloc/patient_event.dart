@@ -10,7 +10,8 @@ class OnSearch extends PatientEvent {
 
 class OnAddPatient extends PatientEvent {
   final bool value;
-  OnAddPatient({this.value = false});
+  int currentSelectedPriview;
+  OnAddPatient({this.value = false, this.currentSelectedPriview = 0});
 }
 
 class IsPatient extends PatientEvent {

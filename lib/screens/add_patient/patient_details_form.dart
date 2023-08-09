@@ -38,6 +38,35 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<PatientBloc>();
       bloc.add(GenerateUmrNumber());
+
+      if(bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1){
+        bloc.add(GenderUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
+
+        bloc.add(FirstNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].firstName));
+        bloc.add(MiddleNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].middleName));
+        bloc.add(LastNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].lastName));
+        bloc.add(MobileNumberUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].mobileNumber));
+        bloc.add(EmailUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].emailId));
+        bloc.add(InsuranceProviderUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceProvider));
+        bloc.add(InsuranceNumberUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceNumber));
+        bloc.add(ConsultedDoctorUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].consultedDoctor));
+
+        _datePickerTextController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].dob;
+
+        String dateText = _datePickerTextController.text;
+        bloc.add(DobUpdated(dateText));
+        var age = bloc.state.patientsList[bloc.state.currentSelectedPriview].age;
+        bloc.add(AgeUpdated(age.toString()));
+
+        _firstNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].firstName;
+        _middleNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].middleName;
+        _lastNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].lastName;
+        _mobileNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].mobileNumber.toString();
+        _emailIdController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].emailId;
+        _insuranceProviderController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceProvider;
+        _insuranceNumberController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceNumber;
+        _umrNumberController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].consultedDoctor;
+      }
     });
 
     super.initState();

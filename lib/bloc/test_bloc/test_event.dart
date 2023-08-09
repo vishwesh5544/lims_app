@@ -15,7 +15,8 @@ class OnSearch extends TestEvent {
 
 class OnAddTest extends TestEvent {
   final bool value;
-  OnAddTest({this.value = false});
+  int currentSelectedPriview;
+  OnAddTest({this.value = false, this.currentSelectedPriview = 0});
 }
 
 class TestNameUpdated extends TestEvent {

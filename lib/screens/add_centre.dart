@@ -40,6 +40,19 @@ class _AddCentreState extends State<AddCentre> {
   void initState() {
     BlocProvider.of<TestBloc>(context).add(FetchAllTests());
     bloc = context.read<LabBloc>();
+
+    if(bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1){
+      _labNameController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].labName;
+      _emailIdController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].emailId;
+      _contactNumberController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].contactNumber;
+      _addressOneController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].addressOne;
+      _addressTwoController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].addressTwo;
+      _cityController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].city;
+      _stateController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].state;
+      _countryController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].country;
+      // _postalCodeController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].;
+      // indicationsEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
+    }
     super.initState();
   }
 

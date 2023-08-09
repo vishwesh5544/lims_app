@@ -67,7 +67,10 @@ class _LabManagementState extends State<LabManagement> {
           LimsTable(columnNames: const ["#", "Lab Name", "Email Id", "Contact Number", "Action"],
               tableType: TableType.lab,
               onEditClick: (value){
-                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true));
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true, currentSelectedPriview: value));
+              },
+              onViewClick: (value){
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true, currentSelectedPriview: value));
               },
               rowData: state.labsList),
           // redirectToTestMenu(),
