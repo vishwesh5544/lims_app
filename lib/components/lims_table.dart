@@ -72,11 +72,12 @@ class _LimsTableState extends State<LimsTable> {
             DataTable(
               dataRowHeight: widget.tableRowHeight,
               dividerThickness: 0.2,
+              headingRowHeight: 50,
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
               dataRowColor: MaterialStateProperty.all(Colors.white),
               border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
-              columns: widget.columnNames.map((name) => DataColumn(label: Text(name))).toList(),
+              columns: widget.columnNames.map((name) => DataColumn(label: Text(name, maxLines: 2,))).toList(),
               rows: widget.rowData.map((value) {
                 var currentIndex = widget.rowData.indexOf(value) + 1;
                 // TODO: bring value type check to top level

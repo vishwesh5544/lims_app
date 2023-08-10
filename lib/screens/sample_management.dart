@@ -38,7 +38,7 @@ class SampleManagement extends StatefulWidget {
 }
 
 class _SampleManagementState extends State<SampleManagement> {
-  TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
+  TextEditingController textController = TextEditingController(text: "vs@gmail.com");
   late final InTransitBloc bloc;
   static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions", ""];
 
@@ -143,19 +143,8 @@ class _SampleManagementState extends State<SampleManagement> {
                   ),
                   Visibility(
                     visible: state.testsList?.isNotEmpty??false,
-                    child: LimsTable(
-                        columnNames: columnNames,
-                        tableType: TableType.sample,
-                        tableRowHeight: 85,
-                        onEditClick: (value) {
-                          // showToast(msg: value);
-                          processingUnit = value;
-                        },
-
-                        onSubmit: (test) {
-                          if (processingUnit.isNotEmpty) {
-                            int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
-                  LimsTable(
+                    child:  LimsTable(
+                      tableRowHeight: 95,
                       columnNames: columnNames,
                       tableType: TableType.sample,
                       onEditClick: (value) {
@@ -187,6 +176,7 @@ class _SampleManagementState extends State<SampleManagement> {
                         PdfUtility.savePdf(context, barcodeString.toString());
                       },
                       rowData: state.testsList!),
+                  )
                 ],
               ),
             ),

@@ -20,7 +20,7 @@ class TestStatus extends StatefulWidget {
 }
 
 class _TestStatusState extends State<TestStatus> {
-  TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
+  TextEditingController textController = TextEditingController(text: "vs@gmail.com");
   late final InTransitBloc bloc;
 
   TextEditingController _fromDatePickerTextController = TextEditingController();
@@ -185,7 +185,7 @@ class _TestStatusState extends State<TestStatus> {
                                           width:80,
                                             child: Text(statusText)),
                                         commonIconBtn(text: "Report",
-                                            icon: const Icon(Icons.print_outlined),
+                                            icon: const Icon(Icons.print_outlined, color: Colors.white, size: 18),
                                             isEnable: true, calll: () {
 
                                             }),

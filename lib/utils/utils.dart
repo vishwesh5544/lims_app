@@ -54,8 +54,9 @@ commonIconBtn({String text = "Next",
       calll.call();
     },
     child: Container(
-        // height: 45,
+        height: 35,
         // width: width,
+        padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
             border: Border.all(
                 color: ColorProvider.blueDarkShade,
@@ -66,8 +67,8 @@ commonIconBtn({String text = "Next",
         ),
         child: Center(child: Row(
           children: [
-            if(icon!=null)icon,
-            Text(text, style: TextUtility.getBoldStyle(16, color: isEnable? Colors.white: Colors.black),),
+            if(icon!=null)Container(child: icon, padding: EdgeInsets.only(right: 8)),
+            Text(text, style: TextUtility.getStyle(16, color: isEnable? Colors.white: Colors.black),),
           ],
         ))
     ),
