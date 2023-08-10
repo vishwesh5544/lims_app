@@ -20,6 +20,7 @@ import 'package:lims_app/utils/strings/route_strings.dart';
 import 'package:lims_app/utils/strings/search_header_strings.dart';
 import 'package:lims_app/utils/utils.dart';
 
+import '../components/barcode_widegt.dart';
 import '../utils/color_provider.dart';
 import '../utils/text_utility.dart';
 import 'add_patient/add_patient.dart';
@@ -64,7 +65,9 @@ class _PatientManagementState extends State<PatientManagement> {
             },
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: state.isAddPatient ? const AddPatient() : patientWidget(state)),
+                child: state.isAddPatient
+                    ? const AddPatient()
+                    : patientWidget(state)),
           );
         });
   }
@@ -83,8 +86,10 @@ class _PatientManagementState extends State<PatientManagement> {
                     buttonText: ButtonStrings.addPatient,
                     routeName: RouteStrings.addPatient,
                     onClick: () {
-                      BlocProvider.of<PatientBloc>(context).add(IsPatient(value: false));
-                      BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+                      BlocProvider.of<PatientBloc>(context)
+                          .add(IsPatient(value: false));
+                      BlocProvider.of<PatientBloc>(context)
+                          .add(OnAddPatient(value: true));
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(builder: (context) => AddPatient()),);
@@ -96,19 +101,24 @@ class _PatientManagementState extends State<PatientManagement> {
               headerTitle: SearchHeaderStrings.patientsListTitle,
               placeholder: SearchHeaderStrings.searchPatientsPlaceholder,
               onClickSearch: (text) {
-                BlocProvider.of<PatientBloc>(context).add(OnSearch(value: text));
+                BlocProvider.of<PatientBloc>(context)
+                    .add(OnSearch(value: text));
               }),
           LimsTable(
               columnNames: TestData.patientsColumnsList(),
               tableType: TableType.addPatient,
               onEditClick: (value) {
-                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true, currentSelectedPriview: value));
+                BlocProvider.of<PatientBloc>(context).add(
+                    OnAddPatient(value: true, currentSelectedPriview: value));
               },
               onViewClick: (value) {
                 _showPreviewDialog(value);
               },
               rowData: state.searchPatientsList),
-        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 7), child: el)).toList(),
+        ]
+            .map((el) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7), child: el))
+            .toList(),
       ),
     );
   }
@@ -116,7 +126,17 @@ class _PatientManagementState extends State<PatientManagement> {
   /// invoice dialog
   Future<void> _showPreviewDialog(Patient patient) async {
     BlocProvider.of<InTransitBloc>(context).add(SearchPatient(patient.emailId));
-    List<String> columns = ["#", "Test Name", "Sample Type", "Test Code", "Cost", "Tax%", "Total", "Barcode",""];
+    List<String> columns = [
+      "#",
+      "Test Name",
+      "Sample Type",
+      "Test Code",
+      "Cost",
+      "Tax%",
+      "Total",
+      "Barcode",
+      ""
+    ];
     print(patient.emailId);
     return showDialog(
       context: context,
@@ -125,11 +145,15 @@ class _PatientManagementState extends State<PatientManagement> {
             builder: (context, state) {
               return AlertDialog(
                   insetPadding: EdgeInsets.zero,
-                  titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
+                  titleTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
                   titlePadding: EdgeInsets.zero,
                   title: Container(
                     padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
+                    decoration:
+                        BoxDecoration(color: ColorProvider.blueDarkShade),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,7 +161,8 @@ class _PatientManagementState extends State<PatientManagement> {
                         const SizedBox(),
                         const Text('Test Details'),
                         InkWell(
-                          child: const Icon(Icons.cancel_rounded, color: Colors.white),
+                          child: const Icon(Icons.cancel_rounded,
+                              color: Colors.white),
                           onTap: () => Navigator.pop(context, "Cancel"),
                         )
                       ],
@@ -148,17 +173,23 @@ class _PatientManagementState extends State<PatientManagement> {
                     width: 1080,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1),
-                        borderRadius: const BorderRadius.all(Radius.circular(5))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           DataTable(
-                              dataRowHeight: 85,
-                              headingRowColor: MaterialStateProperty.all(Colors.black),
-                              headingTextStyle: const TextStyle(color: Colors.white),
-                              dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
-                              columns: columns.map((el) => DataColumn(label: Text(el))).toList(),
+                              dataRowHeight: 95,
+                              headingRowColor:
+                                  MaterialStateProperty.all(Colors.black),
+                              headingTextStyle:
+                                  const TextStyle(color: Colors.white),
+                              dataRowColor: MaterialStateProperty.all(
+                                  Colors.grey.shade300),
+                              columns: columns
+                                  .map((el) => DataColumn(label: Text(el)))
+                                  .toList(),
                               rows: state.testsList!.map((test) {
                                 return DataRow(cells: [
                                   DataCell(Text("${test.id}")),
@@ -169,20 +200,49 @@ class _PatientManagementState extends State<PatientManagement> {
                                   DataCell(Text("${test.taxPercentage}")),
                                   DataCell(Text("${test.totalPrice}")),
                                   DataCell(InkWell(
-                                      onTap:(){
-                                        BlocProvider.of<InTransitBloc>(context).add(ViewQrCode(test.id == state.currentVisibleQrCode? -1 : test.id!));
+                                      onTap: () {
+                                        BlocProvider.of<InTransitBloc>(context)
+                                            .add(ViewQrCode(test.id ==
+                                                    state.currentVisibleQrCode
+                                                ? -1
+                                                : test.id!));
                                       },
-                                      child: Text("View", style: TextUtility.getBoldStyle(16, color: test.id == state.currentVisibleQrCode ? Colors.red : ColorProvider.blueDarkShade)))),
+                                      child: Text("View",
+                                          style: TextUtility.getBoldStyle(16,
+                                              color: test.id ==
+                                                      state.currentVisibleQrCode
+                                                  ? Colors.red
+                                                  : ColorProvider
+                                                      .blueDarkShade)))),
                                   DataCell(
                                     Visibility(
-                                      visible: test.id == state.currentVisibleQrCode,
+                                      visible:
+                                          test.id == state.currentVisibleQrCode,
                                       maintainSize: true,
                                       maintainAnimation: true,
                                       maintainState: true,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
-                                            "{patientId: ${patient.id}, testId: ${test.id}")),
+                                        child: BlocConsumer<InTransitBloc,
+                                            InTransitState>(
+                                          listener: (context, state) {},
+                                          builder: (context, state) {
+                                            if (state.invoiceMappings != null &&
+                                                state.invoiceMappings!
+                                                    .isNotEmpty) {
+                                              var ptid = state.invoiceMappings
+                                                  ?.firstWhere((element) =>
+                                                      element.testId == test.id)
+                                                  .ptid;
+                                              return barCodeWidget(
+                                                text: test.testName,
+                                                barCode: "${ptid}",
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),

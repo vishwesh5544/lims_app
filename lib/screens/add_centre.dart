@@ -14,6 +14,11 @@ import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 import "package:lims_app/utils/strings/add_centre_strings.dart";
 import "package:lims_app/utils/text_utility.dart";
+import "package:lims_app/utils/utils.dart";
+
+import "../components/common_dropdown.dart";
+import "../components/common_edit_text_filed.dart";
+import "../utils/strings/add_test_strings.dart";
 
 class AddCentre extends StatefulWidget {
   const AddCentre({Key? key}) : super(key: key);
@@ -23,8 +28,6 @@ class AddCentre extends StatefulWidget {
 }
 
 class _AddCentreState extends State<AddCentre> {
-  final BoxConstraints _commonBoxConstraint =
-      const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45);
   late final LabBloc bloc;
   final TextEditingController _labNameController = TextEditingController();
   final TextEditingController _emailIdController = TextEditingController();
@@ -62,15 +65,13 @@ class _AddCentreState extends State<AddCentre> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [_headerStrip(), _createForm()],
-              ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [_headerStrip(), _createForm()],
             ),
           ),
         ),
@@ -121,16 +122,16 @@ class _AddCentreState extends State<AddCentre> {
                 .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
                 .toList(),
           ),
-          Row(
-            children: [_selectTestDropdown()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
-                .toList(),
-          ),
-          Row(
-            children: [_selectedTestsTable()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
-                .toList(),
-          ),
+          // Row(
+          //   children: [_selectTestDropdown()]
+          //       .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+          //       .toList(),
+          // ),
+          // Row(
+          //   children: [_selectedTestsTable()]
+          //       .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+          //       .toList(),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [_addCentreButton()]
@@ -144,93 +145,134 @@ class _AddCentreState extends State<AddCentre> {
 
   /// form components
   Widget _labNameField() {
-    var textField = TextField(
-        controller: _labNameController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
-
-    return _getColumnAndFormInput("Lab Name", textField);
+    // var textField = TextField(
+    //     controller: _labNameController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(),
+    //         hintText: "Enter Name"));
+    //
+    // return _getColumnAndFormInput("Lab Name", textField);
+    return CommonEditText(title: 'Lab Name',
+        hintText: "Enter Name",
+        onChange: (value){},
+        controller: _labNameController);
   }
 
   Widget _emailIdField() {
-    var textField = TextField(
-        controller: _emailIdController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Email"));
+    // var textField = TextField(
+    //     controller: _emailIdController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Email"));
 
-    return _getColumnAndFormInput("Email ID", textField);
+    // return _getColumnAndFormInput("Email ID", textField);
+    return CommonEditText(title: 'Lab Name',
+        hintText: "Enter Email",
+        onChange: (value){},
+        controller: _emailIdController);
   }
 
   Widget _contactNumberField() {
-    var textField = TextField(
-        controller: _contactNumberController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter number"));
+    // var textField = TextField(
+    //     controller: _contactNumberController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter number"));
 
-    return _getColumnAndFormInput("Contact Number", textField);
+    // return _getColumnAndFormInput("Contact Number", textField);
+    return CommonEditText(title: 'Contact Number',
+        hintText: "Enter number",
+        onChange: (value){},
+        controller: _contactNumberController);
   }
 
   Widget _addressOneField() {
-    var textField = TextField(
-        controller: _addressOneController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
+    // var textField = TextField(
+    //     controller: _addressOneController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
 
-    return _getColumnAndFormInput("Address Line 1", textField);
+    // return _getColumnAndFormInput("Address Line 1", textField);
+    return CommonEditText(title: 'Address Line 1',
+        hintText: "Type Address...",
+        onChange: (value){},
+        controller: _addressOneController);
   }
 
   Widget _addressTwoField() {
-    var textField = TextField(
-        controller: _addressTwoController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
+    // var textField = TextField(
+    //     controller: _addressTwoController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
 
-    return _getColumnAndFormInput("Address Line 2", textField);
+    // return _getColumnAndFormInput("Address Line 2", textField);
+
+    return CommonEditText(title: 'Address Line 2',
+        hintText: "Type Address...",
+        onChange: (value){},
+        controller: _addressTwoController);
   }
 
   Widget _postalCodeField() {
-    var textField = TextField(
-        controller: _postalCodeController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Code"));
+    // var textField = TextField(
+    //     controller: _postalCodeController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Code"));
 
-    return _getColumnAndFormInput("Postal Code", textField);
+    // return _getColumnAndFormInput("Postal Code", textField);
+
+    return CommonEditText(title: 'Postal Code',
+        hintText: "Enter Code",
+        onChange: (value){},
+        controller: _postalCodeController);
   }
 
   Widget _cityField() {
-    var textField = TextField(
-        controller: _cityController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
+    // var textField = TextField(
+    //     controller: _cityController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
 
-    return _getColumnAndFormInput("City", textField);
+    // return _getColumnAndFormInput("City", textField);
+
+    return CommonEditText(title: 'City',
+        hintText: "Enter Name",
+        onChange: (value){},
+        controller: _cityController);
   }
 
   Widget _stateField() {
-    var textField = TextField(
-        controller: _stateController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
+    // var textField = TextField(
+    //     controller: _stateController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
 
-    return _getColumnAndFormInput("State", textField);
+    // return _getColumnAndFormInput("State", textField);
+    return CommonEditText(title: 'State',
+        hintText: "Enter Name",
+        onChange: (value){},
+        controller: _stateController);
   }
 
   Widget _countryField() {
-    var textField = TextField(
-        controller: _countryController,
-        onChanged: (value) => {},
-        decoration: InputDecoration(
-            constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
+    // var textField = TextField(
+    //     controller: _countryController,
+    //     onChanged: (value) => {},
+    //     decoration: InputDecoration(
+    //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
 
-    return _getColumnAndFormInput("Country", textField);
+    // return _getColumnAndFormInput("Country", textField);
+
+    return CommonEditText(title: 'Country',
+        hintText: "Enter Name",
+        onChange: (value){},
+        controller: _countryController);
   }
 
   /// form dropdowns
@@ -241,26 +283,34 @@ class _AddCentreState extends State<AddCentre> {
     } else {
       hintText = "Select";
     }
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        border: const OutlineInputBorder(),
-        hintText:  hintText ,
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "collection", child: Text('Collection Unit')),
-        DropdownMenuItem(value: "processing", child: Text('Processing Unit')),
-        DropdownMenuItem(value: "both", child: Text('Both')),
-      ],
-      onChanged: (value) {
-        setState(() {
-          unitTypeValue = value;
-        });
-      },
-    );
+    // var dropdown = DropdownButtonFormField(
+    //   icon: IconStore.downwardArrow,
+    //   decoration: InputDecoration(
+    //     constraints: _commonBoxConstraint,
+    //     border: const OutlineInputBorder(),
+    //     hintText:  hintText ,
+    //   ),
+    //   items: const <DropdownMenuItem>[
+    //     DropdownMenuItem(value: "collection", child: Text('Collection Unit')),
+    //     DropdownMenuItem(value: "processing", child: Text('Processing Unit')),
+    //     DropdownMenuItem(value: "both", child: Text('Both')),
+    //   ],
+    //   onChanged: (value) {
+    //     setState(() {
+    //       unitTypeValue = value;
+    //     });
+    //   },
+    // );
 
-    return _getColumnAndFormInput("Collection Centre/Processing Unit", dropdown);
+    // return _getColumnAndFormInput("Collection Centre/Processing Unit", dropdown);
+
+    return CommonDropDown(title: "Collection Centre/Processing Unit",
+        hintText: hintText,
+        list: const ["Collection Unit", "Processing Unit", "Both"], onSubmit: (value){
+          setState(() {
+            unitTypeValue = value;
+          });
+        });
   }
 
   Widget _selectTestDropdown() {
@@ -342,7 +392,43 @@ class _AddCentreState extends State<AddCentre> {
   }
 
   Widget _addCentreButton() {
-    return ElevatedButton(
+    return commonBtn(
+      text: "Add Centre",
+      isEnable: true,
+      calll: (){
+        {
+          if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
+            bloc.add(AddCentreFormSubmitted(
+                contactNumber: _contactNumberController.text,
+                emailId: _emailIdController.text,
+                labName: _labNameController.text,
+                addressOne: _addressOneController.text,
+                addressTwo: _addressTwoController.text,
+                city: _cityController.text,
+                country: _countryController.text,
+                state: _stateController.text,
+                testDetails: selectedTestDetails,
+                unitType: unitTypeValue));
+          } else {
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                Future.delayed(const Duration(seconds: 3), () {
+                  Navigator.of(context).pop();
+                });
+
+                return AlertDialog(
+                  content: const Text("Please select Collection Unit/Processing Unit and Select Tests"),
+                  actions: <Widget>[
+                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Close"))
+                  ],
+                );
+              },
+            );
+          }
+        }
+      });
+    /*return ElevatedButton(
         onPressed: () async {
           if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
             bloc.add(AddCentreFormSubmitted(
@@ -379,6 +465,6 @@ class _AddCentreState extends State<AddCentre> {
             fixedSize: const Size(120, 60),
             shape: const ContinuousRectangleBorder(),
             backgroundColor: ColorProvider.blueDarkShade),
-        child: const Text('Add Centre'));
+        child: const Text('Add Centre'));*/
   }
 }

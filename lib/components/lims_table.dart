@@ -13,6 +13,7 @@ import "package:lims_app/utils/utils.dart";
 
 import "../utils/barcode_utility.dart";
 import "../utils/icons/icon_store.dart";
+import "barcode_widegt.dart";
 
 enum TableType { addPatient, addTest, viewPatient, lab, inTransit, process, testStatus, sample }
 
@@ -121,23 +122,23 @@ class _LimsTableState extends State<LimsTable> {
     ]);
   }
 
-  Widget _barCodeWidget({required String text, required String barCode}) {
-    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(text, style: TextStyle(fontSize: 10)),
-      Container(
-        padding: const EdgeInsets.all(6),
-        margin: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 2),
-            borderRadius: const BorderRadius.all(Radius.circular(5))),
-        child: SvgPicture.string(
-          BarcodeUtility.getBarcodeSvgString(barCode),
-          width: 80,
-          height: 40,
-        ),
-      )
-    ]);
-  }
+  // Widget _barCodeWidget({required String text, required String barCode}) {
+  //   return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //     Text(text, style: TextStyle(fontSize: 10)),
+  //     Container(
+  //       padding: const EdgeInsets.all(6),
+  //       margin: const EdgeInsets.all(3),
+  //       decoration: BoxDecoration(
+  //           border: Border.all(color: Colors.black, width: 2),
+  //           borderRadius: const BorderRadius.all(Radius.circular(5))),
+  //       child: SvgPicture.string(
+  //         BarcodeUtility.getBarcodeSvgString(barCode),
+  //         width: 80,
+  //         height: 40,
+  //       ),
+  //     )
+  //   ]);
+  // }
 
   DataRow _buildDataRowForLab(Lab lab, int currentIndex) {
     return DataRow(cells: [
@@ -165,7 +166,7 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForTestBarCode(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(_barCodeWidget(
+      DataCell(barCodeWidget(
         text: test.testName,
         barCode: "${test.id}",
       )),
@@ -187,7 +188,7 @@ class _LimsTableState extends State<LimsTable> {
         builder: (context, state) {
           if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
             var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
-            return _barCodeWidget(
+            return barCodeWidget(
               text: test.testName,
               barCode: "${ptid}",
             );
@@ -240,7 +241,7 @@ class _LimsTableState extends State<LimsTable> {
         builder: (context, state) {
           if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
             var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
-            return _barCodeWidget(
+            return barCodeWidget(
               text: test.testName,
               barCode: "${ptid}",
             );
@@ -314,7 +315,7 @@ class _LimsTableState extends State<LimsTable> {
         builder: (context, state) {
           if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
             var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
-            return _barCodeWidget(
+            return barCodeWidget(
               text: test.testName,
               barCode: "${ptid}",
             );

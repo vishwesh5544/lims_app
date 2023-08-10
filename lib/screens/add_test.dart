@@ -11,7 +11,9 @@ import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/text_utility.dart";
 import "package:lims_app/utils/utils.dart";
 
+import "../components/common_dropdown.dart";
 import "../components/common_edit_text_filed.dart";
+import "../utils/strings/add_patient_strings.dart";
 
 class AddTest extends StatefulWidget {
   const AddTest({Key? key}) : super(key: key);
@@ -23,8 +25,8 @@ class AddTest extends StatefulWidget {
 class _AddTestState extends State<AddTest> {
   late final TestBloc bloc;
   final formKey = GlobalKey<FormState>();
-  final BoxConstraints _commonBoxConstraint =
-      const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45);
+  // final BoxConstraints _commonBoxConstraint =
+  //     const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45);
   final testCodeEditingController = TextEditingController();
   final testNameEditingController = TextEditingController();
   final sampleTypeEditingController = TextEditingController();
@@ -557,82 +559,111 @@ class _AddTestState extends State<AddTest> {
 
   /// Form dropdown button fields
   Widget _selectTypeDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        border: const OutlineInputBorder(),
-        hintText: AddTestStrings.selectType,
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "one", child: Text('one')),
-        DropdownMenuItem(value: "two", child: Text('two'))
-      ],
-      onChanged: (value) {
-        setState(() {
-          sampleTypeValue = value;
-        });
-      },
-    );
-    var blocComponent = _buildBlocComponent(dropdown);
+    // var dropdown = DropdownButtonFormField(
+    //   icon: IconStore.downwardArrow,
+    //   decoration: InputDecoration(
+    //     constraints: _commonBoxConstraint,
+    //     border: const OutlineInputBorder(),
+    //     hintText: AddTestStrings.selectType,
+    //   ),
+    //   items: const <DropdownMenuItem>[
+    //     DropdownMenuItem(value: "one", child: Text('one')),
+    //     DropdownMenuItem(value: "two", child: Text('two'))
+    //   ],
+    //   onChanged: (value) {
+    //     setState(() {
+    //       sampleTypeValue = value;
+    //     });
+    //   },
+    // );
+    // var blocComponent = _buildBlocComponent(dropdown);
 
-    return _getColumnAndFormInput("Sample Type", blocComponent);
+    // return _getColumnAndFormInput("Sample Type", blocComponent);
+    return _buildBlocComponent(CommonDropDown(title: "Sample Type",
+        hintText: AddTestStrings.selectType,
+        list: const ["one", "two"], onSubmit: (value){
+          setState(() {
+            sampleTypeValue = value;
+          });
+        }));
   }
 
   Widget _volumeTypeDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        border: const OutlineInputBorder(),
-        hintText: AddTestStrings.enterVolume,
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "mg", child: Text('mg')),
-        DropdownMenuItem(value: "ml", child: Text('ml'))
-      ],
-      onChanged: (value) {
-        setState(() {
-          volumeTypeValue = value;
-        });
-      },
-    );
-    var blocComponent = _buildBlocComponent(dropdown);
+    // var dropdown = DropdownButtonFormField(
+    //   icon: IconStore.downwardArrow,
+    //   decoration: InputDecoration(
+    //     constraints: _commonBoxConstraint,
+    //     border: const OutlineInputBorder(),
+    //     hintText: AddTestStrings.enterVolume,
+    //   ),
+    //   items: const <DropdownMenuItem>[
+    //     DropdownMenuItem(value: "mg", child: Text('mg')),
+    //     DropdownMenuItem(value: "ml", child: Text('ml'))
+    //   ],
+    //   onChanged: (value) {
+    //     setState(() {
+    //       volumeTypeValue = value;
+    //     });
+    //   },
+    // );
+    // var blocComponent = _buildBlocComponent(dropdown);
 
-    return _getColumnAndFormInput("Volume Type", blocComponent);
+    // return _getColumnAndFormInput("Volume Type", blocComponent);
+
+    return _buildBlocComponent(CommonDropDown(title: "Volume Type",
+        hintText: AddTestStrings.enterVolume,
+        list: const ["mg", "ml"], onSubmit: (value){
+          setState(() {
+            volumeTypeValue = value;
+          });
+        }));
   }
 
   Widget _selectDepartmentDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        // labelText: AddTestStrings.selectDepartment,
-        border: const OutlineInputBorder(),
-        hintText: AddTestStrings.selectDepartment,
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "one", child: Text('one')),
-        DropdownMenuItem(value: "two", child: Text('two'))
-      ],
-      onChanged: (value) {
-        setState(() {
-          departmentValue = value;
-        });
-      },
-    );
-    var blocComponent = _buildBlocComponent(dropdown);
+    // var dropdown = DropdownButtonFormField(
+    //   icon: IconStore.downwardArrow,
+    //   decoration: InputDecoration(
+    //     constraints: _commonBoxConstraint,
+    //     // labelText: AddTestStrings.selectDepartment,
+    //     border: const OutlineInputBorder(),
+    //     hintText: AddTestStrings.selectDepartment,
+    //   ),
+    //   items: const <DropdownMenuItem>[
+    //     DropdownMenuItem(value: "one", child: Text('one')),
+    //     DropdownMenuItem(value: "two", child: Text('two'))
+    //   ],
+    //   onChanged: (value) {
+    //     setState(() {
+    //       departmentValue = value;
+    //     });
+    //   },
+    // );
+    // var blocComponent = _buildBlocComponent(dropdown);
 
-    return _getColumnAndFormInput("Select department", blocComponent);
+    // return _getColumnAndFormInput("Select department", blocComponent);
+
+    return _buildBlocComponent(CommonDropDown(title: "Select department",
+        hintText: AddTestStrings.selectDepartment,
+        list: const ["one", "two"], onSubmit: (value){
+          setState(() {
+            departmentValue = value;
+          });
+        }));
   }
 
   Widget _enterTemperatureDropdown() {
     var dropdown = DropdownButtonFormField(
       icon: IconStore.downwardArrow,
       decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
+        hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
+        constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
+        border: getOutLineBorder(),
+        focusedErrorBorder: getOutLineBorder(),
+        errorBorder: getOutLineBorder(),
+        disabledBorder: getOutLineBorder(),
+        enabledBorder: getOutLineBorder(),
+        focusedBorder: getOutLineBorder(),
         hintText: "${AddTestStrings.enterTemperature} (\u2103/\u2109)",
-        border: const OutlineInputBorder(),
       ),
       items: const <DropdownMenuItem>[
         DropdownMenuItem(value: "celsius", child: Text('\u2103')),
@@ -650,26 +681,34 @@ class _AddTestState extends State<AddTest> {
   }
 
   Widget _tatDropdown() {
-    var dropdown = DropdownButtonFormField(
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        constraints: _commonBoxConstraint,
-        labelText: "${AddTestStrings.enterTAT} (Hrs./days)",
-        border: const OutlineInputBorder(),
-        hintText: AddTestStrings.enterTemperature,
-      ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "one", child: Text('one')),
-        DropdownMenuItem(value: "two", child: Text('two'))
-      ],
-      onChanged: (value) {
-        setState(() {
-          tatValue = value;
-        });
-      },
-    );
-    var blocComponent = _buildBlocComponent(dropdown);
+    // var dropdown = DropdownButtonFormField(
+    //   icon: IconStore.downwardArrow,
+    //   decoration: InputDecoration(
+    //     constraints: _commonBoxConstraint,
+    //     labelText: "${AddTestStrings.enterTAT} (Hrs./days)",
+    //     border: const OutlineInputBorder(),
+    //     hintText: AddTestStrings.enterTemperature,
+    //   ),
+    //   items: const <DropdownMenuItem>[
+    //     DropdownMenuItem(value: "one", child: Text('one')),
+    //     DropdownMenuItem(value: "two", child: Text('two'))
+    //   ],
+    //   onChanged: (value) {
+    //     setState(() {
+    //       tatValue = value;
+    //     });
+    //   },
+    // );
+    // var blocComponent = _buildBlocComponent(dropdown);
 
-    return _getColumnAndFormInput("Enter TAT (Hrs./days)", blocComponent);
+    // return _getColumnAndFormInput("Enter TAT (Hrs./days)", blocComponent);
+
+    return _buildBlocComponent(CommonDropDown(title: "Enter TAT (Hrs./days)",
+        hintText: AddTestStrings.enterTemperature,
+        list: const ["one", "two"], onSubmit: (value){
+          setState(() {
+            tatValue = value;
+          });
+        }));
   }
 }
