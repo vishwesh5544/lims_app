@@ -90,27 +90,27 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
         children: [
           Row(
             children: [_firstNameField(), _middleNameField(), _lastNameField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
+                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
                 .toList(),
           ),
           Row(
             children: [_datePicker(), _ageField(), _genderDropdown()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
+                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
                 .toList(),
           ),
           Row(
             children: [_mobileNumberField(), _emailField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
+                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
                 .toList(),
           ),
           Row(
             children: [_insuranceProviderField(), _insuranceNumberField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
+                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
                 .toList(),
           ),
           Row(
             children: [_consultedDoctorField(), _umrNumberField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20), child: el))
+                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
                 .toList(),
           ),
           commonBtn(
@@ -378,7 +378,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
           controller: _datePickerTextController,
           decoration: InputDecoration(
               hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-              constraints: const BoxConstraints(maxWidth: 150, minWidth: 150, minHeight: 35, maxHeight: 50),
+              constraints: const BoxConstraints(maxWidth: 160, minWidth: 150, minHeight: 35, maxHeight: 50),
               border: getOutLineBorder(),
               focusedErrorBorder: getOutLineBorder(),
               errorBorder: getOutLineBorder(),

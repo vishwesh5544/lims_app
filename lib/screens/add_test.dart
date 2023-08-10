@@ -9,6 +9,9 @@ import 'package:lims_app/utils/strings/add_test_strings.dart';
 import 'package:lims_app/utils/strings/route_strings.dart';
 import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/text_utility.dart";
+import "package:lims_app/utils/utils.dart";
+
+import "../components/common_edit_text_filed.dart";
 
 class AddTest extends StatefulWidget {
   const AddTest({Key? key}) : super(key: key);
@@ -193,7 +196,61 @@ class _AddTestState extends State<AddTest> {
   Widget submitButton() {
     return BlocBuilder<TestBloc, TestState>(
       builder: (context, state) {
-        return ElevatedButton(
+        return commonBtn(
+          isEnable: true,
+          text: AddTestStrings.title,
+            calll: (){
+          int price = int.parse(priceEditingController.text);
+          int tax = int.parse(taxPercentageEditingController.text);
+          int totalPrice = (price + (price * tax / 100)).ceil();
+
+          AddTestFormSubmitted submitEvent;
+          if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
+            submitEvent = AddTestFormSubmitted(
+                isUpdate: true,
+                id: bloc.state.testsList[bloc.state.currentSelectedPriview].id,
+                testCode: testCodeEditingController.text,
+                testName: testNameEditingController.text,
+                department: departmentValue,
+                temperature: temperatureEditingController.text,
+                typeOfTemperature: temperatureTypeValue,
+                sampleType: sampleTypeValue,
+                vacutainer: vacutainerEditingController.text,
+                volume: volumeEditingController.text,
+                typeOfVolume: volumeTypeValue,
+                method: methodEditingController.text,
+                turnAroundTime: turnAroundTimeEditingController.text,
+                price: price,
+                taxPercentage: tax,
+                totalPrice: totalPrice,
+                indications: indicationsEditingController.text);
+          } else {
+            submitEvent = AddTestFormSubmitted(
+                isUpdate: false,
+                testCode: testCodeEditingController.text,
+                testName: testNameEditingController.text,
+                department: departmentValue,
+                temperature: temperatureEditingController.text,
+                typeOfTemperature: temperatureTypeValue,
+                sampleType: sampleTypeValue,
+                vacutainer: vacutainerEditingController.text,
+                volume: volumeEditingController.text,
+                typeOfVolume: volumeTypeValue,
+                method: methodEditingController.text,
+                turnAroundTime: turnAroundTimeEditingController.text,
+                price: price,
+                taxPercentage: tax,
+                totalPrice: totalPrice,
+                indications: indicationsEditingController.text);
+          }
+
+          bloc.add(submitEvent);
+
+          // if (state.formStatus is SubmissionSuccess) {
+          Navigator.pushReplacementNamed(context, RouteStrings.viewTests);
+          // }
+        });
+         /*ElevatedButton(
             onPressed: () {
               int price = int.parse(priceEditingController.text);
               int tax = int.parse(taxPercentageEditingController.text);
@@ -249,162 +306,232 @@ class _AddTestState extends State<AddTest> {
               backgroundColor: ColorProvider.blueDarkShade,
               fixedSize: const Size(150, 60),
             ),
-            child: Text(AddTestStrings.title, style: TextUtility.getBoldStyle(15.0, color: Colors.white)));
+            child: Text(AddTestStrings.title, style: TextUtility.getBoldStyle(15.0, color: Colors.white)));*/
       },
     );
   }
 
   /// Form text fields
   Widget _enterCodeField() {
-    var textField = TextFormField(
-      controller: testCodeEditingController,
-      onChanged: (value) => bloc.add(TestCodeUpdated(value)),
-      decoration: InputDecoration(
-          constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: AddTestStrings.enterCode),
-    );
-    var blocComponent = _buildBlocComponent(textField);
-    return _getColumnAndFormInput("Enter Code", blocComponent);
+    // var textField = TextFormField(
+    //   controller: testCodeEditingController,
+    //   onChanged: (value) => bloc.add(TestCodeUpdated(value)),
+    //   decoration: InputDecoration(
+    //       constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: AddTestStrings.enterCode),
+    // );
+    // var blocComponent = _buildBlocComponent(CommonEditText(title: 'Enter Code',
+    //     hintText: AddTestStrings.enterCode,
+    //     onChange: (value){bloc.add(TestCodeUpdated(value));},
+    //     controller: testCodeEditingController));
+    //
+    //  _getColumnAndFormInput("Enter Code", blocComponent);
+    return _buildBlocComponent(CommonEditText(title: 'Enter Code',
+        hintText: AddTestStrings.enterCode,
+        onChange: (value){bloc.add(TestCodeUpdated(value));},
+        controller: testCodeEditingController));
   }
 
   Widget _enterTestNameField() {
-    var textField = BlocBuilder<TestBloc, TestState>(
-      builder: (context, state) {
-        return TextFormField(
-          controller: testNameEditingController,
-          onChanged: (value) => bloc.add(TestNameUpdated(value)),
-          decoration: InputDecoration(
-              constraints: _commonBoxConstraint,
-              border: const OutlineInputBorder(),
-              hintText: AddTestStrings.enterTestName),
-        );
-      },
-    );
-    var blocComponent = _buildBlocComponent(textField);
-    return _getColumnAndFormInput("Enter Name", blocComponent);
+    // var textField = BlocBuilder<TestBloc, TestState>(
+    //   builder: (context, state) {
+    //     return TextFormField(
+    //       controller: testNameEditingController,
+    //       onChanged: (value) => bloc.add(TestNameUpdated(value)),
+    //       decoration: InputDecoration(
+    //           constraints: _commonBoxConstraint,
+    //           border: const OutlineInputBorder(),
+    //           hintText: AddTestStrings.enterTestName),
+    //     );
+    //   },
+    // );
+    // var blocComponent = _buildBlocComponent(CommonEditText(title: 'Enter Name',
+    //     hintText: AddTestStrings.enterTestName,
+    //     onChange: (value){bloc.add(TestNameUpdated(value));},
+    //     controller: testNameEditingController));
+    // return _getColumnAndFormInput("Enter Name", blocComponent);
+    return _buildBlocComponent(CommonEditText(title: 'Enter Name',
+        hintText: AddTestStrings.enterTestName,
+        onChange: (value){bloc.add(TestNameUpdated(value));},
+        controller: testNameEditingController));
   }
 
   Widget _enterDetailField() {
-    var textField = BlocBuilder<TestBloc, TestState>(
-      builder: (context, state) {
-        return TextField(
-          controller: vacutainerEditingController,
-          onChanged: (value) => bloc.add(VacutainerUpdated(value)),
-          decoration: InputDecoration(
-              constraints: _commonBoxConstraint,
-              border: const OutlineInputBorder(),
-              hintText: AddTestStrings.enterDetail),
-        );
-      },
-    );
-    var blocComponent = _buildBlocComponent(textField);
+    // var textField = BlocBuilder<TestBloc, TestState>(
+    //   builder: (context, state) {
+    //     return TextField(
+    //       controller: vacutainerEditingController,
+    //       onChanged: (value) => bloc.add(VacutainerUpdated(value)),
+    //       decoration: InputDecoration(
+    //           constraints: _commonBoxConstraint,
+    //           border: const OutlineInputBorder(),
+    //           hintText: AddTestStrings.enterDetail),
+    //     );
+    //   },
+    // );
+    // var blocComponent = _buildBlocComponent(textField);
 
-    return _getColumnAndFormInput("Vacutainer", blocComponent);
+    // return _getColumnAndFormInput("Vacutainer", blocComponent);
+
+    return _buildBlocComponent(CommonEditText(title: 'Vacutainer',
+        hintText: AddTestStrings.enterDetail,
+        onChange: (value){bloc.add(VacutainerUpdated(value));},
+        controller: vacutainerEditingController));
   }
 
   Widget _enterMethodField() {
-    var textField = TextField(
-      controller: methodEditingController,
-      onChanged: (value) => bloc.add(MethodUpdated(value)),
-      decoration: InputDecoration(
-          constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: AddTestStrings.enterMethod),
-    );
-    var blocComponent = _buildBlocComponent(textField);
+    // var textField = TextField(
+    //   controller: methodEditingController,
+    //   onChanged: (value) => bloc.add(MethodUpdated(value)),
+    //   decoration: InputDecoration(
+    //       constraints: _commonBoxConstraint, border: const OutlineInputBorder(),
+    //       hintText: AddTestStrings.enterMethod),
+    // );
+    // var blocComponent = _buildBlocComponent(textField);
 
-    return _getColumnAndFormInput("Enter method", blocComponent);
+    // return _getColumnAndFormInput("Enter method", blocComponent);
+
+    return _buildBlocComponent(CommonEditText(title: 'Enter method',
+        hintText: AddTestStrings.enterMethod,
+        onChange: (value){bloc.add(MethodUpdated(value));},
+        controller: methodEditingController));
   }
 
   Widget _priceField() {
-    var textField = TextField(
-        controller: priceEditingController,
-        onChanged: (value) {
+    // var textField = TextField(
+    //     controller: priceEditingController,
+    //     onChanged: (value) {
+    //       int price = priceEditingController.text.isNotEmpty ? int.parse(priceEditingController.text) : 0;
+    //       int tax = taxPercentageEditingController.text.isNotEmpty ? int.parse(taxPercentageEditingController.text) : 0;
+    //       int totalPrice = price + (price * tax);
+    //       bloc.add(PriceUpdated(price));
+    //       bloc.add(TotalPriceUpdated(totalPrice));
+    //     },
+    //     decoration: const InputDecoration(
+    //         constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
+    //         border: OutlineInputBorder(),
+    //         hintText: AddTestStrings.enterPrice));
+    // var blocComponent = _buildBlocComponent(textField);
+
+    // return _getColumnAndFormInput("Enter price", blocComponent);
+
+    return _buildBlocComponent(CommonEditText(title: 'Enter price',
+        hintText: AddTestStrings.enterPrice,
+        onChange: (value){
           int price = priceEditingController.text.isNotEmpty ? int.parse(priceEditingController.text) : 0;
           int tax = taxPercentageEditingController.text.isNotEmpty ? int.parse(taxPercentageEditingController.text) : 0;
           int totalPrice = price + (price * tax);
           bloc.add(PriceUpdated(price));
           bloc.add(TotalPriceUpdated(totalPrice));
         },
-        decoration: const InputDecoration(
-            constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
-            border: OutlineInputBorder(),
-            hintText: AddTestStrings.enterPrice));
-    var blocComponent = _buildBlocComponent(textField);
-
-    return _getColumnAndFormInput("Enter price", blocComponent);
+        controller: priceEditingController));
   }
 
   Widget _taxField() {
-    var textField = TextField(
-        controller: taxPercentageEditingController,
-        onChanged: (value) {
+    // var textField = TextField(
+    //     controller: taxPercentageEditingController,
+    //     onChanged: (value) {
+    //       int price = priceEditingController.text.isNotEmpty ? int.parse(priceEditingController.text) : 0;
+    //       int tax = taxPercentageEditingController.text.isNotEmpty ? int.parse(taxPercentageEditingController.text) : 0;
+    //       int totalPrice = price + (price * tax);
+    //       bloc.add(TaxPercentageUpdated(tax));
+    //       bloc.add(TotalPriceUpdated(totalPrice));
+    //     },
+    //     decoration: const InputDecoration(
+    //         constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
+    //         border: OutlineInputBorder(),
+    //         hintText: AddTestStrings.enterTaxPercentage));
+    // var blocComponent = _buildBlocComponent(textField);
+
+    // return _getColumnAndFormInput("Enter tax", blocComponent);
+
+    return _buildBlocComponent(CommonEditText(title: 'Enter tax',
+        hintText: AddTestStrings.enterTaxPercentage,
+        onChange: (value){
           int price = priceEditingController.text.isNotEmpty ? int.parse(priceEditingController.text) : 0;
           int tax = taxPercentageEditingController.text.isNotEmpty ? int.parse(taxPercentageEditingController.text) : 0;
           int totalPrice = price + (price * tax);
           bloc.add(TaxPercentageUpdated(tax));
           bloc.add(TotalPriceUpdated(totalPrice));
         },
-        decoration: const InputDecoration(
-            constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
-            border: OutlineInputBorder(),
-            hintText: AddTestStrings.enterTaxPercentage));
-    var blocComponent = _buildBlocComponent(textField);
-
-    return _getColumnAndFormInput("Enter tax", blocComponent);
+        controller: taxPercentageEditingController));
   }
 
   Widget _volumeField() {
-    var textField = TextField(
-        controller: volumeEditingController,
-        onChanged: (value) => bloc.add(VolumeUpdated(value)),
-        decoration: const InputDecoration(
-            constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
-            border: OutlineInputBorder(),
-            hintText: AddTestStrings.enterVolume));
+    // var textField = TextField(
+    //     controller: volumeEditingController,
+    //     onChanged: (value) => bloc.add(VolumeUpdated(value)),
+    //     decoration: const InputDecoration(
+    //         constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
+    //         border: OutlineInputBorder(),
+    //         hintText: AddTestStrings.enterVolume));
+    //
+    // var blocComponent = _buildBlocComponent(textField);
+    // return _getColumnAndFormInput("Enter Value", blocComponent);
 
-    var blocComponent = _buildBlocComponent(textField);
-    return _getColumnAndFormInput("Enter Value", blocComponent);
+    return _buildBlocComponent(CommonEditText(title: 'Enter Value',
+        hintText: AddTestStrings.enterVolume,
+        onChange: (value){bloc.add(VolumeUpdated(value));},
+        controller: volumeEditingController));
   }
 
   Widget _temperatureField() {
-    var textField = TextField(
-        controller: temperatureEditingController,
-        onChanged: (value) => bloc.add(TemperatureUpdated(value)),
-        decoration: const InputDecoration(
-            constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
-            border: OutlineInputBorder(),
-            hintText: AddTestStrings.enterTemperature));
+    // var textField = TextField(
+    //     controller: temperatureEditingController,
+    //     onChanged: (value) => bloc.add(TemperatureUpdated(value)),
+    //     decoration: const InputDecoration(
+    //         constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
+    //         border: OutlineInputBorder(),
+    //         hintText: AddTestStrings.enterTemperature));
+    //
+    // var blocComponent = _buildBlocComponent(textField);
+    // return _getColumnAndFormInput("Enter Temperature", blocComponent);
 
-    var blocComponent = _buildBlocComponent(textField);
-    return _getColumnAndFormInput("Enter Temperature", blocComponent);
+    return _buildBlocComponent(CommonEditText(title: 'Enter Temperature',
+        hintText: AddTestStrings.enterTemperature,
+        onChange: (value){bloc.add(TemperatureUpdated(value));},
+        controller: temperatureEditingController));
   }
 
   Widget _totalPriceField() {
-    var textField = TextField(
-        enabled: false,
-        readOnly: true,
-        controller: totalPriceEditingController,
-        onChanged: (value) => bloc.add(TotalPriceUpdated(int.parse(value))),
-        decoration: const InputDecoration(
-            constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
-            border: OutlineInputBorder(),
-            hintText: "total price"));
-    var blocComponent = _buildBlocComponent(textField);
+    // var textField = TextField(
+    //     enabled: false,
+    //     readOnly: true,
+    //     controller: totalPriceEditingController,
+    //     onChanged: (value) => bloc.add(TotalPriceUpdated(int.parse(value))),
+    //     decoration: const InputDecoration(
+    //         constraints: BoxConstraints(minWidth: 100, maxWidth: 150, minHeight: 40, maxHeight: 45),
+    //         border: OutlineInputBorder(),
+    //         hintText: "total price"));
+    // var blocComponent = _buildBlocComponent(textField);
 
-    return _getColumnAndFormInput("Enter price", blocComponent);
+    // return _getColumnAndFormInput("Enter price", blocComponent);
+
+
+    return _buildBlocComponent(CommonEditText(title: 'Enter price',
+        hintText: "total price",
+        onChange: (value){bloc.add(TotalPriceUpdated(int.parse(value)));},
+        controller: totalPriceEditingController));
   }
 
   Widget _enterObservations() {
-    var textField = TextField(
-        controller: indicationsEditingController,
-        onChanged: (value) => bloc.add(IndicationsUpdated(value)),
-        maxLines: 10,
-        decoration: const InputDecoration(
-            constraints: BoxConstraints(minWidth: 300, maxWidth: 350, minHeight: 100, maxHeight: 150),
-            // labelText: AddTestStrings.typeObservations,
-            border: OutlineInputBorder(),
-            hintText: AddTestStrings.typeObservations));
-    var blocComponent = _buildBlocComponent(textField);
+    // var textField = TextField(
+    //     controller: indicationsEditingController,
+    //     onChanged: (value) => bloc.add(IndicationsUpdated(value)),
+    //     maxLines: 10,
+    //     decoration: const InputDecoration(
+    //         constraints: BoxConstraints(minWidth: 300, maxWidth: 350, minHeight: 100, maxHeight: 150),
+    //         // labelText: AddTestStrings.typeObservations,
+    //         border: OutlineInputBorder(),
+    //         hintText: AddTestStrings.typeObservations));
+    // var blocComponent = _buildBlocComponent(textField);
 
-    return _getColumnAndFormInput("Indication(Observation)", blocComponent);
+    // return _getColumnAndFormInput("Indication(Observation)", blocComponent);
+
+
+    return _buildBlocComponent(CommonEditText(title: 'Indication(Observation)',
+        hintText: AddTestStrings.typeObservations,
+        onChange: (value){bloc.add(IndicationsUpdated(value));},
+        controller: indicationsEditingController));
   }
 
   /// form components util
