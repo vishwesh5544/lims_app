@@ -13,6 +13,7 @@ import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/pdf_utility.dart";
+import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
@@ -150,26 +151,26 @@ class _TransitManagementState extends State<TransitManagement> {
                           tableType: TableType.inTransit,
                           onEditClick: (value){
 
-                          },
-                          onSubmit: (test) {
-                            int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
-                            BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
-                                invoiceId: invoiceId,
-                                userId: state.patient!.id!,
-                                status: 3));
-                          },
-                          onPrintPdf: (Test test) {
-                            var testId = test.id;
-                            var userId = state.patient?.id;
-                            var invoiceId = state.invoiceMappings
-                                ?.firstWhere(
-                                    (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
-                                .id;
-                            var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
-                            PdfUtility.savePdf(context, barcodeString.toString());
-                          },
-                          rowData: state.testsList!),
-                    ),
+                        },
+                        onSubmit: (test) {
+                          int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                          BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
+                              invoiceId: invoiceId,
+                              userId: state.patient!.id!,
+                              status: 3));
+                          ScreenHelper.showAlertPopup("Transit status updated successfully.", context);
+                        },
+                        onPrintPdf: (Test test) {
+                          var testId = test.id;
+                          var userId = state.patient?.id;
+                          var invoiceId = state.invoiceMappings
+                              ?.firstWhere(
+                                  (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                              .id;
+                          var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                          PdfUtility.savePdf(context, barcodeString.toString());
+                        },
+                        rowData: state.testsList!),
 
                     // Container(
                     //   margin: EdgeInsets.symmetric(vertical: 10),
