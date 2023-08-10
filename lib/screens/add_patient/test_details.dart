@@ -17,6 +17,7 @@ import "package:lims_app/models/test.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 
 import "../../bloc/patient_bloc/patient_state.dart";
+import "../../components/barcode_widegt.dart";
 import "../../components/lims_table.dart";
 import "../../utils/barcode_utility.dart";
 import "../../utils/color_provider.dart";
@@ -165,11 +166,12 @@ class _TestDetailsState extends State<TestDetails> {
                                     // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
                                     //     .createdPatient?.id).;
 
-                                    return SvgPicture.string(
-                                        BarcodeUtility.getBarcodeSvgString(
-                                            "${state.createdPatient?.id}${state.invoiceNumber}"),
-                                        width: 150,
-                                        height: 75);
+                                    int ptid = inState.invoiceMappings!.firstWhere((e) => e.invoiceNumber == state.invoiceNumber).ptid!;
+
+                                    return barCodeWidget(
+                                      text: "",
+                                      barCode: "${ptid}",
+                                    );
                                   } else {
                                     return Container();
                                   }
@@ -278,8 +280,15 @@ class _TestDetailsState extends State<TestDetails> {
               onChanged: (value) {
                 setState(() {
                   totalPrice = 0;
-                  selectedTests.add(value!);
-                  patientBloc.add(SelectedTestsUpdated(selectedTests));
+
+                  if(selectedTests.isEmpty || selectedTests.indexWhere((element) => element.id == value!.id)!=0){
+                    selectedTests.add(value!);
+                    patientBloc.add(SelectedTestsUpdated(selectedTests));
+                  }else{
+                    int index = selectedTests.indexWhere((element) => element.id == value!.id);
+                    selectedTests.removeAt(index);
+                  }
+
                   for (var test in selectedTests) {
                     totalPrice += test.price;
                   }

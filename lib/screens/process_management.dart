@@ -125,7 +125,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                             var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
                             PdfUtility.savePdf(context, barcodeString.toString());
                           },
-                          rowData: state.testsList!),
+                          rowData: getTestList(state)),
                       )
 
                       // Container(
@@ -142,6 +142,12 @@ class _ProcessManagementState extends State<ProcessManagement> {
           );
         }
     );
+  }
+
+  getTestList(InTransitState state) {
+    return  state.testsList!.map((e) {
+      return state.invoiceMappings?.where((element) => element.testId == e.id && element.status > 3);
+    }).toList();
   }
 
 }

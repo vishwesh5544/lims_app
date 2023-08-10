@@ -138,7 +138,7 @@ class _SampleManagementState extends State<SampleManagement> {
                           var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
                           PdfUtility.savePdf(context, barcodeString.toString());
                         },
-                        rowData: state.testsList!),
+                        rowData: getTestList(state)),
                   )
                 ],
               ),
@@ -163,5 +163,11 @@ class _SampleManagementState extends State<SampleManagement> {
         ),
       )
     ]);
+  }
+
+  getTestList(InTransitState state) {
+    return  state.testsList!.map((e) {
+      return state.invoiceMappings?.where((element) => element.testId == e.id && element.status > 1);
+    }).toList();
   }
 }

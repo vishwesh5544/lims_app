@@ -22,6 +22,7 @@ import "package:lims_app/utils/utils.dart";
 
 import "../components/common_disabled_field.dart";
 import "../components/common_header.dart";
+import "../models/invoice_mapping.dart";
 import "../utils/color_provider.dart";
 import "../utils/strings/add_test_strings.dart";
 import "../utils/text_utility.dart";
@@ -59,7 +60,6 @@ class _TransitManagementState extends State<TransitManagement> {
     return BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {
           if(state.updateStatus is Updated) {
-            // showToast(msg: "thai gayu");
           }
 
         },
@@ -125,7 +125,7 @@ class _TransitManagementState extends State<TransitManagement> {
                           var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
                           PdfUtility.savePdf(context, barcodeString.toString());
                         },
-                        rowData: state.testsList!),
+                        rowData: getTestListForTransit(state)),
                     )
                     // Container(
                     //   margin: EdgeInsets.symmetric(vertical: 10),
@@ -140,6 +140,12 @@ class _TransitManagementState extends State<TransitManagement> {
           );
         }
     );
+  }
+
+  getTestListForTransit(InTransitState state) {
+    return  state.testsList!.map((e) {
+       return state.invoiceMappings?.where((element) => element.testId == e.id && element.status > 2);
+    }).toList();
   }
 
 }

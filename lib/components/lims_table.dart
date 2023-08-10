@@ -324,7 +324,9 @@ class _LimsTableState extends State<LimsTable> {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          // state.invoiceMappings?.firstWhere((element) => element.testId == test.id).status;
+        },
         builder: (context, state) {
           if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
             var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;

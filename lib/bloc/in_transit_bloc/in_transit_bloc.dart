@@ -65,7 +65,7 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
     } else if (event is FetchSearchResults) {
       var input = event.searchInput;
       int? inputAsInt = int.tryParse(input);
-      if (!inputAsInt.isNull) {
+      if (inputAsInt!=null) {
         String inputString = input.toString();
         List<String> list = List<String>.generate(inputString.length, (index) => inputString[index]);
         List<InvoiceMapping> invoices = [];
@@ -73,7 +73,7 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
         var interimInput = int.parse(list.join(""));
         final responseForPtid = await inTransitRepository.getSearchResultsByPtid(interimInput);
 
-        if (!responseForPtid.data.isNull && responseForPtid.data!.isEmpty) {
+        if (responseForPtid.data!=null && responseForPtid.data!.isEmpty) {
           // for(var r in responseForPtid.data!) {
           //
           // }
