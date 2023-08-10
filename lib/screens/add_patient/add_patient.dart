@@ -125,6 +125,7 @@ class _AddPatientState extends State<AddPatient> {
           // setState(() {
           //   state.isAddPatient = false;
           // });
+          BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
           BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
         });
   }

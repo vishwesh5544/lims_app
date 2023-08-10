@@ -123,9 +123,15 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                 }
 
                 Future.delayed(Duration(seconds: 1), () {
-                  BlocProvider.of<PatientBloc>(context).add(IsPatient());
+                  if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview == -1) {
+                    BlocProvider.of<PatientBloc>(context).add(IsPatient());
+                  }
 
-                  ScreenHelper.showAlertPopup("Patient updated successfully ", context);
+                  ScreenHelper.showAlertPopup("Patient updated successfully ", context).then((value){
+                    ///to refresh listing screen.
+                    BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                    BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+                  });
                 });
               }),
         ],

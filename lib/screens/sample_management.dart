@@ -39,7 +39,7 @@ class SampleManagement extends StatefulWidget {
 class _SampleManagementState extends State<SampleManagement> {
   TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
   late final InTransitBloc bloc;
-  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Select Lab", "Actions", ""];
+  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions", ""];
 
   String processingUnit = "";
 
@@ -56,7 +56,7 @@ class _SampleManagementState extends State<SampleManagement> {
   Widget build(BuildContext context) {
     return BlocConsumer<InTransitBloc, InTransitState>(listener: (context, state) {
       if (state.updateStatus is Updated) {
-        showToast(msg: "thai gayu");
+
       }
     }, builder: (context, state) {
       return WillPopScope(
@@ -94,7 +94,6 @@ class _SampleManagementState extends State<SampleManagement> {
                           hint: "Search by URM No./Patient Name",
                           textController: textController,
                           onSubmit: (value) {
-                            showToast(msg: value);
                             bloc.add(SearchPatient(value));
                           })),
                   Container(
@@ -141,38 +140,42 @@ class _SampleManagementState extends State<SampleManagement> {
                       ],
                     ),
                   ),
-                  LimsTable(
-                      columnNames: columnNames,
-                      tableType: TableType.sample,
-                      onEditClick: (value) {
-                        showToast(msg: value);
-                        processingUnit = value;
-                      },
+                  Visibility(
+                    visible: state.testsList?.isNotEmpty??false,
+                    child: LimsTable(
+                        columnNames: columnNames,
+                        tableType: TableType.sample,
+                        tableRowHeight: 85,
+                        onEditClick: (value) {
+                          showToast(msg: value);
+                          processingUnit = value;
+                        },
 
-                      onSubmit: (test) {
-                        if (processingUnit.isNotEmpty) {
-                          int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                        onSubmit: (test) {
+                          if (processingUnit.isNotEmpty) {
+                            int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
 
-                          BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
-                              invoiceId: invoiceId,
-                              userId: state.patient!.id!,
-                              processingUnit: processingUnit,
-                              status: 2));
-                        } else {
-                          showToast(msg: "Please select Processing Unit first!");
-                        }
-                      },
-                      onPrintPdf: (Test test) {
-                        var testId = test.id;
-                        var userId = state.patient?.id;
-                        var invoiceId = state.invoiceMappings
-                            ?.firstWhere(
-                                (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
-                            .id;
-                        var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
-                        PdfUtility.savePdf(context, barcodeString.toString());
-                      },
-                      rowData: state.testsList!),
+                            BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
+                                invoiceId: invoiceId,
+                                userId: state.patient!.id!,
+                                processingUnit: processingUnit,
+                                status: 2));
+                          } else {
+                            showToast(msg: "Please select Processing Unit first!");
+                          }
+                        },
+                        onPrintPdf: (Test test) {
+                          var testId = test.id;
+                          var userId = state.patient?.id;
+                          var invoiceId = state.invoiceMappings
+                              ?.firstWhere(
+                                  (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                              .id;
+                          var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
+                          PdfUtility.savePdf(context, barcodeString.toString());
+                        },
+                        rowData: state.testsList!),
+                  ),
                 ],
               ),
             ),

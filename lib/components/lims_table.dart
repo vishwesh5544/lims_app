@@ -33,6 +33,7 @@ class LimsTable extends StatefulWidget {
       this.onSubmit,
       this.onPrintPdf,
       this.onSelected,
+        this.tableRowHeight,
       super.key});
 
   final List<String> columnNames;
@@ -44,6 +45,7 @@ class LimsTable extends StatefulWidget {
   Function? onPrintPdf;
   Function? onSelected;
   Widget? conditionalButton;
+  double? tableRowHeight;
 
   @override
   State<LimsTable> createState() => _LimsTableState();
@@ -68,10 +70,12 @@ class _LimsTableState extends State<LimsTable> {
           shrinkWrap: true,
           children: [
             DataTable(
-              dataRowHeight: 85,
+              dataRowHeight: widget.tableRowHeight,
+              dividerThickness: 0.2,
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
-              dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
+              dataRowColor: MaterialStateProperty.all(Colors.white),
+              border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
               columns: widget.columnNames.map((name) => DataColumn(label: Text(name))).toList(),
               rows: widget.rowData.map((value) {
                 var currentIndex = widget.rowData.indexOf(value) + 1;
@@ -121,10 +125,10 @@ class _LimsTableState extends State<LimsTable> {
 
   Widget _barCodeWidget({required String text, required String barCode}) {
     return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(text),
+      Text(text, style: TextStyle(fontSize: 10)),
       Container(
-        padding: EdgeInsets.all(6),
-        margin: EdgeInsets.all(3),
+        padding: const EdgeInsets.all(6),
+        margin: const EdgeInsets.all(3),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 2),
             borderRadius: const BorderRadius.all(Radius.circular(5))),
@@ -191,6 +195,7 @@ class _LimsTableState extends State<LimsTable> {
         commonBtn(
             text: "Approve Transit",
             isEnable: true,
+            width: 120,
             calll: () {
               widget.onSubmit!.call(test);
             }),
@@ -198,6 +203,7 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(commonBtn(
           text: "To Pdf",
           isEnable: true,
+          width: 120,
           calll: () {
             widget.onPrintPdf!.call(test);
           }))
@@ -277,21 +283,21 @@ class _LimsTableState extends State<LimsTable> {
         text: test.testName,
         barCode: "${test.id}",
       )),
-      DataCell(DropdownButtonFormField(
-        icon: IconStore.downwardArrow,
-        decoration: const InputDecoration(
-          constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
-          border: OutlineInputBorder(),
-          hintText: "Select Processing Unit",
-        ),
-        items: const <DropdownMenuItem>[
-          DropdownMenuItem(value: "processing-unit", child: Text('Processing Unit')),
-          DropdownMenuItem(value: "both", child: Text('Both'))
-        ],
-        onChanged: (value) {
-          widget.onEditClick.call(value);
-        },
-      )),
+      // DataCell(DropdownButtonFormField(
+      //   icon: IconStore.downwardArrow,
+      //   decoration: const InputDecoration(
+      //     constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
+      //     border: OutlineInputBorder(),
+      //     hintText: "Select Processing Unit",
+      //   ),
+      //   items: const <DropdownMenuItem>[
+      //     DropdownMenuItem(value: "processing-unit", child: Text('Processing Unit')),
+      //     DropdownMenuItem(value: "both", child: Text('Both'))
+      //   ],
+      //   onChanged: (value) {
+      //     widget.onEditClick.call(value);
+      //   },
+      // )),
       DataCell(BlocConsumer<LabBloc, LabState>(
         listener: (context, state) {
 
@@ -305,19 +311,15 @@ class _LimsTableState extends State<LimsTable> {
       )),
       DataCell(BlocBuilder<InTransitBloc, InTransitState>(
         builder: (context, state) {
-          if (!state.invoiceMappings.isNull && state.invoiceMappings!.isNotEmpty) {
+          if (state.invoiceMappings !=null && state.invoiceMappings!.isNotEmpty) {
             var currentMapping = state.invoiceMappings!.firstWhere((element) => element.testId == test.id);
-            if (!currentMapping.isNull) {
-              return commonBtn(
-                  text: "Collect Sample",
-                  isEnable: currentMapping.status == 5 ? false : true,
-                  calll: () {
-                    widget.onSubmit!.call(test);
-                  });
-            } else {
-              return Container();
-            }
-          } else {
+            return commonBtn(
+                text: "Collect Sample",
+                isEnable: currentMapping.status == 5 ? false : true,
+                calll: () {
+                  widget.onSubmit!.call(test);
+                });
+                    } else {
             return Container();
           }
         },

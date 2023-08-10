@@ -88,14 +88,14 @@ class _ProcessManagementState extends State<ProcessManagement> {
                       ),
 
                       Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
                           child: commonSearchArea(
                               title: "UMR No./Patient Name",
                               hint: "Search by URM No./Patient Name",
                               textController: textController, onSubmit: (value){
                             bloc.add(SearchPatient(value));
 
-                            showToast(msg: value);
+                            // showToast(msg: value);
                           })
                       ),
 
@@ -142,39 +142,43 @@ class _ProcessManagementState extends State<ProcessManagement> {
                         ),
                       ),
 
-                      LimsTable(columnNames: columnNames,
-                          tableType: TableType.process,
-                          onEditClick: (value){
-                        status = value;
+                      Visibility(
+                        visible: state.testsList?.isNotEmpty??false,
+                        child: LimsTable(columnNames: columnNames,
+                            tableType: TableType.process,
+                            tableRowHeight: 95,
+                            onEditClick: (value){
+                          status = value;
 
-                          },
-                          onSubmit: (test){
-                            int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                            },
+                            onSubmit: (test){
+                              int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
 
-                            bloc.add(UpdateInTransit(
-                            invoiceId: invoiceId,
-                            userId: state.patient!.id!,
-                            status: int.parse(status)));
-                          },
-                          onPrintPdf: (Test test) {
-                            var testId = test.id;
-                            var userId = state.patient?.id;
-                            var invoiceId = state.invoiceMappings
-                                ?.firstWhere(
-                                    (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
-                                .id;
-                            var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
-                            PdfUtility.savePdf(context, barcodeString.toString());
-                          },
-                          rowData: state.testsList!),
+                              bloc.add(UpdateInTransit(
+                              invoiceId: invoiceId,
+                              userId: state.patient!.id!,
+                              status: int.parse(status)));
+                            },
+                            onPrintPdf: (Test test) {
+                              var testId = test.id;
+                              var userId = state.patient?.id;
+                              var invoiceId = state.invoiceMappings
+                                  ?.firstWhere(
+                                      (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                                  .id;
+                              var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                              PdfUtility.savePdf(context, barcodeString.toString());
+                            },
+                            rowData: state.testsList!),
+                      ),
 
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        child: commonBtn(text: "Update", isEnable: true, calll: (){
-                          showToast(msg: "Update");
-                        }),
-                      )
-                      ,
+                      // Container(
+                      //   margin: EdgeInsets.symmetric(vertical: 10),
+                      //   child: commonBtn(text: "Update", isEnable: true, calll: (){
+                      //     showToast(msg: "Update");
+                      //   }),
+                      // )
+                      // ,
                     ],
                   ),
                 ),

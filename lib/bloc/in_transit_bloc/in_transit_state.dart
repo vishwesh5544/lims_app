@@ -10,11 +10,13 @@ class InTransitState {
   final List<InvoiceMapping>? invoiceMappings;
   final FormSubmissionStatus formStatus;
   final UpdateStatus updateStatus;
+  int currentVisibleQrCode = -1;
 
   InTransitState(
       {this.testsList = const [],
       this.invoiceMappings = const [],
       this.patient,
+      this.currentVisibleQrCode = -1,
       this.formStatus = const InitialFormStatus(),
       this.updateStatus = const InitialUpdateStatus()});
 
@@ -23,12 +25,14 @@ class InTransitState {
       List<InvoiceMapping>? invoiceMappings,
       Patient? patient,
       FormSubmissionStatus? formStatus,
+      int? currentVisibleQrCode = -1,
       UpdateStatus? updateStatus}) {
     return InTransitState(
       invoiceMappings: invoiceMappings ?? this.invoiceMappings,
       testsList: testsList ?? this.testsList,
       patient: patient ?? this.patient,
       formStatus: formStatus ?? this.formStatus,
+      currentVisibleQrCode: currentVisibleQrCode?? this.currentVisibleQrCode,
       updateStatus: updateStatus ?? this.updateStatus,
     );
   }

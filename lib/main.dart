@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'LIMS Application',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

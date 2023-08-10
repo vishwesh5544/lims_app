@@ -92,7 +92,8 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       List<Test> data = [];
 
       for (Test patient in state.testsList) {
-        if(patient.testName.toLowerCase().contains(event.value.trim())){
+        if(patient.testName.toLowerCase().contains(event.value.trim()) ||
+            patient.testCode.toLowerCase().contains(event.value.trim())){
           data.add(patient);
         }
       }

@@ -7,21 +7,9 @@ import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
-import "package:lims_app/bloc/test_bloc/test_state.dart";
-import "package:lims_app/components/buttons/redirect_button.dart";
-import "package:lims_app/components/lims_table.dart";
-import "package:lims_app/components/search_header.dart";
 import "package:lims_app/models/invoice_mapping.dart";
-import "package:lims_app/screens/add_test.dart";
-import "package:lims_app/test_items/redirect_to_test_menu.dart";
-import "package:lims_app/utils/strings/button_strings.dart";
-import "package:lims_app/utils/strings/route_strings.dart";
-import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/utils.dart";
-
-import "../bloc/patient_bloc/patient_event.dart";
 import "../utils/color_provider.dart";
-import "../utils/strings/add_test_strings.dart";
 import "../utils/text_utility.dart";
 
 class TestStatus extends StatefulWidget {
@@ -47,7 +35,7 @@ class _TestStatusState extends State<TestStatus> {
     // "Sample Collection Code",
     // "Process Unit",
     "Status",
-    "action"
+    // "action"
   ];
 
   @override
@@ -62,7 +50,7 @@ class _TestStatusState extends State<TestStatus> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InTransitBloc, InTransitState>(listener: (context, state) {
-      print(state.invoiceMappings.toString());
+
     }, builder: (context, state) {
       return WillPopScope(
           onWillPop: () async {
@@ -105,7 +93,7 @@ class _TestStatusState extends State<TestStatus> {
                             hint: "Search by Patient Name/UMR/ Test/ Processing Unit/ Sample Collection Centre",
                             textController: textController,
                             onSubmit: (value) {
-                              showToast(msg: value);
+                              // showToast(msg: value);
                               bloc.add(SearchPatient(value));
                             }),
 
@@ -128,7 +116,7 @@ class _TestStatusState extends State<TestStatus> {
                             }),
 
                         Container(
-                          margin: EdgeInsets.only(left: 10),
+                          margin: const EdgeInsets.only(left: 10),
                           child: commonBtn(text: "Search", isEnable: true, calll: () {}),
                         ),
                       ],
@@ -149,12 +137,15 @@ class _TestStatusState extends State<TestStatus> {
                       shrinkWrap: true,
                       children: [
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             DataTable(
-                                dataRowHeight: 85,
+                                // dataRowHeight: 85,
                                 headingRowColor: MaterialStateProperty.all(Colors.black),
                                 headingTextStyle: const TextStyle(color: Colors.white),
-                                dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
+                                dataRowColor: MaterialStateProperty.all(Colors.white),
+                                dividerThickness: 0.2,
+                                border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
                                 columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
                                 rows: state.invoiceMappings!.map((InvoiceMapping mapping) {
                                   var invoiceId = mapping.id;
@@ -188,16 +179,37 @@ class _TestStatusState extends State<TestStatus> {
                                     DataCell(Text(umrNumber)),
                                     DataCell(Text("$testName")),
                                     DataCell(Text("$testCode")),
-                                    DataCell(Text(statusText)),
-                                    DataCell(ElevatedButton.icon(
-                                      onPressed: () {},
-                                      label: Text("Report"),
-                                      icon: Icon(Icons.print_outlined),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: mapping.status == 5 ? ColorProvider.blueDarkShade : Colors
-                                            .grey.shade800
-                                      ),
+                                    DataCell(Row(
+                                      children: [
+                                        SizedBox(
+                                          width:80,
+                                            child: Text(statusText)),
+                                        commonIconBtn(text: "Report",
+                                            icon: const Icon(Icons.print_outlined),
+                                            isEnable: true, calll: () {
+
+                                            }),
+
+                                        // ElevatedButton.icon(
+                                        //   onPressed: () {},
+                                        //   label: Text("Report"),
+                                        //   icon: Icon(Icons.print_outlined),
+                                        //   style: ElevatedButton.styleFrom(
+                                        //       backgroundColor: mapping.status == 5 ? ColorProvider.blueDarkShade : Colors
+                                        //           .grey.shade800
+                                        //   ),
+                                        // )
+                                      ],
                                     )),
+                                    // DataCell(ElevatedButton.icon(
+                                    //   onPressed: () {},
+                                    //   label: Text("Report"),
+                                    //   icon: Icon(Icons.print_outlined),
+                                    //   style: ElevatedButton.styleFrom(
+                                    //     backgroundColor: mapping.status == 5 ? ColorProvider.blueDarkShade : Colors
+                                    //         .grey.shade800
+                                    //   ),
+                                    // )),
                                   ]);
                                 }).toList()),
                           ],

@@ -17,9 +17,15 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
     if (event is FetchAllInvoiceMapping) {
       // TODO: Fetch all invoice mapping from repository, set state
     } else if (event is SearchPatient) {
-      final patientAndTestsResponse = await inTransitRepository.getPatientByEmail(event.searchString);
-      yield state.copyWith(
-          testsList: patientAndTestsResponse.data?.tests, patient: patientAndTestsResponse.data?.patient);
+
+      if(event.searchString.trim().isNotEmpty && event.searchString.trim().length > 3){
+        final patientAndTestsResponse = await inTransitRepository.getPatientByEmail(event.searchString);
+        yield state.copyWith(
+            testsList: patientAndTestsResponse.data?.tests, patient: patientAndTestsResponse.data?.patient);
+      }else if(event.searchString.trim().isEmpty){
+        yield state.copyWith(testsList: [], patient: null);
+      }
+
       final invoiceMappingsResponse = await inTransitRepository.getInvoiceMappingsForUser(state.patient!.id!);
       yield state.copyWith(invoiceMappings: invoiceMappingsResponse.data);
     } else if (event is UpdateInTransit) {
@@ -48,6 +54,10 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e), updateStatus: UpdatingFailed(exception: e));
       }
+    }
+
+    else if (event is ViewQrCode) {
+      yield state.copyWith(currentVisibleQrCode: event.value);
     }
   }
 }

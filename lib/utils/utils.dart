@@ -16,7 +16,12 @@ showToast({String msg = ""}){
   );
 }
 
-commonBtn({String text = "Next", Color? bgColor, bool isEnable = false, required Function calll}){
+getBorder(){
+  return BorderSide(width: 0.1, color: Colors.grey);
+}
+
+commonBtn({String text = "Next", Color? bgColor, bool isEnable = false, required Function calll,
+double width = 140}){
   bgColor = bgColor??ColorProvider.blueDarkShade;
  return GestureDetector(
     onTap: (){
@@ -24,7 +29,7 @@ commonBtn({String text = "Next", Color? bgColor, bool isEnable = false, required
     },
     child: Container(
         height: 45,
-        width: 140,
+        width: width,
         decoration: BoxDecoration(
             border: Border.all(
                 color: ColorProvider.blueDarkShade,
@@ -35,6 +40,36 @@ commonBtn({String text = "Next", Color? bgColor, bool isEnable = false, required
         ),
         child: Center(child: Text(text, style:
         TextUtility.getBoldStyle(16, color: isEnable? Colors.white: Colors.black),))
+    ),
+  );
+}
+
+
+commonIconBtn({String text = "Next",
+  Icon? icon, Color? bgColor, bool isEnable = false, required Function calll,
+  double width = 140}){
+  bgColor = bgColor??ColorProvider.blueDarkShade;
+  return GestureDetector(
+    onTap: (){
+      calll.call();
+    },
+    child: Container(
+        // height: 45,
+        // width: width,
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: ColorProvider.blueDarkShade,
+                width: 2
+            ),
+            color: isEnable ? bgColor : Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(5))
+        ),
+        child: Center(child: Row(
+          children: [
+            if(icon!=null)icon,
+            Text(text, style: TextUtility.getBoldStyle(16, color: isEnable? Colors.white: Colors.black),),
+          ],
+        ))
     ),
   );
 }
@@ -54,7 +89,7 @@ commonSearchArea({required String title, String hint = "Next", required TextEdit
             maxLines: 1,
             minLines: 1,
             onChanged: (text){
-              // onSubmit.call(textController.text.trim());
+                onSubmit.call(textController.text.trim());
             },
             onSubmitted: (text){
               onSubmit.call(textController.text.trim());

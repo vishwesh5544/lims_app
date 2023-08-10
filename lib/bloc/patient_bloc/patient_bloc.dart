@@ -106,7 +106,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       List<Patient> data = [];
 
       for (Patient patient in state.patientsList) {
-        if ("${patient.lastName} ${patient.firstName}".toLowerCase().contains(event.value.trim())) {
+        if ("${patient.lastName} ${patient.middleName} ${patient.firstName}".toLowerCase().contains(event.value.trim())) {
           data.add(patient);
         }
       }

@@ -21,6 +21,7 @@ import 'package:lims_app/utils/strings/search_header_strings.dart';
 import 'package:lims_app/utils/utils.dart';
 
 import '../utils/color_provider.dart';
+import '../utils/text_utility.dart';
 import 'add_patient/add_patient.dart';
 
 class PatientManagement extends StatefulWidget {
@@ -110,7 +111,7 @@ class _PatientManagementState extends State<PatientManagement> {
   /// invoice dialog
   Future<void> _showPreviewDialog(Patient patient) async {
     BlocProvider.of<InTransitBloc>(context).add(SearchPatient(patient.emailId));
-    List<String> columns = ["#", "Test Name", "Sample Type", "Test Code", "Cost", "Tax%", "Price Total", "Barcode"];
+    List<String> columns = ["#", "Test Name", "Sample Type", "Test Code", "Cost", "Tax%", "Total", "Barcode",""];
     print(patient.emailId);
     return showDialog(
       context: context,
@@ -138,7 +139,7 @@ class _PatientManagementState extends State<PatientManagement> {
                     ),
                   ),
                   content: Container(
-                    height: 600,
+                    // height: 600,
                     width: 1080,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1),
@@ -162,11 +163,22 @@ class _PatientManagementState extends State<PatientManagement> {
                                   DataCell(Text("${test.price}")),
                                   DataCell(Text("${test.taxPercentage}")),
                                   DataCell(Text("${test.totalPrice}")),
+                                  DataCell(InkWell(
+                                      onTap:(){
+                                        BlocProvider.of<InTransitBloc>(context).add(ViewQrCode(test.id == state.currentVisibleQrCode? -1 : test.id!));
+                                      },
+                                      child: Text("View", style: TextUtility.getBoldStyle(16, color: test.id == state.currentVisibleQrCode ? Colors.red : ColorProvider.blueDarkShade)))),
                                   DataCell(
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
-                                          "{patientId: ${patient.id}, testId: ${test.id}")),
+                                    Visibility(
+                                      visible: test.id == state.currentVisibleQrCode,
+                                      maintainSize: true,
+                                      maintainAnimation: true,
+                                      maintainState: true,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
+                                            "{patientId: ${patient.id}, testId: ${test.id}")),
+                                      ),
                                     ),
                                   ),
                                 ]);
