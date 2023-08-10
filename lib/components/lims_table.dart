@@ -235,9 +235,19 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForProcess(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(_barCodeWidget(
-        text: test.testName,
-        barCode: "${test.id}",
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+            return _barCodeWidget(
+              text: test.testName,
+              barCode: "${ptid}",
+            );
+          } else {
+            return Container();
+          }
+        },
       )),
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),

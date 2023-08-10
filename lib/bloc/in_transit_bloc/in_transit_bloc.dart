@@ -20,12 +20,11 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       final response = await inTransitRepository.getAllFilteredLabs();
       yield state.copyWith(filteredLabs: response.data);
     } else if (event is SearchPatient) {
-
-      if(event.searchString.trim().isNotEmpty && event.searchString.trim().length > 3){
+      if (event.searchString.trim().isNotEmpty && event.searchString.trim().length > 3) {
         final patientAndTestsResponse = await inTransitRepository.getPatientByEmail(event.searchString);
         yield state.copyWith(
             testsList: patientAndTestsResponse.data?.tests, patient: patientAndTestsResponse.data?.patient);
-      }else if(event.searchString.trim().isEmpty){
+      } else if (event.searchString.trim().isEmpty) {
         yield state.copyWith(testsList: [], patient: null);
       }
 
@@ -57,10 +56,10 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e), updateStatus: UpdatingFailed(exception: e));
       }
-    }
-
-    else if (event is ViewQrCode) {
+    } else if (event is ViewQrCode) {
       yield state.copyWith(currentVisibleQrCode: event.value);
+    } else if(event is ResetState) {
+      yield state.copyWith(filteredLabs: [],invoiceMappings: [], testsList: [], patient: null);
     }
   }
 }
