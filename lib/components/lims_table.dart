@@ -6,19 +6,13 @@ import "package:flutter_svg/svg.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
-import "package:lims_app/bloc/lab_bloc/lab_bloc.dart";
-import "package:lims_app/bloc/lab_bloc/lab_event.dart";
-import "package:lims_app/bloc/lab_bloc/lab_state.dart";
 import "package:lims_app/models/lab.dart";
 import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
-import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/utils.dart";
-import "package:printing/printing.dart";
 
 import "../utils/barcode_utility.dart";
 import "../utils/icons/icon_store.dart";
-import "../utils/strings/add_patient_strings.dart";
 
 enum TableType { addPatient, addTest, viewPatient, lab, inTransit, process, testStatus, sample }
 
@@ -188,9 +182,19 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForTransit(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(_barCodeWidget(
-        text: test.testName,
-        barCode: "${test.id}",
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if(!state.invoiceMappings!.isNull && state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+            return _barCodeWidget(
+              text: test.testName,
+              barCode: "${ptid}",
+            );
+          } else {
+            return Container();
+          }
+        },
       )),
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
@@ -295,9 +299,19 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(_barCodeWidget(
-        text: test.testName,
-        barCode: "${test.id}",
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if(!state.invoiceMappings!.isNull && state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+            return _barCodeWidget(
+              text: test.testName,
+              barCode: "${ptid}",
+            );
+          } else {
+            return Container();
+          }
+        },
       )),
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
