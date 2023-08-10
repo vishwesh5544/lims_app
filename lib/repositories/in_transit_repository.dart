@@ -22,38 +22,111 @@ abstract class IInTransitRepository {
 
   Future<ResponseCallback<List<Lab>>> getAllFilteredLabs();
 
-  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid();
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid(int ptid);
 
-  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId();
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId(int invoiceId);
 
-  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName();
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName(String firstname);
 }
 
 class InTransitRepository implements IInTransitRepository {
   final _repositoryName = "InTransitRepository";
   final _headers = LimsHttpClient.headers;
 
-
-
   @override
-  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName() {
-    // TODO: implement getSearchResultsByFirstName
-    throw UnimplementedError();
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName(String firstname) async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/testlist");
+    ResponseCallback<List<SearchResult>> responseCallback = ResponseCallback();
+
+    try {
+      var req = {"name":firstname};
+      final response = await http.post(url,body: jsonEncode(req), headers: _headers);
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      List<SearchResult> searchResults = [];
+      for (var el in responseMap["data"]) {
+        var lab = SearchResult.fromJson(el);
+        searchResults.add(lab);
+      }
+      responseCallback.data = searchResults;
+
+      responseCallback.code = response.statusCode;
+      LimsLogger.log("*** Filtered Search Results fetched successfully => $responseMap");
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in $_repositoryName getSearchResultsByFirstName().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
   }
 
   @override
-  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId() {
-    // TODO: implement getSearchResultsByInvoiceId
-    throw UnimplementedError();
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId(int invoiceId) async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/testpatient/SearchInvoiceid");
+    ResponseCallback<List<SearchResult>> responseCallback = ResponseCallback();
+
+    try {
+      var req = {"invoice_id": invoiceId};
+      final response = await http.post(url, body: jsonEncode(req), headers: _headers);
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      List<SearchResult> searchResults = [];
+      for (var el in responseMap["data"]) {
+        var lab = SearchResult.fromJson(el);
+        searchResults.add(lab);
+      }
+      responseCallback.data = searchResults;
+      responseCallback.code = response.statusCode;
+      LimsLogger.log("*** Filtered Search Results fetched successfully => $responseMap");
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in $_repositoryName getSearchResultsByInvoiceId().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
   }
 
   @override
-  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid() {
-    // TODO: implement getSearchResultsByPtid
-    throw UnimplementedError();
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid(int ptid) async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/SearchPTID");
+    ResponseCallback<List<SearchResult>> responseCallback = ResponseCallback();
+
+    try {
+      var req = {"patienttestid": ptid};
+      final response = await http.post(url, body: jsonEncode(req), headers: _headers);
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      List<SearchResult> searchResults = [];
+      print(responseMap);
+      for (var el in responseMap["data"]) {
+        var searchResult = SearchResult.fromJson(el);
+        searchResults.add(searchResult);
+      }
+      responseCallback.data = searchResults;
+      responseCallback.code = response.statusCode;
+      LimsLogger.log("*** Filtered Search Results fetched successfully => $responseMap");
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in $_repositoryName getSearchResultsByPtid().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
   }
-
-
 
   @override
   Future<ResponseCallback<PatientAndTests>> getPatientByEmail(String emailId) async {
@@ -62,7 +135,6 @@ class InTransitRepository implements IInTransitRepository {
     try {
       var requestBody = {"UMR": emailId};
       final response = await http.post(url, body: jsonEncode(requestBody), headers: _headers);
-      // if (response.statusCode >= 200 && response.statusCode <= 299) {
       responseCallback.code = response.statusCode;
       var decodedJson = jsonDecode(response.body);
       var testsJson = decodedJson["tests"];
@@ -71,17 +143,17 @@ class InTransitRepository implements IInTransitRepository {
         tests.add(Test.fromJson(testRaw));
       }
       responseCallback.data = PatientAndTests(Patient.fromJson(decodedJson["user"]), tests);
-      // }
-    } on http.ClientException catch (e) {
-      LimsLogger.log("*** http.ClientException in $_repositoryName getPatientByEmail().");
-      LimsLogger.log("Message => ${e.message}");
-      LimsLogger.log("Uri => ${e.uri}");
-      responseCallback.message = e.message;
-      responseCallback.uri = e.uri;
+    }
+    on http.ClientException catch (e) {
+      // LimsLogger.log("*** http.ClientException in $_repositoryName getPatientByEmail().");
+      // LimsLogger.log("Message => ${e.message}");
+      // LimsLogger.log("Uri => ${e.uri}");
+      // responseCallback.message = e.message;
+      // responseCallback.uri = e.uri;
     } on Exception catch (e) {
-      LimsLogger.log("*** Exception in $_repositoryName getPatientByEmail().");
-      LimsLogger.log("Message => ${e.toString()}");
-      responseCallback.message = e.toString();
+      // LimsLogger.log("*** Exception in $_repositoryName getPatientByFirstName().");
+      // LimsLogger.log("Message => ${e.toString()}");
+      // responseCallback.message = e.toString();
     }
 
     return responseCallback;
@@ -175,5 +247,4 @@ class InTransitRepository implements IInTransitRepository {
 
     return responseCallback;
   }
-
 }

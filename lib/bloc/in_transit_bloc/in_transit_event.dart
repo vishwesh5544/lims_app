@@ -19,6 +19,13 @@ class ResetState extends InTransitEvent {
 
 }
 
+
+class FetchSearchResults extends InTransitEvent {
+  final String searchInput;
+
+  FetchSearchResults(this.searchInput);
+}
+
 class FetchFilteredLabs extends InTransitEvent {}
 
 class UpdateInTransit extends InTransitEvent {

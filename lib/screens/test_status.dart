@@ -76,8 +76,12 @@ class _TestStatusState extends State<TestStatus> {
                             hint: "Search by Patient Name/UMR/ Test/ Processing Unit/ Sample Collection Centre",
                             textController: textController,
                             onSubmit: (value) {
-                              // showToast(msg: value);
                               bloc.add(SearchPatient(value));
+
+                              bloc.add(FetchSearchResults(value));
+                              for(var result in state.searchResults!) {
+                                print(result.toJson());
+                              }
                             }),
 
                         ///from date
@@ -172,27 +176,8 @@ class _TestStatusState extends State<TestStatus> {
                                             isEnable: true, calll: () {
 
                                             }),
-
-                                        // ElevatedButton.icon(
-                                        //   onPressed: () {},
-                                        //   label: Text("Report"),
-                                        //   icon: Icon(Icons.print_outlined),
-                                        //   style: ElevatedButton.styleFrom(
-                                        //       backgroundColor: mapping.status == 5 ? ColorProvider.blueDarkShade : Colors
-                                        //           .grey.shade800
-                                        //   ),
-                                        // )
                                       ],
                                     )),
-                                    // DataCell(ElevatedButton.icon(
-                                    //   onPressed: () {},
-                                    //   label: Text("Report"),
-                                    //   icon: Icon(Icons.print_outlined),
-                                    //   style: ElevatedButton.styleFrom(
-                                    //     backgroundColor: mapping.status == 5 ? ColorProvider.blueDarkShade : Colors
-                                    //         .grey.shade800
-                                    //   ),
-                                    // )),
                                   ]);
                                 }).toList()),
                           ],

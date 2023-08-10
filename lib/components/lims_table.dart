@@ -252,7 +252,20 @@ class _LimsTableState extends State<LimsTable> {
       )),
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
-      DataCell(Text("Processing unit")),
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var mappings = state.invoiceMappings;
+
+          if (mappings!=null && mappings.isNotEmpty) {
+            var name = mappings.firstWhere((element) => element.testId == test.id).processingUnit;
+
+            return Text(name ?? "");
+          } else {
+            return Container();
+          }
+        },
+      )),
       DataCell(DropdownButtonFormField(
         icon: IconStore.downwardArrow,
         decoration: const InputDecoration(

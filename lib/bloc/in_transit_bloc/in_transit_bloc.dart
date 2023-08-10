@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_event.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_state.dart';
@@ -58,8 +60,33 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       }
     } else if (event is ViewQrCode) {
       yield state.copyWith(currentVisibleQrCode: event.value);
-    } else if(event is ResetState) {
-      yield state.copyWith(filteredLabs: [],invoiceMappings: [], testsList: [], patient: null);
+    } else if (event is ResetState) {
+      yield state.copyWith(filteredLabs: [], invoiceMappings: [], testsList: [], patient: null);
+    } else if (event is FetchSearchResults) {
+      var input = event.searchInput;
+      int? inputAsInt = int.tryParse(input);
+      if (!inputAsInt.isNull) {
+        String inputString = input.toString();
+        List<String> list = List<String>.generate(inputString.length, (index) => inputString[index]);
+        List<InvoiceMapping> invoices = [];
+        list.removeLast();
+        var interimInput = int.parse(list.join(""));
+        final responseForPtid = await inTransitRepository.getSearchResultsByPtid(interimInput);
+
+        if (!responseForPtid.data.isNull && responseForPtid.data!.isEmpty) {
+          // for(var r in responseForPtid.data!) {
+          //
+          // }
+          
+          yield state.copyWith(searchResults: responseForPtid.data);
+        } else {
+          final responseForInvoiceId = await inTransitRepository.getSearchResultsByInvoiceId(inputAsInt!);
+          yield state.copyWith(searchResults: responseForInvoiceId.data);
+        }
+      } else {
+        final responseForFirstName = await inTransitRepository.getSearchResultsByFirstName(input);
+        yield state.copyWith(searchResults: responseForFirstName.data);
+      }
     }
   }
 }
