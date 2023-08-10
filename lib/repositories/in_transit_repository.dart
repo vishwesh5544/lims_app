@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:lims_app/models/in_transit.dart';
 import 'package:lims_app/models/invoice_mapping.dart';
+import 'package:lims_app/models/lab.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/patient_and_test.dart';
 import 'package:lims_app/models/response_callback.dart';
@@ -18,6 +19,7 @@ abstract class IInTransitRepository {
 
   Future<ResponseCallback<List<InvoiceMapping>>> getInvoiceMappingsForUser(int userId);
 
+  Future<ResponseCallback<List<Lab>>> getAllFilteredLabs();
 
   // TODO: Fetch lab data from api => http://103.174.102.117:8080/lms/api/Labinfo/filterdata
 }
@@ -110,6 +112,37 @@ class InTransitRepository implements IInTransitRepository {
     } on Exception catch (e) {
       LimsLogger.log("*** Exception in $_repositoryName getPatientByEmail().");
       LimsLogger.log("Message => ${e.toString()}");
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
+  }
+
+  @override
+  Future<ResponseCallback<List<Lab>>> getAllFilteredLabs() async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Labinfo/filterdata");
+    ResponseCallback<List<Lab>> responseCallback = ResponseCallback();
+
+    try {
+      final response = await http.get(url, headers: _headers);
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      List<Lab> labs = [];
+      for (var el in responseMap) {
+        var lab = Lab.fromJson(el);
+        labs.add(lab);
+      }
+      responseCallback.data = labs;
+
+      responseCallback.code = response.statusCode;
+      LimsLogger.log("*** Filtered Labs fetched successfully => $responseMap");
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in $_repositoryName addLab().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
       responseCallback.message = e.toString();
     }
 

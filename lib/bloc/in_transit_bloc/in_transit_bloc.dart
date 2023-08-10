@@ -16,6 +16,9 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
   Stream<InTransitState> mapEventToState(InTransitEvent event) async* {
     if (event is FetchAllInvoiceMapping) {
       // TODO: Fetch all invoice mapping from repository, set state
+    } else if (event is FetchFilteredLabs) {
+      final response = await inTransitRepository.getAllFilteredLabs();
+      yield state.copyWith(filteredLabs: response.data);
     } else if (event is SearchPatient) {
 
       if(event.searchString.trim().isNotEmpty && event.searchString.trim().length > 3){

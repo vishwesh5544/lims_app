@@ -18,9 +18,11 @@ class InvoiceMapping {
   final String? collectionUnit;
   @JsonKey(name: "status")
   final int status;
+  @JsonKey(name : "patienttestid")
+  final int? ptid;
 
   InvoiceMapping(this.patientId, this.testId, this.invoiceNumber,
-      {this.processingUnit, this.collectionUnit, this.id, this.status = 0});
+      {this.processingUnit, this.collectionUnit, this.id, this.ptid, this.status = 0});
 
   factory InvoiceMapping.fromJson(Map<String, dynamic> json) => _$InvoiceMappingFromJson(json);
 

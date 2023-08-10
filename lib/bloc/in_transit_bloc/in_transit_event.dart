@@ -1,7 +1,6 @@
 abstract class InTransitEvent {}
 
-class FetchAllInvoiceMapping extends InTransitEvent{}
-
+class FetchAllInvoiceMapping extends InTransitEvent {}
 
 class ViewQrCode extends InTransitEvent {
   final int value;
@@ -16,7 +15,9 @@ class SearchPatient extends InTransitEvent {
   SearchPatient(this.searchString);
 }
 
-class UpdateInTransit extends InTransitEvent{
+class FetchFilteredLabs extends InTransitEvent {}
+
+class UpdateInTransit extends InTransitEvent {
   final int userId;
   final int? invoiceId;
   final int? patientId;

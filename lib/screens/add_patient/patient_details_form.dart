@@ -112,7 +112,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
               text: "Next",
               isEnable: true,
               calll: () {
-                if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
+                if (!bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
                   int userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id!;
                   // update?
                   BlocProvider.of<PatientBloc>(context)

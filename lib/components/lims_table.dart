@@ -52,11 +52,14 @@ class LimsTable extends StatefulWidget {
 }
 
 class _LimsTableState extends State<LimsTable> {
-
+  late final inTransitBloc;
 
   @override
   void initState() {
-    BlocProvider.of<LabBloc>(context).add(FetchAllLabs());
+    inTransitBloc = context.read<InTransitBloc>();
+    inTransitBloc.add(FetchFilteredLabs());
+    inTransitBloc.add(FetchAllInvoiceMapping());
+
     super.initState();
   }
 
@@ -191,7 +194,20 @@ class _LimsTableState extends State<LimsTable> {
       )),
       DataCell(Text(test.testCode)),
       DataCell(Text(test.testName)),
-      DataCell(Text("Processing unit")),
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var mappings = state.invoiceMappings;
+
+          if (!mappings.isNull && mappings!.isNotEmpty) {
+            var name = mappings.firstWhere((element) => element.testId == test.id).processingUnit;
+
+            return Text(name ?? "");
+          } else {
+            return Container();
+          }
+        },
+      )),
       DataCell(
         commonBtn(
             text: "Approve Transit",
@@ -277,37 +293,25 @@ class _LimsTableState extends State<LimsTable> {
 
   ///Sample Management
   DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
-
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
       DataCell(_barCodeWidget(
         text: test.testName,
         barCode: "${test.id}",
       )),
-      // DataCell(DropdownButtonFormField(
-      //   icon: IconStore.downwardArrow,
-      //   decoration: const InputDecoration(
-      //     constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
-      //     border: OutlineInputBorder(),
-      //     hintText: "Select Processing Unit",
-      //   ),
-      //   items: const <DropdownMenuItem>[
-      //     DropdownMenuItem(value: "processing-unit", child: Text('Processing Unit')),
-      //     DropdownMenuItem(value: "both", child: Text('Both'))
-      //   ],
-      //   onChanged: (value) {
-      //     widget.onEditClick.call(value);
-      //   },
-      // )),
-      DataCell(BlocConsumer<LabBloc, LabState>(
-        listener: (context, state) {
-
-        },
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
         builder: (context, state) {
-
-          return DropdownButtonFormField(items: state.labsList.map((Lab lab) {
-            return DropdownMenuItem(value: lab.labName,child: Text(lab.labName),);
-          }).toList(), onChanged: (value) {});
+          return DropdownButtonFormField(
+              items: state.filteredLabs?.map((Lab lab) {
+                return DropdownMenuItem(
+                  value: lab.labName,
+                  child: Text(lab.labName),
+                );
+              }).toList(),
+              onChanged: (value) {
+                widget.onEditClick(value);
+              });
         },
       )),
       DataCell(BlocBuilder<InTransitBloc, InTransitState>(

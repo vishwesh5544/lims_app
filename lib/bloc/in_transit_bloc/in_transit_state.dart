@@ -1,4 +1,5 @@
 import 'package:lims_app/models/invoice_mapping.dart';
+import 'package:lims_app/models/lab.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/test.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
@@ -8,12 +9,14 @@ class InTransitState {
   final Patient? patient;
   final List<Test>? testsList;
   final List<InvoiceMapping>? invoiceMappings;
+  final List<Lab>? filteredLabs;
   final FormSubmissionStatus formStatus;
   final UpdateStatus updateStatus;
   int currentVisibleQrCode = -1;
 
   InTransitState(
-      {this.testsList = const [],
+      {this.filteredLabs = const [],
+      this.testsList = const [],
       this.invoiceMappings = const [],
       this.patient,
       this.currentVisibleQrCode = -1,
@@ -22,12 +25,14 @@ class InTransitState {
 
   InTransitState copyWith(
       {List<Test>? testsList,
+      List<Lab>? filteredLabs,
       List<InvoiceMapping>? invoiceMappings,
       Patient? patient,
       FormSubmissionStatus? formStatus,
       int? currentVisibleQrCode = -1,
       UpdateStatus? updateStatus}) {
     return InTransitState(
+      filteredLabs: filteredLabs ?? this.filteredLabs,
       invoiceMappings: invoiceMappings ?? this.invoiceMappings,
       testsList: testsList ?? this.testsList,
       patient: patient ?? this.patient,

@@ -80,6 +80,7 @@ class _PatientManagementState extends State<PatientManagement> {
                   buttonText: ButtonStrings.addPatient,
                   routeName: RouteStrings.addPatient,
                   onClick: () {
+                    BlocProvider.of<PatientBloc>(context).add(IsPatient(value: false));
                     BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
                     // Navigator.push(
                     //   context,
