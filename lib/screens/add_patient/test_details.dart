@@ -1,7 +1,12 @@
+import "dart:js_interop";
+
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
 import "package:intl/intl.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
@@ -61,14 +66,25 @@ class _TestDetailsState extends State<TestDetails> {
           width: double.infinity,
           color: Colors.black,
           child: Row(
-            children: [Text("Total Price: \$${totalPrice.toString()}", style: TextUtility.getStyle(16, color: Colors.white),)],
+            children: [
+              Text(
+                "Total Price: \$${totalPrice.toString()}",
+                style: TextUtility.getStyle(16, color: Colors.white),
+              )
+            ],
           ),
         ),
-        commonBtn(text: "Preview Invoice", isEnable: true, calll: (){
-
-          BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
-          _showInvoiceDialog();
-        }),
+        commonBtn(
+            text: "Preview Invoice",
+            isEnable: true,
+            calll: () {
+              BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
+              Future.delayed(const Duration(seconds: 1), () {
+                BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
+                BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
+              });
+              _showInvoiceDialog();
+            }),
       ]
           .map((el) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -77,7 +93,6 @@ class _TestDetailsState extends State<TestDetails> {
           .toList(),
     ));
   }
-
 
   /// invoice dialog
   Future<void> _showInvoiceDialog() async {
@@ -116,7 +131,7 @@ class _TestDetailsState extends State<TestDetails> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18,color: Colors.black))],
+                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18, color: Colors.black))],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -143,14 +158,25 @@ class _TestDetailsState extends State<TestDetails> {
                               padding: EdgeInsets.all(10),
                               margin: EdgeInsets.all(5),
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black,
-                                      width: 2
-                                  ),
-                                  borderRadius: const BorderRadius.all(Radius.circular(5))
+                                  border: Border.all(color: Colors.black, width: 2),
+                                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                              child: BlocConsumer<InTransitBloc, InTransitState>(
+                                listener: (context, state) {},
+                                builder: (context, inState) {
+                                  if (!inState.invoiceMappings.isNull && inState.invoiceMappings!.isNotEmpty) {
+                                    // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
+                                    //     .createdPatient?.id).;
+
+                                    return SvgPicture.string(
+                                        BarcodeUtility.getBarcodeSvgString(
+                                            "${state.createdPatient?.id}${state.invoiceNumber}"),
+                                        width: 150,
+                                        height: 75);
+                                  } else {
+                                    return Container();
+                                  }
+                                },
                               ),
-                              child: SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
-                                  "${state.createdPatient?.id}${state.invoiceNumber}"), width: 150, height: 75),
                             )
                           ],
                         ),
@@ -179,28 +205,42 @@ class _TestDetailsState extends State<TestDetails> {
                         // ),
 
                         LimsTable(
-                            columnNames: const ["#","Names of the Test", "Sample Type",
-                              "Test Code", "Cost", "Tax %", "Total",],
+                            columnNames: const [
+                              "#",
+                              "Names of the Test",
+                              "Sample Type",
+                              "Test Code",
+                              "Cost",
+                              "Tax %",
+                              "Total",
+                            ],
                             tableType: TableType.viewPatient,
                             tableRowHeight: 85,
-                            rowData: state.selectedTests, onEditClick: (value){
-
-                        }),
+                            rowData: state.selectedTests,
+                            onEditClick: (value) {}),
                         Container(
                           height: 50,
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           width: double.infinity,
                           color: Colors.black,
                           child: Row(
-                            children: [Text("Total Price: \$${totalPrice.toString()}", style: TextUtility.getStyle(16, color: Colors.white),)],
+                            children: [
+                              Text(
+                                "Total Price: \$${totalPrice.toString()}",
+                                style: TextUtility.getStyle(16, color: Colors.white),
+                              )
+                            ],
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 10),
-                          child: commonBtn(text: "Generate Invoice", isEnable: true, calll: (){
-                            BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
-                          }),
-                        )// SvgPicture.string(barcodeOne)
+                          child: commonBtn(
+                              text: "Generate Invoice",
+                              isEnable: true,
+                              calll: () {
+                                // BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
+                              }),
+                        ) // SvgPicture.string(barcodeOne)
                       ],
                     ),
                   ),
@@ -210,8 +250,6 @@ class _TestDetailsState extends State<TestDetails> {
       },
     );
   }
-
-
 
   /// dropdown
   Widget _selectTestDropdown() {
@@ -275,7 +313,8 @@ class _TestDetailsState extends State<TestDetails> {
               dataRowColor: MaterialStateProperty.all(Colors.white),
               dividerThickness: 0.2,
               headingRowHeight: 50,
-              border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
+              border: TableBorder(
+                  horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
               columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
               rows: selectedTests.map((value) {
                 var currentIndex = selectedTests.indexOf(value) + 1;
