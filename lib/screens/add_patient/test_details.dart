@@ -163,7 +163,7 @@ class _TestDetailsState extends State<TestDetails> {
                               child: BlocConsumer<InTransitBloc, InTransitState>(
                                 listener: (context, state) {},
                                 builder: (context, inState) {
-                                  if (!inState.invoiceMappings.isNull && inState.invoiceMappings!.isNotEmpty) {
+                                  if (inState.invoiceMappings!=null && inState.invoiceMappings!.isNotEmpty) {
                                     // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
                                     //     .createdPatient?.id).;
 

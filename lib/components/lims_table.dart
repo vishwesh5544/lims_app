@@ -185,7 +185,7 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if(!state.invoiceMappings!.isNull && state.invoiceMappings!.isNotEmpty) {
+          if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
             var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
             return _barCodeWidget(
               text: test.testName,
@@ -302,7 +302,7 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if(!state.invoiceMappings!.isNull && state.invoiceMappings!.isNotEmpty) {
+          if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
             var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
             return _barCodeWidget(
               text: test.testName,
