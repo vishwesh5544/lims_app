@@ -162,19 +162,28 @@ class _TestDetailsState extends State<TestDetails> {
                               child: BlocConsumer<InTransitBloc, InTransitState>(
                                 listener: (context, state) {},
                                 builder: (context, inState) {
-                                  if (inState.invoiceMappings!=null && inState.invoiceMappings!.isNotEmpty) {
+                                  if (inState.invoiceMappings != null && inState.invoiceMappings!.isNotEmpty) {
                                     // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
                                     //     .createdPatient?.id).;
 
-                                    int ptid = inState.invoiceMappings!.firstWhere((e) => e.invoiceNumber == state.invoiceNumber).ptid!;
-
-                                    return barCodeWidget(
-                                      text: "",
-                                      barCode: "${ptid}",
-                                    );
+                                    int ptid = 13;
+                                    if (ptid.toString().length == 11 || ptid.toString().length == 12) {
+                                      try {
+                                        return barCodeWidget(
+                                          text: "",
+                                          barCode: "12345678901",
+                                        );
+                                      } on Exception catch (e) {
+                                        print(e);
+                                      }
+                                    } else {
+                                      return Container();
+                                    }
                                   } else {
                                     return Container();
                                   }
+
+                                  return Container();
                                 },
                               ),
                             )
@@ -281,10 +290,10 @@ class _TestDetailsState extends State<TestDetails> {
                 setState(() {
                   totalPrice = 0;
 
-                  if(selectedTests.isEmpty || selectedTests.indexWhere((element) => element.id == value!.id)!=0){
+                  if (selectedTests.isEmpty || selectedTests.indexWhere((element) => element.id == value!.id) != 0) {
                     selectedTests.add(value!);
                     patientBloc.add(SelectedTestsUpdated(selectedTests));
-                  }else{
+                  } else {
                     int index = selectedTests.indexWhere((element) => element.id == value!.id);
                     selectedTests.removeAt(index);
                   }

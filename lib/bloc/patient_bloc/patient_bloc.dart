@@ -77,7 +77,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         } else {
           response = await patientRepository.addPatient(newPatient);
         }
-        yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
+          yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
         LimsLogger.log("*** Patient successfully created => ${response.data?.toJson()}");
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
@@ -97,8 +97,10 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       List<InvoiceMapping> invoices = [];
 
       for (Test test in state.selectedTests) {
-        InvoiceMapping invoice = InvoiceMapping(state.createdPatient!.id!, test.id!, state.invoiceNumber, status: 0);
-        invoices.add(invoice);
+        if(state.createdPatient?.id != null && test.id != null) {
+          InvoiceMapping invoice = InvoiceMapping(state.createdPatient!.id!, test.id!, state.invoiceNumber, status: 0);
+          invoices.add(invoice);
+        }
       }
 
       patientRepository.addInvoice(invoices);

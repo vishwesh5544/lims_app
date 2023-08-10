@@ -163,12 +163,27 @@ class _LimsTableState extends State<LimsTable> {
     ]);
   }
 
+
+  // barCodeWidget(
+  // text: test.testName,
+  // barCode: "${test.id}",
+  // )
   DataRow _buildDataRowForTestBarCode(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(barCodeWidget(
-        text: test.testName,
-        barCode: "${test.id}",
+      DataCell(  BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+            return barCodeWidget(
+              text: test.testName,
+              barCode: "${ptid}",
+            );
+          } else {
+            return Container();
+          }
+        },
       )),
       DataCell(Text(test.sampleType)),
       DataCell(Text(test.testCode)),
