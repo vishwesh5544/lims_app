@@ -73,20 +73,24 @@ class _PatientManagementState extends State<PatientManagement> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              RedirectButton(
-                  buttonText: ButtonStrings.addPatient,
-                  routeName: RouteStrings.addPatient,
-                  onClick: () {
-                    BlocProvider.of<PatientBloc>(context).add(IsPatient(value: false));
-                    BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => AddPatient()),);
-                  }),
-            ],
+          Container(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                RedirectButton(
+                    buttonText: ButtonStrings.addPatient,
+                    routeName: RouteStrings.addPatient,
+                    onClick: () {
+                      BlocProvider.of<PatientBloc>(context).add(IsPatient(value: false));
+                      BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => AddPatient()),);
+                    }),
+              ],
+            ),
           ),
           SearchHeader(
               headerTitle: SearchHeaderStrings.patientsListTitle,
@@ -104,7 +108,7 @@ class _PatientManagementState extends State<PatientManagement> {
                 _showPreviewDialog(value);
               },
               rowData: state.searchPatientsList),
-        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 7), child: el)).toList(),
       ),
     );
   }

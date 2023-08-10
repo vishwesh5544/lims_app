@@ -26,6 +26,7 @@ import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/update_status.dart";
 import "package:lims_app/utils/utils.dart";
 
+import "../components/common_header.dart";
 import "../utils/color_provider.dart";
 import "../utils/strings/add_test_strings.dart";
 import "../utils/text_utility.dart";
@@ -72,24 +73,9 @@ class _SampleManagementState extends State<SampleManagement> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                 CommonHeader(title:  "Sample Management"),
                   Container(
-                    decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
-                    // margin: EdgeInsets.only(bottom: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Sample Management",
-                            style: TextUtility.getBoldStyle(18.0, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 10),
                       child: commonSearchArea(
                           title: "UMR No./Patient Name",
                           hint: "Search by URM No./Patient Name",

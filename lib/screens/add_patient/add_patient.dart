@@ -66,7 +66,9 @@ class _AddPatientState extends State<AddPatient> {
                       ),
                     ),
                     Expanded(
-                      child: _getFormStepper(state),
+                      child: SingleChildScrollView(
+                        child: state.isPatient? PatientDetailsForm() : TestDetails(),
+                      )
                     ),
                   ],
                 ),
@@ -77,17 +79,6 @@ class _AddPatientState extends State<AddPatient> {
       ),
     );
   }
-
-  /// form stepper
-  _getFormStepper(PatientState state) {
-    // Step(title: const Text('Add Patient'), content: const PatientDetailsForm());
-    //
-    // const Step(title: Text('Add New details'), content: TestDetails());
-    return SingleChildScrollView(
-       child: state.isPatient? PatientDetailsForm() : TestDetails(),
-    );
-  }
-
 
   /// header strip
   Widget _header(PatientState state) {

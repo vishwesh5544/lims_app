@@ -10,6 +10,7 @@ import 'package:lims_app/screens/sample_management.dart';
 import 'package:lims_app/screens/test_management.dart';
 import 'package:lims_app/screens/test_status.dart';
 import 'package:lims_app/screens/transit_management.dart';
+import 'package:lims_app/utils/color_provider.dart';
 import 'package:lims_app/utils/text_utility.dart';
 import 'package:lims_app/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,10 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 500),
+        preferredSize: const Size(double.infinity, 500),
         child: Container(
-          color: Colors.blue,
-          padding: EdgeInsets.symmetric(
+          color: ColorProvider.blueDarkShade,
+          padding: const EdgeInsets.symmetric(
             horizontal: 8.0,
           ),
           child: Row(
@@ -95,10 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
               displayMode: SideMenuDisplayMode.auto,
               hoverColor: Colors.blue[100],
               selectedHoverColor: Colors.blue[100],
-              selectedColor: Colors.lightBlue,
+              selectedColor: ColorProvider.blueDarkShade,
               selectedTitleTextStyle: const TextStyle(color: Colors.white),
               selectedIconColor: Colors.white,
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorProvider.blueDarkShade
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.all(Radius.circular(10)),
               // ),

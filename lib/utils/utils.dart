@@ -39,7 +39,7 @@ double width = 140}){
             borderRadius: const BorderRadius.all(Radius.circular(5))
         ),
         child: Center(child: Text(text, style:
-        TextUtility.getBoldStyle(16, color: isEnable? Colors.white: Colors.black),))
+        TextUtility.getStyle(16, color: isEnable? Colors.white: Colors.black),))
     ),
   );
 }

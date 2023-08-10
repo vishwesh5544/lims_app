@@ -88,6 +88,7 @@ class _TestDetailsState extends State<TestDetails> {
           builder: (context, state) {
             return AlertDialog(
                 insetPadding: EdgeInsets.zero,
+                backgroundColor: Colors.white,
                 titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
                 titlePadding: EdgeInsets.zero,
                 title: Container(
@@ -107,7 +108,7 @@ class _TestDetailsState extends State<TestDetails> {
                   ),
                 ),
                 content: Container(
-                  height: 700,
+                  // height: 700,
                   width: 1200,
                   child: SingleChildScrollView(
                     child: Column(
@@ -177,12 +178,14 @@ class _TestDetailsState extends State<TestDetails> {
                         //   ],
                         // ),
 
-                        LimsTable(columnNames: const ["#","Names of the Test", "Sample Type",
-                          "Test Code", "Cost", "Tax %", "Total",],
+                        LimsTable(
+                            columnNames: const ["#","Names of the Test", "Sample Type",
+                              "Test Code", "Cost", "Tax %", "Total",],
                             tableType: TableType.viewPatient,
+                            tableRowHeight: 85,
                             rowData: state.selectedTests, onEditClick: (value){
 
-                            }),
+                        }),
                         Container(
                           height: 50,
                           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -269,7 +272,10 @@ class _TestDetailsState extends State<TestDetails> {
             DataTable(
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
-              dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
+              dataRowColor: MaterialStateProperty.all(Colors.white),
+              dividerThickness: 0.2,
+              headingRowHeight: 50,
+              border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
               columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
               rows: selectedTests.map((value) {
                 var currentIndex = selectedTests.indexOf(value) + 1;

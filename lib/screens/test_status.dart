@@ -9,6 +9,7 @@ import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/models/invoice_mapping.dart";
 import "package:lims_app/utils/utils.dart";
+import "../components/common_header.dart";
 import "../utils/color_provider.dart";
 import "../utils/text_utility.dart";
 
@@ -64,23 +65,7 @@ class _TestStatusState extends State<TestStatus> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
-                    // margin: EdgeInsets.only(bottom: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Test Status",
-                            style: TextUtility.getBoldStyle(18.0, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
+                  CommonHeader(title:  "Test Status"),
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 10),
                     child: Row(

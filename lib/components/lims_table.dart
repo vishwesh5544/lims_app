@@ -199,7 +199,7 @@ class _LimsTableState extends State<LimsTable> {
         builder: (context, state) {
           var mappings = state.invoiceMappings;
 
-          if (!mappings.isNull && mappings!.isNotEmpty) {
+          if (mappings!=null && mappings.isNotEmpty) {
             var name = mappings.firstWhere((element) => element.testId == test.id).processingUnit;
 
             return Text(name ?? "");

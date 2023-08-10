@@ -19,6 +19,7 @@ import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/utils.dart";
 
+import "../components/common_header.dart";
 import "../utils/color_provider.dart";
 import "../utils/strings/add_test_strings.dart";
 import "../utils/text_utility.dart";
@@ -72,22 +73,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
-                        // margin: EdgeInsets.only(bottom: 20),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Process Management",
-                                style: TextUtility.getBoldStyle(18.0, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
+                      CommonHeader(title:  "Process Management"),
                       Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: commonSearchArea(
