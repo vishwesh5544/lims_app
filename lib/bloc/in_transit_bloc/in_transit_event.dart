@@ -15,6 +15,10 @@ class SearchPatient extends InTransitEvent {
   SearchPatient(this.searchString);
 }
 
+class ResetState extends InTransitEvent {
+
+}
+
 class FetchFilteredLabs extends InTransitEvent {}
 
 class UpdateInTransit extends InTransitEvent {

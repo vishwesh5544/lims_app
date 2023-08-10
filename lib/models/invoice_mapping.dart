@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part "invoice_mapping.g.dart";
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class InvoiceMapping {
   @JsonKey(name: "id")
   final int? id;

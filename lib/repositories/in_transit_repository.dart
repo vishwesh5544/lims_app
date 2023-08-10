@@ -6,6 +6,7 @@ import 'package:lims_app/models/lab.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/patient_and_test.dart';
 import 'package:lims_app/models/response_callback.dart';
+import 'package:lims_app/models/search_result.dart';
 import 'package:lims_app/models/test.dart';
 import 'package:lims_app/network/lims_http_client.dart';
 import 'package:lims_app/utils/lims_logger.dart';
@@ -21,12 +22,38 @@ abstract class IInTransitRepository {
 
   Future<ResponseCallback<List<Lab>>> getAllFilteredLabs();
 
-  // TODO: Fetch lab data from api => http://103.174.102.117:8080/lms/api/Labinfo/filterdata
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid();
+
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId();
+
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName();
 }
 
 class InTransitRepository implements IInTransitRepository {
   final _repositoryName = "InTransitRepository";
   final _headers = LimsHttpClient.headers;
+
+
+
+  @override
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName() {
+    // TODO: implement getSearchResultsByFirstName
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId() {
+    // TODO: implement getSearchResultsByInvoiceId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid() {
+    // TODO: implement getSearchResultsByPtid
+    throw UnimplementedError();
+  }
+
+
 
   @override
   Future<ResponseCallback<PatientAndTests>> getPatientByEmail(String emailId) async {
@@ -148,4 +175,5 @@ class InTransitRepository implements IInTransitRepository {
 
     return responseCallback;
   }
+
 }

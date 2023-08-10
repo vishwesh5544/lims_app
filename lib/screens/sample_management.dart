@@ -58,9 +58,7 @@ class _SampleManagementState extends State<SampleManagement> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InTransitBloc, InTransitState>(listener: (context, state) {
-      if (state.updateStatus is Updated) {
-
-      }
+      if (state.updateStatus is Updated) {}
     }, builder: (context, state) {
       return WillPopScope(
           onWillPop: () async {
@@ -74,15 +72,23 @@ class _SampleManagementState extends State<SampleManagement> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 CommonHeader(title:  "Sample Management"),
+                  CommonHeader(title: "Sample Management"),
                   Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       child: commonSearchArea(
                           title: "UMR No./Patient Name",
                           hint: "Search by URM No./Patient Name",
                           textController: textController,
-                          onSubmit: (value) {
-                            bloc.add(SearchPatient(value));
+                          onSubmit: (String value) {
+                            bloc.add(ResetState());
+                            if (value.length > 4) {
+                              var parsed = int.tryParse(value);
+
+                              if (parsed.runtimeType is int) {
+                              } else {
+                                bloc.add(SearchPatient(value));
+                              }
+                            }
                           })),
                   Container(
                     margin: EdgeInsets.only(bottom: 15),
@@ -90,45 +96,49 @@ class _SampleManagementState extends State<SampleManagement> {
                       children: [
                         CommonGreyFiled(title: "UMR Number", value: state.patient?.umrNumber ?? ""),
                         const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
-                        CommonGreyFiled(title: "Patient Name", value: "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
+                        CommonGreyFiled(
+                            title: "Patient Name",
+                            value:
+                                "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
                       ],
                     ),
                   ),
                   Visibility(
-                    visible: state.testsList?.isNotEmpty??false,
-                    child:  LimsTable(
-                      tableRowHeight: 95,
-                      columnNames: columnNames,
-                      tableType: TableType.sample,
-                      onEditClick: (value) {
-                        showToast(msg: value);
-                        processingUnit = value;
-                      },
-                      onSubmit: (test) {
-                        if (processingUnit.isNotEmpty) {
-                          int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                    visible: state.testsList?.isNotEmpty ?? false,
+                    child: LimsTable(
+                        tableRowHeight: 95,
+                        columnNames: columnNames,
+                        tableType: TableType.sample,
+                        onEditClick: (value) {
+                          showToast(msg: value);
+                          processingUnit = value;
+                        },
+                        onSubmit: (test) {
+                          if (processingUnit.isNotEmpty) {
+                            int invoiceId =
+                                state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
 
-                          BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
-                              invoiceId: invoiceId,
-                              userId: state.patient!.id!,
-                              processingUnit: processingUnit,
-                              status: 2));
-                          ScreenHelper.showAlertPopup("Sample status updated successfully", context);
-                        } else {
-                          ScreenHelper.showAlertPopup("Please select Processing Unit first!", context);
-                        }
-                      },
-                      onPrintPdf: (Test test) {
-                        var testId = test.id;
-                        var userId = state.patient?.id;
-                        var invoiceId = state.invoiceMappings
-                            ?.firstWhere(
-                                (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
-                            .id;
-                        var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
-                        PdfUtility.savePdf(context, barcodeString.toString());
-                      },
-                      rowData: state.testsList!),
+                            BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
+                                invoiceId: invoiceId,
+                                userId: state.patient!.id!,
+                                processingUnit: processingUnit,
+                                status: 2));
+                            ScreenHelper.showAlertPopup("Sample status updated successfully", context);
+                          } else {
+                            ScreenHelper.showAlertPopup("Please select Processing Unit first!", context);
+                          }
+                        },
+                        onPrintPdf: (Test test) {
+                          var testId = test.id;
+                          var userId = state.patient?.id;
+                          var invoiceId = state.invoiceMappings
+                              ?.firstWhere(
+                                  (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                              .id;
+                          var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
+                          PdfUtility.savePdf(context, barcodeString.toString());
+                        },
+                        rowData: state.testsList!),
                   )
                 ],
               ),
