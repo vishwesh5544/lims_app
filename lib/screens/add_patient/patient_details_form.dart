@@ -5,6 +5,7 @@ import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/patient_bloc/patient_state.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
+import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
 import 'package:age_calculator/age_calculator.dart';
 
@@ -116,11 +117,16 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                   // update?
                   BlocProvider.of<PatientBloc>(context)
                       .add(AddPatientFormSubmitted(isUpdate: true, userId: userId));
+
                 } else {
                   BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: false));
                 }
 
-                BlocProvider.of<PatientBloc>(context).add(IsPatient());
+                Future.delayed(Duration(seconds: 1), () {
+                  BlocProvider.of<PatientBloc>(context).add(IsPatient());
+
+                  ScreenHelper.showAlertPopup("Patient updated successfully ", context);
+                });
               }),
         ],
       ),

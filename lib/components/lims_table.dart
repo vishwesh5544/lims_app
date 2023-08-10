@@ -6,6 +6,9 @@ import "package:flutter_svg/svg.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
+import "package:lims_app/bloc/lab_bloc/lab_bloc.dart";
+import "package:lims_app/bloc/lab_bloc/lab_event.dart";
+import "package:lims_app/bloc/lab_bloc/lab_state.dart";
 import "package:lims_app/models/lab.dart";
 import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
@@ -19,7 +22,7 @@ import "../utils/strings/add_patient_strings.dart";
 
 enum TableType { addPatient, addTest, viewPatient, lab, inTransit, process, testStatus, sample }
 
-class LimsTable extends StatelessWidget {
+class LimsTable extends StatefulWidget {
   LimsTable(
       {required this.columnNames,
       required this.rowData,
@@ -29,6 +32,7 @@ class LimsTable extends StatelessWidget {
       this.onViewClick,
       this.onSubmit,
       this.onPrintPdf,
+      this.onSelected,
       super.key});
 
   final List<String> columnNames;
@@ -38,7 +42,21 @@ class LimsTable extends StatelessWidget {
   Function? onViewClick;
   Function? onSubmit;
   Function? onPrintPdf;
+  Function? onSelected;
   Widget? conditionalButton;
+
+  @override
+  State<LimsTable> createState() => _LimsTableState();
+}
+
+class _LimsTableState extends State<LimsTable> {
+
+
+  @override
+  void initState() {
+    BlocProvider.of<LabBloc>(context).add(FetchAllLabs());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,25 +72,25 @@ class LimsTable extends StatelessWidget {
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
               dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
-              columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
-              rows: rowData.map((value) {
-                var currentIndex = rowData.indexOf(value) + 1;
+              columns: widget.columnNames.map((name) => DataColumn(label: Text(name))).toList(),
+              rows: widget.rowData.map((value) {
+                var currentIndex = widget.rowData.indexOf(value) + 1;
                 // TODO: bring value type check to top level
-                if (tableType == TableType.addPatient) {
+                if (widget.tableType == TableType.addPatient) {
                   return _buildDataRowForPatient(value, currentIndex);
-                } else if (tableType == TableType.addTest) {
+                } else if (widget.tableType == TableType.addTest) {
                   return _buildDataRowForTest(value, currentIndex);
-                } else if (tableType == TableType.lab) {
+                } else if (widget.tableType == TableType.lab) {
                   return _buildDataRowForLab(value, currentIndex);
-                } else if (tableType == TableType.viewPatient) {
+                } else if (widget.tableType == TableType.viewPatient) {
                   return _buildDataRowForTestBarCode(value, currentIndex);
-                } else if (tableType == TableType.inTransit) {
+                } else if (widget.tableType == TableType.inTransit) {
                   return _buildDataRowForTransit(value, currentIndex);
-                } else if (tableType == TableType.process) {
+                } else if (widget.tableType == TableType.process) {
                   return _buildDataRowForProcess(value, currentIndex);
-                } else if (tableType == TableType.testStatus) {
+                } else if (widget.tableType == TableType.testStatus) {
                   return _buildDataRowForTestStatus(value, currentIndex);
-                } else if (tableType == TableType.sample) {
+                } else if (widget.tableType == TableType.sample) {
                   return _buildDataRowForSampleManagement(value, currentIndex);
                 } else {
                   throw Exception("*** Invalid type provided for ${value.toString()}");
@@ -90,12 +108,12 @@ class LimsTable extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       InkWell(
           onTap: () {
-            onEditClick.call(currentIndex - 1);
+            widget.onEditClick.call(currentIndex - 1);
           },
           child: Icon(Icons.note_alt_outlined)),
       InkWell(
           onTap: () {
-            onViewClick!.call(value);
+            widget.onViewClick!.call(value);
           },
           child: Icon(Icons.remove_red_eye_outlined))
     ]);
@@ -174,14 +192,14 @@ class LimsTable extends StatelessWidget {
             text: "Approve Transit",
             isEnable: true,
             calll: () {
-              onSubmit!.call(test);
+              widget.onSubmit!.call(test);
             }),
       ),
       DataCell(commonBtn(
           text: "To Pdf",
           isEnable: true,
           calll: () {
-            onPrintPdf!.call(test);
+            widget.onPrintPdf!.call(test);
           }))
     ]);
   }
@@ -217,20 +235,20 @@ class LimsTable extends StatelessWidget {
           } else {
             intValue = 2;
           }
-          onEditClick.call("$intValue");
+          widget.onEditClick.call("$intValue");
         },
       )),
       DataCell(commonBtn(
           text: "Submit",
           isEnable: true,
           calll: () {
-            onSubmit!.call(test);
+            widget.onSubmit!.call(test);
           })),
       DataCell(commonBtn(
           text: "To Pdf",
           isEnable: true,
           calll: () {
-            onPrintPdf!.call(test);
+            widget.onPrintPdf!.call(test);
           }))
     ]);
   }
@@ -252,6 +270,7 @@ class LimsTable extends StatelessWidget {
 
   ///Sample Management
   DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
+
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
       DataCell(_barCodeWidget(
@@ -270,7 +289,18 @@ class LimsTable extends StatelessWidget {
           DropdownMenuItem(value: "both", child: Text('Both'))
         ],
         onChanged: (value) {
-          onEditClick.call(value);
+          widget.onEditClick.call(value);
+        },
+      )),
+      DataCell(BlocConsumer<LabBloc, LabState>(
+        listener: (context, state) {
+
+        },
+        builder: (context, state) {
+
+          return DropdownButtonFormField(items: state.labsList.map((Lab lab) {
+            return DropdownMenuItem(value: lab.labName,child: Text(lab.labName),);
+          }).toList(), onChanged: (value) {});
         },
       )),
       DataCell(BlocBuilder<InTransitBloc, InTransitState>(
@@ -280,9 +310,9 @@ class LimsTable extends StatelessWidget {
             if (!currentMapping.isNull) {
               return commonBtn(
                   text: "Collect Sample",
-                  isEnable: currentMapping!.status == 5 ? false : true,
+                  isEnable: currentMapping.status == 5 ? false : true,
                   calll: () {
-                    onSubmit!.call(test);
+                    widget.onSubmit!.call(test);
                   });
             } else {
               return Container();
@@ -296,7 +326,7 @@ class LimsTable extends StatelessWidget {
           text: "To Pdf",
           isEnable: true,
           calll: () {
-            onPrintPdf!.call(test);
+            widget.onPrintPdf!.call(test);
           }))
     ]);
   }

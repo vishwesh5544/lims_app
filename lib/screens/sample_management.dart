@@ -39,7 +39,7 @@ class SampleManagement extends StatefulWidget {
 class _SampleManagementState extends State<SampleManagement> {
   TextEditingController textController = TextEditingController(text: "vishweshshukla20@gmail.com");
   late final InTransitBloc bloc;
-  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions", ""];
+  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Select Lab", "Actions", ""];
 
   String processingUnit = "";
 
@@ -80,7 +80,7 @@ class _SampleManagementState extends State<SampleManagement> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "In Transit Management",
+                            "Sample Management",
                             style: TextUtility.getBoldStyle(18.0, color: Colors.white),
                           ),
                         ],
