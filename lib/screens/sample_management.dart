@@ -19,6 +19,7 @@ import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/barcode_utility.dart";
 import "package:lims_app/utils/pdf_utility.dart";
+import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
@@ -148,7 +149,6 @@ class _SampleManagementState extends State<SampleManagement> {
                         showToast(msg: value);
                         processingUnit = value;
                       },
-
                       onSubmit: (test) {
                         if (processingUnit.isNotEmpty) {
                           int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
@@ -158,8 +158,9 @@ class _SampleManagementState extends State<SampleManagement> {
                               userId: state.patient!.id!,
                               processingUnit: processingUnit,
                               status: 2));
+                          ScreenHelper.showAlertPopup("Sample status updated successfully", context);
                         } else {
-                          showToast(msg: "Please select Processing Unit first!");
+                          ScreenHelper.showAlertPopup("Please select Processing Unit first!", context);
                         }
                       },
                       onPrintPdf: (Test test) {
