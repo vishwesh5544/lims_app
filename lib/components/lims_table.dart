@@ -1,8 +1,11 @@
+import "dart:js_interop";
+
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/models/lab.dart";
 import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
@@ -22,6 +25,7 @@ class LimsTable extends StatelessWidget {
       required this.rowData,
       required this.tableType,
       required this.onEditClick,
+      this.conditionalButton,
       this.onViewClick,
       this.onSubmit,
       this.onPrintPdf,
@@ -34,6 +38,7 @@ class LimsTable extends StatelessWidget {
   Function? onViewClick;
   Function? onSubmit;
   Function? onPrintPdf;
+  Widget? conditionalButton;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +73,7 @@ class LimsTable extends StatelessWidget {
                 } else if (tableType == TableType.testStatus) {
                   return _buildDataRowForTestStatus(value, currentIndex);
                 } else if (tableType == TableType.sample) {
-                  return _buildDataRowForSampleManagement(value, currentIndex, context);
+                  return _buildDataRowForSampleManagement(value, currentIndex);
                 } else {
                   throw Exception("*** Invalid type provided for ${value.toString()}");
                 }
@@ -144,12 +149,12 @@ class LimsTable extends StatelessWidget {
         text: test.testName,
         barCode: "${test.id}",
       )),
-      DataCell(Text(test.testCode)),
-      DataCell(Text(test.testName)),
-      DataCell(Text(test.department)),
       DataCell(Text(test.sampleType)),
-      DataCell(Text(test.turnAroundTime)),
+      DataCell(Text(test.testCode)),
       DataCell(Text(test.price.toString())),
+      DataCell(Text(test.taxPercentage.toString())),
+      DataCell(Text(test.totalPrice.toString())),
+      // DataCell(Text(test.price.toString())),
     ]);
   }
 
@@ -246,7 +251,7 @@ class LimsTable extends StatelessWidget {
   }
 
   ///Sample Management
-  DataRow _buildDataRowForSampleManagement(Test test, int currentIndex, BuildContext context) {
+  DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
       DataCell(_barCodeWidget(
@@ -268,12 +273,25 @@ class LimsTable extends StatelessWidget {
           onEditClick.call(value);
         },
       )),
-      DataCell(commonBtn(
-          text: "Collect Sample",
-          isEnable: true,
-          calll: () {
-            onSubmit!.call(test);
-          })),
+      DataCell(BlocBuilder<InTransitBloc, InTransitState>(
+        builder: (context, state) {
+          if (!state.invoiceMappings.isNull && state.invoiceMappings!.isNotEmpty) {
+            var currentMapping = state.invoiceMappings!.firstWhere((element) => element.testId == test.id);
+            if (!currentMapping.isNull) {
+              return commonBtn(
+                  text: "Collect Sample",
+                  isEnable: currentMapping!.status == 5 ? false : true,
+                  calll: () {
+                    onSubmit!.call(test);
+                  });
+            } else {
+              return Container();
+            }
+          } else {
+            return Container();
+          }
+        },
+      )),
       DataCell(commonBtn(
           text: "To Pdf",
           isEnable: true,

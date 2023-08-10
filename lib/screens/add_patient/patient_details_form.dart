@@ -359,7 +359,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
 
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
-        context: context, initialDate: DateTime.now(), firstDate: DateTime(1995), lastDate: DateTime.now());
+        context: context, initialDate: DateTime.now(), firstDate: DateTime(1947), lastDate: DateTime.now());
     if (pickedDate != null) {
       _datePickerTextController.text = DateFormat(dateFormat).format(pickedDate);
       String dateText = _datePickerTextController.text;

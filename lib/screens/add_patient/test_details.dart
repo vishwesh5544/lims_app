@@ -178,7 +178,7 @@ class _TestDetailsState extends State<TestDetails> {
                         // ),
 
                         LimsTable(columnNames: const ["#","Names of the Test", "Sample Type",
-                          "Test Code", "Cost", "Tax %", "Total", "action"],
+                          "Test Code", "Cost", "Tax %", "Total",],
                             tableType: TableType.viewPatient,
                             rowData: state.selectedTests, onEditClick: (value){
 

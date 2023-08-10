@@ -148,6 +148,7 @@ class _SampleManagementState extends State<SampleManagement> {
                         showToast(msg: value);
                         processingUnit = value;
                       },
+
                       onSubmit: (test) {
                         if (processingUnit.isNotEmpty) {
                           int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
@@ -168,7 +169,7 @@ class _SampleManagementState extends State<SampleManagement> {
                             ?.firstWhere(
                                 (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
                             .id;
-                        var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                        var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
                         PdfUtility.savePdf(context, barcodeString.toString());
                       },
                       rowData: state.testsList!),

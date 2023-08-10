@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:lims_app/bloc/lab_bloc/lab_bloc.dart";
@@ -41,7 +43,7 @@ class _AddCentreState extends State<AddCentre> {
     BlocProvider.of<TestBloc>(context).add(FetchAllTests());
     bloc = context.read<LabBloc>();
 
-    if(bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1){
+    if (bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1) {
       _labNameController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].labName;
       _emailIdController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].emailId;
       _contactNumberController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].contactNumber;
@@ -233,12 +235,18 @@ class _AddCentreState extends State<AddCentre> {
 
   /// form dropdowns
   Widget _collectionCentreDropdown() {
+    String hintText = "";
+    if(bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1) {
+      hintText = bloc.state.labsList[bloc.state.currentSelectedPriview].unitType;
+    } else {
+      hintText = "Select";
+    }
     var dropdown = DropdownButtonFormField(
       icon: IconStore.downwardArrow,
       decoration: InputDecoration(
         constraints: _commonBoxConstraint,
         border: const OutlineInputBorder(),
-        hintText: "Select",
+        hintText:  hintText ,
       ),
       items: const <DropdownMenuItem>[
         DropdownMenuItem(value: "collection", child: Text('Collection Unit')),
@@ -329,24 +337,42 @@ class _AddCentreState extends State<AddCentre> {
           color: Colors.white,
         ),
         onTap: () {
-        BlocProvider.of<LabBloc>(context).add(OnAddCenter());
+          BlocProvider.of<LabBloc>(context).add(OnAddCenter());
         });
   }
 
   Widget _addCentreButton() {
     return ElevatedButton(
-        onPressed: () {
-          bloc.add(AddCentreFormSubmitted(
-              contactNumber: _contactNumberController.text,
-              emailId: _emailIdController.text,
-              labName: _labNameController.text,
-              addressOne: _addressOneController.text,
-              addressTwo: _addressTwoController.text,
-              city: _cityController.text,
-              country: _countryController.text,
-              state: _stateController.text,
-              testDetails: selectedTestDetails,
-              unitType: unitTypeValue));
+        onPressed: () async {
+          if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
+            bloc.add(AddCentreFormSubmitted(
+                contactNumber: _contactNumberController.text,
+                emailId: _emailIdController.text,
+                labName: _labNameController.text,
+                addressOne: _addressOneController.text,
+                addressTwo: _addressTwoController.text,
+                city: _cityController.text,
+                country: _countryController.text,
+                state: _stateController.text,
+                testDetails: selectedTestDetails,
+                unitType: unitTypeValue));
+          } else {
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                  Future.delayed(const Duration(seconds: 3), () {
+                    Navigator.of(context).pop();
+                  });
+
+                return AlertDialog(
+                  content: const Text("Please select Collection Unit/Processing Unit and Select Tests"),
+                  actions: <Widget>[
+                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Close"))
+                  ],
+                );
+              },
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(10),
