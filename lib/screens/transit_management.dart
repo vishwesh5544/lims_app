@@ -20,6 +20,7 @@ import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/update_status.dart";
 import "package:lims_app/utils/utils.dart";
 
+import "../components/common_disabled_field.dart";
 import "../components/common_header.dart";
 import "../utils/color_provider.dart";
 import "../utils/strings/add_test_strings.dart";
@@ -33,7 +34,7 @@ class TransitManagement extends StatefulWidget {
 }
 
 class _TransitManagementState extends State<TransitManagement> {
-  TextEditingController textController = TextEditingController(text: "vs@gmail.com");
+  TextEditingController textController = TextEditingController(text: "vs23@gmail.com");
   late final InTransitBloc bloc;
   static List<String> columnNames = [
     "#",
@@ -77,7 +78,7 @@ class _TransitManagementState extends State<TransitManagement> {
                   children: [
                     CommonHeader(title:  "In Transit Management"),
                     Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
                         child: commonSearchArea(
                             title: "UMR No./Patient Name",
                             hint: "Search by URM No./Patient Name",
@@ -91,41 +92,9 @@ class _TransitManagementState extends State<TransitManagement> {
                       margin: EdgeInsets.only(bottom: 15),
                       child: Row(
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("UMR NUMBER"),
-                              SizedBox(height: 10),
-                              TextField(
-                                enabled: false,
-                                decoration: InputDecoration(
-                                  constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
-                                  border: OutlineInputBorder(),
-                                  fillColor: Colors.grey,
-                                  hintText: state.patient?.umrNumber ?? "",
-                                ),
-                              )
-                            ],
-                          ),
+                          CommonGreyFiled(title: "UMR Number", value: state.patient?.umrNumber ?? ""),
                           const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Patient Name"),
-                              SizedBox(height: 10),
-                              TextField(
-                                enabled: false,
-                                decoration: InputDecoration(
-                                  constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
-                                  border: OutlineInputBorder(),
-                                  fillColor: Colors.grey,
-                                  hintText: "${state.patient?.firstName??''} ${state.patient?.middleName??''} ${state.patient?.lastName??''}",
-                                ),
-                              )
-                            ],
-                          ),
+                          CommonGreyFiled(title: "Patient Name", value: "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
                         ],
                       ),
                     ),

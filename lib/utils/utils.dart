@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:lims_app/utils/text_utility.dart';
-
 import 'color_provider.dart';
 
 const String dateFormat = "yyyy-MM-dd";
@@ -18,6 +16,11 @@ showToast({String msg = ""}){
 
 getBorder(){
   return BorderSide(width: 0.1, color: Colors.grey);
+  OutlineInputBorder(borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),);
+}
+
+getOutLineBorder(){
+  return OutlineInputBorder(borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),);
 }
 
 commonBtn({String text = "Next", Color? bgColor, bool isEnable = false, required Function calll,
@@ -80,9 +83,9 @@ commonSearchArea({required String title, String hint = "Next", required TextEdit
  return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title),
+      Text(title, style: TextUtility.getStyle(13)),
       Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 6),
         child: SizedBox.fromSize(
           size: const Size(600, 42),
           child: TextField(
@@ -129,12 +132,13 @@ Widget datePicker({required Function onClick, String title = "From Date", requir
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisSize: MainAxisSize.min,
     children: [
-       Text(title),
+      Text(title, style: TextUtility.getStyle(13)),
       // const SizedBox(height: 10),
       TextFormField(
         controller: datePickerTextController,
         decoration: InputDecoration(
-            constraints: const BoxConstraints(maxWidth: 200, minWidth: 150, minHeight: 40, maxHeight: 45),
+            constraints: const BoxConstraints(maxWidth: 200, minWidth: 150,
+                minHeight: 40, maxHeight: 45),
             border: const OutlineInputBorder(),
             suffixIcon: const Icon(Icons.calendar_today),
             hintText: dateText.isNotEmpty ? dateText : "Select Date"),
