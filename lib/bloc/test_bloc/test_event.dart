@@ -18,7 +18,7 @@ class OnAddTest extends TestEvent {
   final bool value;
   int currentSelectedPriview;
 
-  OnAddTest({this.value = false, this.currentSelectedPriview = 0});
+  OnAddTest({this.value = false, this.currentSelectedPriview = -1});
 }
 
 class TestNameUpdated extends TestEvent {

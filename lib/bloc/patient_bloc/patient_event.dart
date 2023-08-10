@@ -12,7 +12,7 @@ class OnAddPatient extends PatientEvent {
   final bool value;
   int currentSelectedPriview;
 
-  OnAddPatient({this.value = false, this.currentSelectedPriview = 0});
+  OnAddPatient({this.value = false, this.currentSelectedPriview = -1});
 }
 
 class IsPatient extends PatientEvent {

@@ -3,17 +3,14 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
-import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 import 'package:lims_app/utils/strings/add_test_strings.dart';
-import 'package:lims_app/utils/strings/route_strings.dart';
 import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/text_utility.dart";
 import "package:lims_app/utils/utils.dart";
-
 import "../components/common_dropdown.dart";
 import "../components/common_edit_text_filed.dart";
-import "../utils/strings/add_patient_strings.dart";
+import "../utils/screen_helper.dart";
 
 class AddTest extends StatefulWidget {
   const AddTest({Key? key}) : super(key: key);
@@ -24,9 +21,6 @@ class AddTest extends StatefulWidget {
 
 class _AddTestState extends State<AddTest> {
   late final TestBloc bloc;
-  final formKey = GlobalKey<FormState>();
-  // final BoxConstraints _commonBoxConstraint =
-  //     const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45);
   final testCodeEditingController = TextEditingController();
   final testNameEditingController = TextEditingController();
   final sampleTypeEditingController = TextEditingController();
@@ -202,12 +196,14 @@ class _AddTestState extends State<AddTest> {
           isEnable: true,
           text: AddTestStrings.title,
             calll: (){
+              TestBloc bloc = BlocProvider.of<TestBloc>(context);
+
           int price = int.parse(priceEditingController.text);
           int tax = int.parse(taxPercentageEditingController.text);
           int totalPrice = (price + (price * tax / 100)).ceil();
 
           AddTestFormSubmitted submitEvent;
-          if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
+          if (/*bloc.state.isAddTest &&*/ bloc.state.currentSelectedPriview != -1) {
             submitEvent = AddTestFormSubmitted(
                 isUpdate: true,
                 id: bloc.state.testsList[bloc.state.currentSelectedPriview].id,
@@ -248,67 +244,13 @@ class _AddTestState extends State<AddTest> {
 
           bloc.add(submitEvent);
 
+          BlocProvider.of<TestBloc>(context).add(OnAddTest());
+
+          ScreenHelper.showAlertPopup("Process status ${bloc.state.currentSelectedPriview != -1 ? 'added':'updated'} successfully", context);
           // if (state.formStatus is SubmissionSuccess) {
-          Navigator.pushReplacementNamed(context, RouteStrings.viewTests);
+          // Navigator.pushReplacementNamed(context, RouteStrings.viewTests);
           // }
         });
-         /*ElevatedButton(
-            onPressed: () {
-              int price = int.parse(priceEditingController.text);
-              int tax = int.parse(taxPercentageEditingController.text);
-              int totalPrice = (price + (price * tax / 100)).ceil();
-
-              AddTestFormSubmitted submitEvent;
-              if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
-                submitEvent = AddTestFormSubmitted(
-                    isUpdate: true,
-                    id: bloc.state.testsList[bloc.state.currentSelectedPriview].id,
-                    testCode: testCodeEditingController.text,
-                    testName: testNameEditingController.text,
-                    department: departmentValue,
-                    temperature: temperatureEditingController.text,
-                    typeOfTemperature: temperatureTypeValue,
-                    sampleType: sampleTypeValue,
-                    vacutainer: vacutainerEditingController.text,
-                    volume: volumeEditingController.text,
-                    typeOfVolume: volumeTypeValue,
-                    method: methodEditingController.text,
-                    turnAroundTime: turnAroundTimeEditingController.text,
-                    price: price,
-                    taxPercentage: tax,
-                    totalPrice: totalPrice,
-                    indications: indicationsEditingController.text);
-              } else {
-                submitEvent = AddTestFormSubmitted(
-                    isUpdate: false,
-                    testCode: testCodeEditingController.text,
-                    testName: testNameEditingController.text,
-                    department: departmentValue,
-                    temperature: temperatureEditingController.text,
-                    typeOfTemperature: temperatureTypeValue,
-                    sampleType: sampleTypeValue,
-                    vacutainer: vacutainerEditingController.text,
-                    volume: volumeEditingController.text,
-                    typeOfVolume: volumeTypeValue,
-                    method: methodEditingController.text,
-                    turnAroundTime: turnAroundTimeEditingController.text,
-                    price: price,
-                    taxPercentage: tax,
-                    totalPrice: totalPrice,
-                    indications: indicationsEditingController.text);
-              }
-
-              bloc.add(submitEvent);
-
-              // if (state.formStatus is SubmissionSuccess) {
-              Navigator.pushReplacementNamed(context, RouteStrings.viewTests);
-              // }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorProvider.blueDarkShade,
-              fixedSize: const Size(150, 60),
-            ),
-            child: Text(AddTestStrings.title, style: TextUtility.getBoldStyle(15.0, color: Colors.white)));*/
       },
     );
   }

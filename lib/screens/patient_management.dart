@@ -1,7 +1,5 @@
-import 'package:barcode/barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_event.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_state.dart';
@@ -12,14 +10,11 @@ import 'package:lims_app/components/lims_table.dart';
 import 'package:lims_app/components/buttons/redirect_button.dart';
 import 'package:lims_app/components/search_header.dart';
 import 'package:lims_app/models/patient.dart';
-import 'package:lims_app/test_items/redirect_to_test_menu.dart';
 import 'package:lims_app/test_items/test_data.dart';
-import 'package:lims_app/utils/barcode_utility.dart';
 import 'package:lims_app/utils/strings/button_strings.dart';
 import 'package:lims_app/utils/strings/route_strings.dart';
 import 'package:lims_app/utils/strings/search_header_strings.dart';
 import 'package:lims_app/utils/utils.dart';
-
 import '../components/barcode_widegt.dart';
 import '../utils/color_provider.dart';
 import '../utils/text_utility.dart';
@@ -33,17 +28,6 @@ class PatientManagement extends StatefulWidget {
 }
 
 class _PatientManagementState extends State<PatientManagement> {
-  final test = TestData();
-  static List<String> columnNames = [
-    "#",
-    "UMR Number",
-    "Patient Name",
-    "Consulted Doctor",
-    "Insurance Number",
-    "Mobile Number",
-    "Email ID",
-    "Actions"
-  ];
 
   @override
   void initState() {
@@ -87,8 +71,6 @@ class _PatientManagementState extends State<PatientManagement> {
                     routeName: RouteStrings.addPatient,
                     onClick: () {
                       BlocProvider.of<PatientBloc>(context)
-                          .add(IsPatient(value: false));
-                      BlocProvider.of<PatientBloc>(context)
                           .add(OnAddPatient(value: true));
                       // Navigator.push(
                       //   context,
@@ -108,8 +90,8 @@ class _PatientManagementState extends State<PatientManagement> {
               columnNames: TestData.patientsColumnsList(),
               tableType: TableType.addPatient,
               onEditClick: (value) {
-                BlocProvider.of<PatientBloc>(context).add(
-                    OnAddPatient(value: true, currentSelectedPriview: value));
+                BlocProvider.of<PatientBloc>(context).add(IsPatient(value: true));
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true, currentSelectedPriview: value));
               },
               onViewClick: (value) {
                 _showPreviewDialog(value);
@@ -181,12 +163,12 @@ class _PatientManagementState extends State<PatientManagement> {
                         children: [
                           DataTable(
                               dataRowHeight: 95,
-                              headingRowColor:
-                                  MaterialStateProperty.all(Colors.black),
-                              headingTextStyle:
-                                  const TextStyle(color: Colors.white),
-                              dataRowColor: MaterialStateProperty.all(
-                                  Colors.grey.shade300),
+                              dividerThickness: 0.2,
+                              headingRowHeight: 50,
+                              headingRowColor: MaterialStateProperty.all(Colors.black),
+                              headingTextStyle: const TextStyle(color: Colors.white),
+                              dataRowColor: MaterialStateProperty.all(Colors.white),
+                              border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
                               columns: columns
                                   .map((el) => DataColumn(label: Text(el)))
                                   .toList(),

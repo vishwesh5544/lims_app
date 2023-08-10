@@ -74,9 +74,6 @@ class _TestManagementState extends State<TestManagement> {
             children: [
               RedirectButton(buttonText: ButtonStrings.addTest, routeName: RouteStrings.addTest, onClick: (){
                 BlocProvider.of<TestBloc>(context).add(OnAddTest(value: true));
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => AddTest()));
               }),
             ],
           ),

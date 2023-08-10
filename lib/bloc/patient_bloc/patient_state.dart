@@ -68,7 +68,7 @@ class PatientState {
       List<Patient>? searchPatientsList,
       List<Test>? selectedTests,
         bool? isAddPatient,
-        int? currentSelectedPriview,
+        int? currentSelectedPriview = -1,
         bool? isPatient,
       FormSubmissionStatus? formStatus}) {
     return PatientState(

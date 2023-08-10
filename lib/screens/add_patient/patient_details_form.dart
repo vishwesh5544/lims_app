@@ -8,7 +8,6 @@ import "package:lims_app/utils/icons/icon_store.dart";
 import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
 import 'package:age_calculator/age_calculator.dart';
-
 import "../../components/common_disabled_field.dart";
 import "../../components/common_dropdown.dart";
 import "../../components/common_edit_text_filed.dart";
@@ -117,7 +116,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
               text: "Next",
               isEnable: true,
               calll: () {
-                if (!bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
+                if (/*!bloc.state.isAddPatient &&*/ bloc.state.currentSelectedPriview != -1) {
                   int userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id!;
                   // update?
                   BlocProvider.of<PatientBloc>(context)
@@ -127,17 +126,15 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                   BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: false));
                 }
 
-                Future.delayed(Duration(seconds: 1), () {
-                  if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview == -1) {
-                    BlocProvider.of<PatientBloc>(context).add(IsPatient());
-                  }
-
+                if (/*bloc.state.isAddPatient && */bloc.state.currentSelectedPriview == -1) {
+                  BlocProvider.of<PatientBloc>(context).add(IsPatient());
+                }else {
                   ScreenHelper.showAlertPopup("Patient updated successfully ", context).then((value){
                     ///to refresh listing screen.
                     BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
                     BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
                   });
-                });
+                }
               }),
         ],
       ),

@@ -195,11 +195,11 @@ class _MyHomePageState extends State<MyHomePage> {
             });
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),);
+              MaterialPageRoute(builder: (context) => const LoginScreen()),);
           },
           child: Container(
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
                 'LOGOUT',
                 style: TextUtility.getBoldStyle(28),

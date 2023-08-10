@@ -31,8 +31,6 @@ class TestDetails extends StatefulWidget {
 }
 
 class _TestDetailsState extends State<TestDetails> {
-  final BoxConstraints _commonBoxConstraint =
-      const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
   late final TestBloc testBloc;
   late final PatientBloc patientBloc;
   List<Test> selectedTests = [];
@@ -62,7 +60,7 @@ class _TestDetailsState extends State<TestDetails> {
         SingleChildScrollView(child: _selectedTestsTable()),
         Container(
           height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           width: double.infinity,
           color: Colors.black,
           child: Row(
@@ -263,9 +261,15 @@ class _TestDetailsState extends State<TestDetails> {
           builder: (context, state) {
             return DropdownButtonFormField(
               icon: IconStore.downwardArrow,
-              decoration: const InputDecoration(
-                constraints: BoxConstraints(maxWidth: 500, minWidth: 400, minHeight: 60, maxHeight: 70),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
+                constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
+                border: getOutLineBorder(),
+                focusedErrorBorder: getOutLineBorder(),
+                errorBorder: getOutLineBorder(),
+                disabledBorder: getOutLineBorder(),
+                enabledBorder: getOutLineBorder(),
+                focusedBorder: getOutLineBorder(),
                 hintText: AddPatientStrings.selectTest,
               ),
               items: state.testsList.map((test) {
