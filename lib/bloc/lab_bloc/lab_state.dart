@@ -16,6 +16,7 @@ class LabState {
   final List<LabTestDetail> testDetails;
   final FormSubmissionStatus formStatus;
   bool isAddNewCenter = false;
+  int currentSelectedPriview = -1;
   final List<Lab> labsList;
 
   LabState(
@@ -31,7 +32,8 @@ class LabState {
       this.unitType = '',
       this.testDetails = const [],
       this.labsList = const [],
-        this.isAddNewCenter = false,
+      this.isAddNewCenter = false,
+      this.currentSelectedPriview = -1,
       this.formStatus = const InitialFormStatus()});
 
   LabState copyWith(
@@ -48,6 +50,7 @@ class LabState {
       List<LabTestDetail>? testDetails,
       FormSubmissionStatus? formStatus,
         bool? isAddNewCenter,
+        int? currentSelectedPriview ,
       List<Lab>? labsList}) {
     return LabState(
         id: id ?? this.id,
@@ -63,6 +66,7 @@ class LabState {
         testDetails: testDetails ?? this.testDetails,
         formStatus: formStatus ?? this.formStatus,
         isAddNewCenter: isAddNewCenter ?? this.isAddNewCenter,
+        currentSelectedPriview: currentSelectedPriview ?? this.currentSelectedPriview,
         labsList: labsList ?? this.labsList);
   }
 }

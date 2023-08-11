@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/text_utility.dart";
 
 class RedirectButton extends StatelessWidget {
@@ -13,9 +14,9 @@ class RedirectButton extends StatelessWidget {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(10),
-            fixedSize: const Size(150, 45),
+            fixedSize: const Size(150, 42),
             shape: const ContinuousRectangleBorder(), 
-            backgroundColor: Colors.blueAccent.shade400),
+            backgroundColor: ColorProvider.greyColor),
         child: Text(buttonText, style: TextUtility.getStyle(18, color: Colors.white)),
         onPressed: () {
           onClick.call();

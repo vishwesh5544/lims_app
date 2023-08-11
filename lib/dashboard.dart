@@ -10,6 +10,7 @@ import 'package:lims_app/screens/sample_management.dart';
 import 'package:lims_app/screens/test_management.dart';
 import 'package:lims_app/screens/test_status.dart';
 import 'package:lims_app/screens/transit_management.dart';
+import 'package:lims_app/utils/color_provider.dart';
 import 'package:lims_app/utils/text_utility.dart';
 import 'package:lims_app/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,10 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 500),
+        preferredSize: const Size(double.infinity, 500),
         child: Container(
-          color: Colors.blue,
-          padding: EdgeInsets.symmetric(
+          color: ColorProvider.blueDarkShade,
+          padding: const EdgeInsets.symmetric(
             horizontal: 8.0,
           ),
           child: Row(
@@ -95,10 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
               displayMode: SideMenuDisplayMode.auto,
               hoverColor: Colors.blue[100],
               selectedHoverColor: Colors.blue[100],
-              selectedColor: Colors.lightBlue,
+              selectedColor: ColorProvider.blueDarkShade,
               selectedTitleTextStyle: const TextStyle(color: Colors.white),
               selectedIconColor: Colors.white,
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorProvider.blueDarkShade
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.all(Radius.circular(10)),
               // ),
@@ -124,8 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
               sideMenuItem(index: 0, title: "Patient\n Management", iconName: "ic_management",isSelected: sideMenu.currentPage == 0),
               sideMenuItem(index: 1, title: "Test\n Management", iconName: "ic_Layer",isSelected: sideMenu.currentPage == 1),
               sideMenuItem(index: 2, title: "Sample\n Management", iconName: "ic_chemistry", isSelected: sideMenu.currentPage == 2),
-              sideMenuItem(index: 3, title: "In Transit\n Management", iconName: "", isSelected: sideMenu.currentPage == 3),
-              sideMenuItem(index: 4, title: "Process\n Management",iconName: "", isSelected: sideMenu.currentPage == 4),
+              sideMenuItem(index: 3, title: "In Transit\n Management", iconName: "ic_in_transit_mgmt", isSelected:
+              sideMenu
+                  .currentPage == 3),
+              sideMenuItem(index: 4, title: "Process\n Management",iconName: "ic_process_mgmt", isSelected: sideMenu
+                  .currentPage == 4),
               sideMenuItem(index: 5, title: "Lab\n Management", iconName: "ic_Lab_Report",isSelected: sideMenu.currentPage == 5),
               sideMenuItem(index: 6, title: "Test\n Status", iconName: "ic_processing_time",isSelected: sideMenu.currentPage == 6),
             ],
@@ -191,11 +195,11 @@ class _MyHomePageState extends State<MyHomePage> {
             });
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),);
+              MaterialPageRoute(builder: (context) => const LoginScreen()),);
           },
           child: Container(
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
                 'LOGOUT',
                 style: TextUtility.getBoldStyle(28),

@@ -17,8 +17,8 @@ Lab _$LabFromJson(Map<String, dynamic> json) => Lab(
       state: json['state'] as String,
       city: json['city'] as String,
       unitType: json['unit_type'] as String,
-      testDetails: (json['tests_details'] as List<dynamic>)
-          .map((e) => LabTestDetail.fromJson(e as Map<String, dynamic>))
+      testDetails: (json['tests_details'] as List<dynamic>?)
+          ?.map((e) => LabTestDetail.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

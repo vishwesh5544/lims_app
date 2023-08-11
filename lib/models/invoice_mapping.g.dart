@@ -14,6 +14,8 @@ InvoiceMapping _$InvoiceMappingFromJson(Map<String, dynamic> json) =>
       processingUnit: json['processing_unit'] as String?,
       collectionUnit: json['collection_unit'] as String?,
       id: json['id'] as int?,
+      ptid: json['patienttestid'] as int?,
+      invoiceId: json['invoice_id'] as int?,
       status: json['status'] as int? ?? 0,
     );
 
@@ -26,4 +28,6 @@ Map<String, dynamic> _$InvoiceMappingToJson(InvoiceMapping instance) =>
       'processing_unit': instance.processingUnit,
       'collection_unit': instance.collectionUnit,
       'status': instance.status,
+      'patienttestid': instance.ptid,
+      'invoice_id': instance.invoiceId,
     };

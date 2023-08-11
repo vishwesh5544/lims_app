@@ -15,6 +15,7 @@ class TestState {
   final String turnAroundTime;
   final int price;
   final bool isAddTest;
+  int currentSelectedPriview = -1;
   final int taxPercentage;
   final int totalPrice; // price + (price * tax)
   final String indications;
@@ -37,6 +38,7 @@ class TestState {
       this.turnAroundTime = "",
       this.price = 0,
         this.isAddTest = false,
+        this.currentSelectedPriview = -1,
       this.taxPercentage = 0,
       this.totalPrice = 0,
       this.indications = "",
@@ -65,6 +67,7 @@ class TestState {
       List<Test>? testsList,
         List<Test>? searchTestsList,
         bool? isAddTest,
+        int? currentSelectedPriview = -1,
       FormSubmissionStatus? formStatus}) {
     return TestState(
         testCode: testCode ?? this.testCode,
@@ -80,6 +83,7 @@ class TestState {
         turnAroundTime: turnAroundTime ?? this.turnAroundTime,
         price: price ?? this.price,
         isAddTest: isAddTest?? this.isAddTest,
+        currentSelectedPriview: currentSelectedPriview?? this.currentSelectedPriview,
         taxPercentage: taxPercentage ?? this.taxPercentage,
         totalPrice: totalPrice ?? this.totalPrice,
         indications: indications ?? this.indications,

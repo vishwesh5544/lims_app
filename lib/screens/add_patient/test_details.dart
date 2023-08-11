@@ -1,7 +1,12 @@
+import "dart:js_interop";
+
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
 import "package:intl/intl.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
@@ -12,6 +17,7 @@ import "package:lims_app/models/test.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 
 import "../../bloc/patient_bloc/patient_state.dart";
+import "../../components/barcode_widegt.dart";
 import "../../components/lims_table.dart";
 import "../../utils/barcode_utility.dart";
 import "../../utils/color_provider.dart";
@@ -26,8 +32,6 @@ class TestDetails extends StatefulWidget {
 }
 
 class _TestDetailsState extends State<TestDetails> {
-  final BoxConstraints _commonBoxConstraint =
-      const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
   late final TestBloc testBloc;
   late final PatientBloc patientBloc;
   List<Test> selectedTests = [];
@@ -57,18 +61,29 @@ class _TestDetailsState extends State<TestDetails> {
         SingleChildScrollView(child: _selectedTestsTable()),
         Container(
           height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           width: double.infinity,
           color: Colors.black,
           child: Row(
-            children: [Text("Total Price: \$${totalPrice.toString()}", style: TextUtility.getStyle(16, color: Colors.white),)],
+            children: [
+              Text(
+                "Total Price: \$${totalPrice.toString()}",
+                style: TextUtility.getStyle(16, color: Colors.white),
+              )
+            ],
           ),
         ),
-        commonBtn(text: "Preview Invoice", isEnable: true, calll: (){
-
-          BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
-          _showInvoiceDialog();
-        }),
+        commonBtn(
+            text: "Preview Invoice",
+            isEnable: true,
+            calll: () {
+              BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
+              Future.delayed(const Duration(seconds: 1), () {
+                BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
+                BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
+              });
+              _showInvoiceDialog();
+            }),
       ]
           .map((el) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -77,7 +92,6 @@ class _TestDetailsState extends State<TestDetails> {
           .toList(),
     ));
   }
-
 
   /// invoice dialog
   Future<void> _showInvoiceDialog() async {
@@ -88,6 +102,7 @@ class _TestDetailsState extends State<TestDetails> {
           builder: (context, state) {
             return AlertDialog(
                 insetPadding: EdgeInsets.zero,
+                backgroundColor: Colors.white,
                 titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
                 titlePadding: EdgeInsets.zero,
                 title: Container(
@@ -107,7 +122,7 @@ class _TestDetailsState extends State<TestDetails> {
                   ),
                 ),
                 content: Container(
-                  height: 700,
+                  // height: 700,
                   width: 1200,
                   child: SingleChildScrollView(
                     child: Column(
@@ -115,7 +130,7 @@ class _TestDetailsState extends State<TestDetails> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18,color: Colors.black))],
+                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18, color: Colors.black))],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,14 +157,35 @@ class _TestDetailsState extends State<TestDetails> {
                               padding: EdgeInsets.all(10),
                               margin: EdgeInsets.all(5),
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black,
-                                      width: 2
-                                  ),
-                                  borderRadius: const BorderRadius.all(Radius.circular(5))
+                                  border: Border.all(color: Colors.black, width: 2),
+                                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                              child: BlocConsumer<InTransitBloc, InTransitState>(
+                                listener: (context, state) {},
+                                builder: (context, inState) {
+                                  if (inState.invoiceMappings != null && inState.invoiceMappings!.isNotEmpty) {
+                                    // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
+                                    //     .createdPatient?.id).;
+
+                                    int ptid = 13;
+                                    if (ptid.toString().length == 11 || ptid.toString().length == 12) {
+                                      try {
+                                        return barCodeWidget(
+                                          text: "",
+                                          barCode: "12345678901",
+                                        );
+                                      } on Exception catch (e) {
+                                        print(e);
+                                      }
+                                    } else {
+                                      return Container();
+                                    }
+                                  } else {
+                                    return Container();
+                                  }
+
+                                  return Container();
+                                },
                               ),
-                              child: SvgPicture.string(BarcodeUtility.getBarcodeSvgString(
-                                  "${state.createdPatient?.id}${state.invoiceNumber}"), width: 150, height: 75),
                             )
                           ],
                         ),
@@ -177,27 +213,43 @@ class _TestDetailsState extends State<TestDetails> {
                         //   ],
                         // ),
 
-                        LimsTable(columnNames: const ["#","Names of the Test", "Sample Type",
-                          "Test Code", "Cost", "Tax %", "Total", "action"],
+                        LimsTable(
+                            columnNames: const [
+                              "#",
+                              "Names of the Test",
+                              "Sample Type",
+                              "Test Code",
+                              "Cost",
+                              "Tax %",
+                              "Total",
+                            ],
                             tableType: TableType.viewPatient,
-                            rowData: state.selectedTests, onEditClick: (value){
-
-                            }),
+                            tableRowHeight: 85,
+                            rowData: state.selectedTests,
+                            onEditClick: (value) {}),
                         Container(
                           height: 50,
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           width: double.infinity,
                           color: Colors.black,
                           child: Row(
-                            children: [Text("Total Price: \$${totalPrice.toString()}", style: TextUtility.getStyle(16, color: Colors.white),)],
+                            children: [
+                              Text(
+                                "Total Price: \$${totalPrice.toString()}",
+                                style: TextUtility.getStyle(16, color: Colors.white),
+                              )
+                            ],
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 10),
-                          child: commonBtn(text: "Generate Invoice", isEnable: true, calll: (){
-                            BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
-                          }),
-                        )// SvgPicture.string(barcodeOne)
+                          child: commonBtn(
+                              text: "Generate Invoice",
+                              isEnable: true,
+                              calll: () {
+                                // BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
+                              }),
+                        ) // SvgPicture.string(barcodeOne)
                       ],
                     ),
                   ),
@@ -207,8 +259,6 @@ class _TestDetailsState extends State<TestDetails> {
       },
     );
   }
-
-
 
   /// dropdown
   Widget _selectTestDropdown() {
@@ -222,9 +272,15 @@ class _TestDetailsState extends State<TestDetails> {
           builder: (context, state) {
             return DropdownButtonFormField(
               icon: IconStore.downwardArrow,
-              decoration: const InputDecoration(
-                constraints: BoxConstraints(maxWidth: 500, minWidth: 400, minHeight: 60, maxHeight: 70),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
+                constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
+                border: getOutLineBorder(),
+                focusedErrorBorder: getOutLineBorder(),
+                errorBorder: getOutLineBorder(),
+                disabledBorder: getOutLineBorder(),
+                enabledBorder: getOutLineBorder(),
+                focusedBorder: getOutLineBorder(),
                 hintText: AddPatientStrings.selectTest,
               ),
               items: state.testsList.map((test) {
@@ -233,8 +289,15 @@ class _TestDetailsState extends State<TestDetails> {
               onChanged: (value) {
                 setState(() {
                   totalPrice = 0;
-                  selectedTests.add(value!);
-                  patientBloc.add(SelectedTestsUpdated(selectedTests));
+
+                  if (selectedTests.isEmpty || selectedTests.indexWhere((element) => element.id == value!.id) != 0) {
+                    selectedTests.add(value!);
+                    patientBloc.add(SelectedTestsUpdated(selectedTests));
+                  } else {
+                    int index = selectedTests.indexWhere((element) => element.id == value!.id);
+                    selectedTests.removeAt(index);
+                  }
+
                   for (var test in selectedTests) {
                     totalPrice += test.price;
                   }
@@ -269,7 +332,11 @@ class _TestDetailsState extends State<TestDetails> {
             DataTable(
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
-              dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
+              dataRowColor: MaterialStateProperty.all(Colors.white),
+              dividerThickness: 0.2,
+              headingRowHeight: 50,
+              border: TableBorder(
+                  horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
               columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
               rows: selectedTests.map((value) {
                 var currentIndex = selectedTests.indexOf(value) + 1;

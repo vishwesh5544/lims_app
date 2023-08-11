@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:lims_app/utils/text_utility.dart";
 
+import "../utils/color_provider.dart";
+
 class SearchHeader extends StatefulWidget {
   SearchHeader(
       {required this.headerTitle, required this.placeholder, required this.onClickSearch, super.key});
@@ -19,9 +21,10 @@ class _SearchHeaderState extends State<SearchHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blueAccent.shade400,
+      height: 55,
+      color: ColorProvider.blueDarkShade,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -29,11 +32,11 @@ class _SearchHeaderState extends State<SearchHeader> {
               widget.headerTitle,
               style: const TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.0),
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 18.0),
             ),
             SizedBox.fromSize(
-              size: const Size(250, 45),
+              size: const Size(250, 40),
               child: TextField(
                 textAlignVertical: TextAlignVertical.bottom,
                 maxLines: 1,

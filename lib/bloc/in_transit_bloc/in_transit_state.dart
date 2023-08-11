@@ -1,46 +1,49 @@
+import 'package:lims_app/models/invoice_mapping.dart';
+import 'package:lims_app/models/lab.dart';
+import 'package:lims_app/models/patient.dart';
+import 'package:lims_app/models/search_result.dart';
+import 'package:lims_app/models/test.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
+import 'package:lims_app/utils/update_status.dart';
 
 class InTransitState {
-  final int? userId;
-  final int? invoiceId;
-  final int? patientId;
-  final int? testId;
-  final String? invoiceNo;
-  final String? processingUnit;
-  final String? collectionUnit;
-  final int? status;
+  final Patient? patient;
+  final List<Test>? testsList;
+  final List<InvoiceMapping>? invoiceMappings;
+  final List<Lab>? filteredLabs;
+  final List<SearchResult>? searchResults;
   final FormSubmissionStatus formStatus;
+  final UpdateStatus updateStatus;
+  int currentVisibleQrCode = -1;
 
   InTransitState(
-      {this.userId,
-      this.invoiceId,
-      this.patientId,
-      this.testId,
-      this.invoiceNo,
-      this.processingUnit,
-      this.collectionUnit,
-      this.status,
-      this.formStatus = const InitialFormStatus()});
+      {this.filteredLabs = const [],
+      this.testsList = const [],
+      this.invoiceMappings = const [],
+      this.searchResults = const [],
+      this.patient,
+      this.currentVisibleQrCode = -1,
+      this.formStatus = const InitialFormStatus(),
+      this.updateStatus = const InitialUpdateStatus()});
 
-  InTransitState copyWith({
-    int? userId,
-    int? invoiceId,
-    int? patientId,
-    int? testId,
-    String? invoiceNo,
-    String? processingUnit,
-    String? collectionUnit,
-    int? status,
-    FormSubmissionStatus? formStatus,
-  }) {
+  InTransitState copyWith(
+      {List<Test>? testsList,
+      List<Lab>? filteredLabs,
+      List<SearchResult>? searchResults,
+      List<InvoiceMapping>? invoiceMappings,
+      Patient? patient,
+      FormSubmissionStatus? formStatus,
+      int? currentVisibleQrCode = -1,
+      UpdateStatus? updateStatus}) {
     return InTransitState(
-        userId: userId ?? this.userId,
-        patientId: patientId ?? this.patientId,
-        invoiceNo: invoiceNo ?? this.invoiceNo,
-        testId: testId ?? this.testId,
-        processingUnit: processingUnit ?? this.processingUnit,
-        collectionUnit: collectionUnit ?? this.collectionUnit,
-        status: status ?? this.status,
-        formStatus: formStatus ?? this.formStatus);
+      searchResults: searchResults ?? this.searchResults,
+      filteredLabs: filteredLabs ?? this.filteredLabs,
+      invoiceMappings: invoiceMappings ?? this.invoiceMappings,
+      testsList: testsList ?? this.testsList,
+      patient: patient ?? this.patient,
+      formStatus: formStatus ?? this.formStatus,
+      currentVisibleQrCode: currentVisibleQrCode ?? this.currentVisibleQrCode,
+      updateStatus: updateStatus ?? this.updateStatus,
+    );
   }
 }

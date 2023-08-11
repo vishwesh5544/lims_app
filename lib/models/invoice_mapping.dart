@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part "invoice_mapping.g.dart";
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class InvoiceMapping {
   @JsonKey(name: "id")
   final int? id;
@@ -18,9 +18,14 @@ class InvoiceMapping {
   final String? collectionUnit;
   @JsonKey(name: "status")
   final int status;
+  @JsonKey(name : "patienttestid")
+  final int? ptid;
+  @JsonKey(name : "invoice_id")
+  final int? invoiceId;
+
 
   InvoiceMapping(this.patientId, this.testId, this.invoiceNumber,
-      {this.processingUnit, this.collectionUnit, this.id, this.status = 0});
+      {this.processingUnit, this.collectionUnit, this.id, this.ptid, this.invoiceId, this.status = 0});
 
   factory InvoiceMapping.fromJson(Map<String, dynamic> json) => _$InvoiceMappingFromJson(json);
 

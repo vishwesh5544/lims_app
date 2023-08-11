@@ -14,6 +14,8 @@ abstract class IPatientRepository {
   Future<ResponseCallback<Patient>> addPatient(Patient patient);
 
   Future<ResponseCallback<List<InvoiceMapping>>> addInvoice(List<InvoiceMapping> invoiceMapping);
+
+  Future<ResponseCallback<Patient>> updatePatient(Patient patient, int id);
 }
 
 class PatientRepository implements IPatientRepository {
@@ -21,16 +23,50 @@ class PatientRepository implements IPatientRepository {
   final _headers = LimsHttpClient.headers;
 
   @override
+  Future<ResponseCallback<Patient>> updatePatient(Patient patient, int id) async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/${id.toString()}");
+    ResponseCallback<Patient> responseCallback = ResponseCallback();
+    try {
+      var patch = {
+        "firstname": patient.firstName,
+        "middlename": patient.middleName,
+        "lastname": patient.lastName,
+        "DOB": patient.dob,
+        "age": patient.age,
+        "gender": patient.gender,
+        "mobilenumber": patient.mobileNumber,
+        "emailID": patient.emailId,
+        "insuranceProvider": patient.insuraceProvider,
+        "insuranceNumber": patient.insuraceNumber,
+        "consultantDoctor": patient.consultedDoctor
+      };
+      final response = await http.put(url, headers: _headers, body: jsonEncode(patient.toJson()));
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      LimsLogger.log("*** Patient updated successfully => $responseMap");
+      responseCallback.data = patient;
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in Patient Repository addPatient().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
+  }
+
+  @override
   Future<ResponseCallback<Patient>> addPatient(Patient patient) async {
     Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/add");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var req = patient.toJson();
-      print(jsonEncode(req));
       final response = await http.post(url, headers: _headers, body: jsonEncode(req));
       responseCallback.code = response.statusCode;
       var responseMap = jsonDecode(response.body);
-      print(responseMap);
       LimsLogger.log("*** Patient created successfully => $responseMap");
       responseCallback.data = Patient.fromJson(responseMap["data"][0]);
     } on http.ClientException catch (e) {
@@ -54,12 +90,11 @@ class PatientRepository implements IPatientRepository {
       final response = await http.get(url, headers: _headers);
       List<Patient> patients = [];
       var body = jsonDecode(response.body);
-      for (var patient in body) {
-        print(patient.runtimeType);
-      }
+      // for (var patient in body) {
+      //   print(patient.runtimeType);
+      // }
 
       for (var patient in body) {
-
         patients.add(Patient.fromJson(patient));
       }
       responseCallback.data = patients;

@@ -63,28 +63,8 @@ class LabRepository implements ILabRepository {
       var responseMap = jsonDecode(response.body);
       List<Lab> labs = [];
       for (var el in responseMap) {
-        // var testDetails = json.decode(el['tests_details']);
-        // List<LabTestDetail> testDetailsList = [];
-        // for (var sml in testDetails) {
-        //   var testDetail = LabTestDetail(sml["name"] as String, sml["testcode"] as String);
-        //   testDetailsList.add(testDetail);
-        // }
-
-        var b = Lab(
-          contactNumber: el['contact_number'] as String,
-          emailId: el['email_id'] as String,
-          country: el['country'] as String,
-          unitType: el['unit_type'] as String,
-          city: el['city'] as String,
-          state: el['state'] as String,
-          addressTwo: el['address_2'] as String,
-          id: el['id'] as int,
-          addressOne: el['address_1'] as String,
-          labName: el['lab_name'] as String,
-          testDetails: null,
-        );
-        // print(b.toJson());
-        labs.add(b);
+        var lab = Lab.fromJson(el);
+        labs.add(lab);
       }
       responseCallback.data = labs;
 

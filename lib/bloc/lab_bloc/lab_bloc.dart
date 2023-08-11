@@ -53,7 +53,7 @@ class LabBloc extends Bloc<LabEvent, LabState> {
     }
     else if (event is OnAddCenter) {
 
-      yield state.copyWith(isAddNewCenter: event.value);
+      yield state.copyWith(isAddNewCenter: event.value, currentSelectedPriview: event.currentSelectedPriview);
     }
   }
 }

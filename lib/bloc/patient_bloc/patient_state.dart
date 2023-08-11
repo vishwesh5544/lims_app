@@ -24,11 +24,13 @@ class PatientState {
 
   bool isAddPatient = false;
   bool isPatient = true;
+  int currentSelectedPriview = -1;
 
   PatientState(
       {this.invoiceNumber = "",
       this.selectedTests = const [],
         this.isAddPatient = false,
+        this.currentSelectedPriview = -1,
         this.isPatient = true,
       this.createdPatient,
       this.umrNumber = "",
@@ -66,6 +68,7 @@ class PatientState {
       List<Patient>? searchPatientsList,
       List<Test>? selectedTests,
         bool? isAddPatient,
+        int? currentSelectedPriview = -1,
         bool? isPatient,
       FormSubmissionStatus? formStatus}) {
     return PatientState(
@@ -78,6 +81,7 @@ class PatientState {
         lastName: lastName ?? this.lastName,
         middleName: middleName ?? this.middleName,
         isAddPatient: isAddPatient?? this.isAddPatient,
+        currentSelectedPriview: currentSelectedPriview?? this.currentSelectedPriview,
         isPatient: isPatient?? this.isPatient,
         dob: dob ?? this.dob,
         age: age ?? this.age,
