@@ -5,6 +5,7 @@ import 'package:lims_app/bloc/patient_bloc/patient_event.dart';
 import 'package:lims_app/bloc/patient_bloc/patient_state.dart';
 import 'package:lims_app/models/invoice_mapping.dart';
 import 'package:lims_app/models/patient.dart';
+import 'package:lims_app/models/response_callback.dart';
 import 'package:lims_app/models/test.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
@@ -70,15 +71,18 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
             gender: state.gender,
             consultedDoctor: state.consultedDoctor,
             age: state.age);
-
-        var response = await patientRepository.addPatient(newPatient);
-        yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
+        ResponseCallback<Patient> response;
+        if (event.isUpdate) {
+          response = await patientRepository.updatePatient(newPatient, event.userId!);
+        } else {
+          response = await patientRepository.addPatient(newPatient);
+        }
+          yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
         LimsLogger.log("*** Patient successfully created => ${response.data?.toJson()}");
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
-    }
-    else if (event is SelectedTestsUpdated) {
+    } else if (event is SelectedTestsUpdated) {
       yield state.copyWith(selectedTests: event.selectedTests);
     } else if (event is GenerateInvoiceNumber) {
       var random = Random();
@@ -89,35 +93,30 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
 
       String generatedInvoiceNumber = "IN${next.ceil()}";
       yield state.copyWith(invoiceNumber: generatedInvoiceNumber);
-    }
-    else if (event is GenerateInvoice) {
+    } else if (event is GenerateInvoice) {
       List<InvoiceMapping> invoices = [];
 
       for (Test test in state.selectedTests) {
-        InvoiceMapping invoice = InvoiceMapping(state.createdPatient!.id!, test.id!, state.invoiceNumber, status: 0);
-        invoices.add(invoice);
+        if(state.createdPatient?.id != null && test.id != null) {
+          InvoiceMapping invoice = InvoiceMapping(state.createdPatient!.id!, test.id!, state.invoiceNumber, status: 0);
+          invoices.add(invoice);
+        }
       }
 
       patientRepository.addInvoice(invoices);
-    }
-    else if (event is OnSearch) {
+    } else if (event is OnSearch) {
       List<Patient> data = [];
 
       for (Patient patient in state.patientsList) {
-
-        if("${patient.lastName} ${patient.firstName}".toLowerCase().contains(event.value.trim())){
+        if ("${patient.lastName} ${patient.middleName} ${patient.firstName}".toLowerCase().contains(event.value.trim())) {
           data.add(patient);
         }
       }
 
       yield state.copyWith(searchPatientsList: data);
-    }
-    else if (event is OnAddPatient) {
-
-      yield state.copyWith(isAddPatient: event.value);
-    }
-    else if (event is IsPatient) {
-
+    } else if (event is OnAddPatient) {
+      yield state.copyWith(isAddPatient: event.value, currentSelectedPriview: event.currentSelectedPriview);
+    } else if (event is IsPatient) {
       yield state.copyWith(isPatient: event.value);
     }
   }

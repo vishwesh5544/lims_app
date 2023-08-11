@@ -1,21 +1,13 @@
-import "package:barcode/barcode.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_svg/svg.dart";
-import "package:intl/intl.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/patient_bloc/patient_state.dart";
 import "package:lims_app/screens/add_patient/patient_details_form.dart";
 import "package:lims_app/screens/add_patient/test_details.dart";
-import "package:lims_app/utils/barcode_utility.dart";
 import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
-import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/text_utility.dart";
-
-import "../../components/buttons/redirect_button.dart";
-import "../../utils/strings/button_strings.dart";
 import "../../utils/utils.dart";
 
 class AddPatient extends StatefulWidget {
@@ -27,9 +19,6 @@ class AddPatient extends StatefulWidget {
 
 class _AddPatientState extends State<AddPatient> {
   late final PatientBloc bloc;
-
-  final barcode = Barcode.code128(useCode128A: false, useCode128C: false);
-  late final barcodeOne = barcode.toSvg("hello LIMS", width: 200, height: 100, drawText: false);
 
   @override
   void initState() {
@@ -66,7 +55,9 @@ class _AddPatientState extends State<AddPatient> {
                       ),
                     ),
                     Expanded(
-                      child: _getFormStepper(state),
+                      child: SingleChildScrollView(
+                        child: state.isPatient? PatientDetailsForm() : TestDetails(),
+                      )
                     ),
                   ],
                 ),
@@ -77,17 +68,6 @@ class _AddPatientState extends State<AddPatient> {
       ),
     );
   }
-
-  /// form stepper
-  _getFormStepper(PatientState state) {
-    // Step(title: const Text('Add Patient'), content: const PatientDetailsForm());
-    //
-    // const Step(title: Text('Add New details'), content: TestDetails());
-    return SingleChildScrollView(
-       child: state.isPatient? PatientDetailsForm() : TestDetails(),
-    );
-  }
-
 
   /// header strip
   Widget _header(PatientState state) {
@@ -125,6 +105,7 @@ class _AddPatientState extends State<AddPatient> {
           // setState(() {
           //   state.isAddPatient = false;
           // });
+          BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
           BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
         });
   }

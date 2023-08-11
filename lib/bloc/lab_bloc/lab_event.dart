@@ -6,7 +6,8 @@ class FetchAllLabs extends LabEvent {}
 
 class OnAddCenter extends LabEvent {
   final bool value;
-  OnAddCenter({this.value = false});
+  int currentSelectedPriview = -1;
+  OnAddCenter({this.value = false, this.currentSelectedPriview = -1});
 }
 
 class AddCentreFormSubmitted extends LabEvent {

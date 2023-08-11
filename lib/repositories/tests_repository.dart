@@ -10,10 +10,37 @@ abstract class ITestRepository {
   Future<ResponseCallback<List<Test>>> getAllTests();
 
   Future<ResponseCallback<Test>> addTest(Test test);
+  Future<ResponseCallback<Test>> updateTest(Test test, int id);
+
 }
 
 class TestRepository implements ITestRepository {
   final _headers = LimsHttpClient.headers;
+
+  @override
+  Future<ResponseCallback<Test>> updateTest(Test test, int id) async {
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/${id.toString()}");
+    ResponseCallback<Test> responseCallback = ResponseCallback();
+    try {
+      var req = test.toJson();
+      print(jsonEncode(req));
+      final response = await http.put(url, headers: _headers, body: jsonEncode(req));
+      responseCallback.code = response.statusCode;
+      var responseMap = jsonDecode(response.body);
+      LimsLogger.log("*** Test updated successfully => $responseMap");
+      responseCallback.data = test;
+    } on http.ClientException catch (e) {
+      LimsLogger.log("*** http.ClientException in Test Repository updateTest().");
+      LimsLogger.log("Message => ${e.message}");
+      LimsLogger.log("Uri => ${e.uri}");
+      responseCallback.message = e.message;
+      responseCallback.uri = e.uri;
+    } on Exception catch (e) {
+      responseCallback.message = e.toString();
+    }
+
+    return responseCallback;
+  }
 
   @override
   Future<ResponseCallback<Test>> addTest(Test test) async {

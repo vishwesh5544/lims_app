@@ -5,17 +5,20 @@ abstract class PatientEvent {}
 
 class OnSearch extends PatientEvent {
   final String value;
+
   OnSearch({this.value = ''});
 }
 
 class OnAddPatient extends PatientEvent {
   final bool value;
+  int currentSelectedPriview;
 
-  OnAddPatient({this.value = false});
+  OnAddPatient({this.value = false, this.currentSelectedPriview = -1});
 }
 
 class IsPatient extends PatientEvent {
   final bool value;
+
   IsPatient({this.value = false});
 }
 
@@ -95,7 +98,13 @@ class ConsultedDoctorUpdated extends PatientEvent {
   ConsultedDoctorUpdated(this.consultedDoctor);
 }
 
-class AddPatientFormSubmitted extends PatientEvent {}
+class AddPatientFormSubmitted extends PatientEvent {
+  final bool isUpdate;
+  final int? userId;
+
+  AddPatientFormSubmitted({required this.isUpdate, this.userId});
+}
+
 
 class GenerateInvoiceNumber extends PatientEvent {}
 

@@ -13,6 +13,6 @@ class ResponseCallback<T> {
 
   @override
   String toString() {
-    return 'ResponseCallback{code: $code, data: $data, error: $error, message: $message}';
+    return 'ResponseCallback{code: $code, data: $data, error: $error, message: $message, uri: $uri}';
   }
 }

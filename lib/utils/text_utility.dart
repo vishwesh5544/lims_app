@@ -11,7 +11,7 @@ class TextUtility {
 
   static OutlineInputBorder getBorderStyle(){
     return OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0), borderSide: const BorderSide(color: Colors.grey));
+        borderRadius: BorderRadius.circular(5.0), borderSide: const BorderSide(color: Colors.grey));
   }
 
   static Widget getTextWithBoldAndPlain(String boldText, String plainText,

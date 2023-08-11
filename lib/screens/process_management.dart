@@ -1,18 +1,26 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
+import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
+import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
+import "package:lims_app/utils/pdf_utility.dart";
+import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/utils.dart";
 
+import "../components/common_disabled_field.dart";
+import "../components/common_header.dart";
 import "../utils/color_provider.dart";
 import "../utils/strings/add_test_strings.dart";
 import "../utils/text_utility.dart";
@@ -25,27 +33,31 @@ class ProcessManagement extends StatefulWidget {
 }
 
 class _ProcessManagementState extends State<ProcessManagement> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController textController = TextEditingController(text: "sudovish@gmail.com");
+  late final InTransitBloc bloc;
+  String status = "";
   static List<String> columnNames = [
     "#",
     "Name of the Test",
     "Test Code",
     "Sample type",
     "Process Unit",
-    "Status"
+    "Status",
+    "Submit", ""
   ];
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
+      bloc = context.read<InTransitBloc>();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TestBloc, TestState>(
+    return BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {
 
         },
@@ -62,89 +74,67 @@ class _ProcessManagementState extends State<ProcessManagement> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      CommonHeader(title:  "Process Management"),
                       Container(
-                        decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
-                        // margin: EdgeInsets.only(bottom: 20),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Process Management",
-                                style: TextUtility.getBoldStyle(18.0, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
                           child: commonSearchArea(
                               title: "UMR No./Patient Name",
                               hint: "Search by URM No./Patient Name",
                               textController: textController, onSubmit: (value){
-                            showToast(msg: value);
+                            bloc.add(SearchPatient(value));
                           })
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        child: const Row(
+                        margin: const EdgeInsets.only(bottom: 15),
+                        child: Row(
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("UMR NUMBER"),
-                                SizedBox(height: 10),
-                                TextField(
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
-                                    border: OutlineInputBorder(),
-                                    fillColor: Colors.grey,
-                                    hintText: "fhasdjfgaksjhdfghks",
-                                  ),
-                                )
-                              ],
-                            ),
-                            Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Patient Name"),
-                                SizedBox(height: 10),
-                                TextField(
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
-                                    border: OutlineInputBorder(),
-                                    fillColor: Colors.grey,
-                                    hintText: "Parth Pitroda",
-                                  ),
-                                )
-                              ],
-                            ),
+                            CommonGreyFiled(title: "UMR Number", value: state.patient?.umrNumber ?? ""),
+                            const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+                            CommonGreyFiled(title: "Patient Name", value: "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
                           ],
                         ),
                       ),
 
-                      LimsTable(columnNames: columnNames,
-                          tableType: TableType.process,
-                          onEditClick: (value){
+                      Visibility(
+                        visible: state.testsList?.isNotEmpty??false,
+                        child: LimsTable(columnNames: columnNames,
+                            tableType: TableType.process,
+                            tableRowHeight: 95,
+                            onEditClick: (value){
+                          status = value;
 
+                            },
+                            onSubmit: (test){
+                              int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+
+                            bloc.add(UpdateInTransit(
+                            invoiceId: invoiceId,
+                            userId: state.patient!.id!,
+                            status: int.parse(status)));
+
+                            ScreenHelper.showAlertPopup("Process status updated successfully", context);
                           },
-                          rowData: state.searchTestsList),
-
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        child: commonBtn(text: "Update", isEnable: true, calll: (){
-                          showToast(msg: "Update");
-                        }),
+                          onPrintPdf: (Test test) {
+                            var testId = test.id;
+                            var userId = state.patient?.id;
+                            var invoiceId = state.invoiceMappings
+                                ?.firstWhere(
+                                    (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                                .id;
+                            var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                            PdfUtility.savePdf(context, barcodeString.toString());
+                          },
+                          rowData: getTestList(state)),
                       )
-                      ,
+
+                      // Container(
+                      //   margin: EdgeInsets.symmetric(vertical: 10),
+                      //   child: commonBtn(text: "Update", isEnable: true, calll: (){
+                      //     showToast(msg: "Update");
+                      //   }),
+                      // )
+                      // ,
                     ],
                   ),
                 ),
@@ -152,6 +142,12 @@ class _ProcessManagementState extends State<ProcessManagement> {
           );
         }
     );
+  }
+
+  getTestList(InTransitState state) {
+    return  state.testsList!.map((e) {
+      return state.invoiceMappings?.where((element) => element.testId == e.id && element.status > 3);
+    }).toList();
   }
 
 }

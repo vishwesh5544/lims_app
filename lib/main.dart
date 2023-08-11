@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart';
 import 'package:lims_app/bloc/lab_bloc/lab_bloc.dart';
 import 'package:lims_app/bloc/login_bloc/login_bloc.dart';
 import 'package:lims_app/bloc/patient_bloc/patient_bloc.dart';
 import 'package:lims_app/bloc/test_bloc/test_bloc.dart';
+import 'package:lims_app/repositories/in_transit_repository.dart';
 import 'package:lims_app/repositories/lab_repository.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
 import 'package:lims_app/repositories/tests_repository.dart';
@@ -35,7 +37,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<UserRepository>(create: (context) => UserRepository()),
         RepositoryProvider<TestRepository>(create: (context) => TestRepository()),
         RepositoryProvider<PatientRepository>(create: (context) => PatientRepository()),
-        RepositoryProvider<LabRepository>(create: (context) => LabRepository())
+        RepositoryProvider<LabRepository>(create: (context) => LabRepository()),
+        RepositoryProvider<InTransitRepository>(create: (context) => InTransitRepository(),)
       ],
       child: MultiBlocProvider(
         providers: [
@@ -43,10 +46,13 @@ class MyApp extends StatelessWidget {
           BlocProvider<TestBloc>(create: (context) => TestBloc(testRepository: context.read<TestRepository>())),
           BlocProvider<PatientBloc>(
               create: (context) => PatientBloc(patientRepository: context.read<PatientRepository>())),
-          BlocProvider<LabBloc>(create: (context) => LabBloc(labRepository: context.read<LabRepository>()),)
+          BlocProvider<LabBloc>(create: (context) => LabBloc(labRepository: context.read<LabRepository>()),),
+          BlocProvider<InTransitBloc>(create: (context) => InTransitBloc(inTransitRepository: context
+              .read<InTransitRepository>()))
         ],
         child: MaterialApp(
           title: 'LIMS Application',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
