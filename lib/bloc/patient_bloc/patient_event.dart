@@ -10,6 +10,7 @@ class OnSearch extends PatientEvent {
 
 class OnAddPatient extends PatientEvent {
   final bool value;
+
   OnAddPatient({this.value = false});
 }
 
