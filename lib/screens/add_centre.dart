@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_form_builder/flutter_form_builder.dart";
+import "package:form_builder_validators/form_builder_validators.dart";
 import "package:lims_app/bloc/lab_bloc/lab_bloc.dart";
 import "package:lims_app/bloc/lab_bloc/lab_event.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
@@ -186,6 +187,7 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
       name: 'labName',
       title: 'Lab Name',
+      inputFormatters: FormFormatters.name,
       hintText: "Enter Name",
       onChange: (value) {},
       controller: _labNameController,
@@ -203,6 +205,10 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'labEmail',
         title: 'Lab Email',
+        inputFormatters: FormFormatters.email,
+        validators: [
+          FormBuilderValidators.email(),
+        ],
         hintText: "Enter Email",
         onChange: (value) {},
         controller: _emailIdController);
@@ -290,6 +296,9 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'city',
         title: 'City',
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+        ],
         hintText: "Enter Name",
         onChange: (value) {},
         controller: _cityController);
@@ -306,6 +315,9 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'state',
         title: 'State',
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+        ],
         hintText: "Enter State Name",
         onChange: (value) {},
         controller: _stateController);
@@ -323,6 +335,9 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'country',
         title: 'Country',
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+        ],
         hintText: "Enter Country Name",
         onChange: (value) {},
         controller: _countryController);

@@ -385,6 +385,7 @@ class _AddTestState extends State<AddTest> {
     return _buildBlocComponent(CommonEditText(
         title: 'Enter Name',
         name: 'name',
+        inputFormatters: FormFormatters.name,
         hintText: AddTestStrings.enterTestName,
         onChange: (value) {
           bloc.add(TestNameUpdated(value));
