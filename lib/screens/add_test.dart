@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_form_builder/flutter_form_builder.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
+import "package:lims_app/utils/formatters.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 import 'package:lims_app/utils/strings/add_test_strings.dart';
 import "package:lims_app/utils/color_provider.dart";
@@ -21,6 +24,7 @@ class AddTest extends StatefulWidget {
 
 class _AddTestState extends State<AddTest> {
   late final TestBloc bloc;
+  late final GlobalKey<FormBuilderState> formKey;
   final testCodeEditingController = TextEditingController();
   final testNameEditingController = TextEditingController();
   final sampleTypeEditingController = TextEditingController();
@@ -41,6 +45,7 @@ class _AddTestState extends State<AddTest> {
 
   @override
   void initState() {
+    formKey = GlobalKey<FormBuilderState>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<TestBloc>();
 
@@ -173,7 +178,8 @@ class _AddTestState extends State<AddTest> {
 
   /// form element
   Widget _createForm() {
-    return Form(
+    return FormBuilder(
+      key: formKey,
       child: Column(
         children: [
           Row(
@@ -267,6 +273,9 @@ class _AddTestState extends State<AddTest> {
             isEnable: true,
             text: AddTestStrings.title,
             calll: () {
+              if (!formKey.currentState!.validate()) {
+                return;
+              }
               TestBloc bloc = BlocProvider.of<TestBloc>(context);
 
               int price = int.parse(priceEditingController.text);
@@ -454,6 +463,9 @@ class _AddTestState extends State<AddTest> {
         title: 'Enter price',
         name: 'price',
         hintText: AddTestStrings.enterPrice,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^[0-9\.]+$')),
+        ],
         onChange: (value) {
           int price = priceEditingController.text.isNotEmpty
               ? int.parse(priceEditingController.text)
@@ -461,7 +473,9 @@ class _AddTestState extends State<AddTest> {
           int tax = taxPercentageEditingController.text.isNotEmpty
               ? int.parse(taxPercentageEditingController.text)
               : 0;
-          int totalPrice = price + (price * tax);
+          int totalPrice = (price + (price * tax / 100)).toInt();
+          formKey.currentState!.fields['totalPrice']
+              ?.didChange(totalPrice.toString());
           bloc.add(PriceUpdated(price));
           bloc.add(TotalPriceUpdated(totalPrice));
         },
@@ -490,6 +504,9 @@ class _AddTestState extends State<AddTest> {
         title: 'Enter tax',
         name: 'tax',
         hintText: AddTestStrings.enterTaxPercentage,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^[0-9\.]+$')),
+        ],
         onChange: (value) {
           int price = priceEditingController.text.isNotEmpty
               ? int.parse(priceEditingController.text)
@@ -497,7 +514,9 @@ class _AddTestState extends State<AddTest> {
           int tax = taxPercentageEditingController.text.isNotEmpty
               ? int.parse(taxPercentageEditingController.text)
               : 0;
-          int totalPrice = price + (price * tax);
+          int totalPrice = (price + (price * tax / 100)).toInt();
+          formKey.currentState!.fields['totalPrice']
+              ?.didChange(totalPrice.toString());
           bloc.add(TaxPercentageUpdated(tax));
           bloc.add(TotalPriceUpdated(totalPrice));
         },
@@ -517,8 +536,11 @@ class _AddTestState extends State<AddTest> {
     // return _getColumnAndFormInput("Enter Value", blocComponent);
 
     return _buildBlocComponent(CommonEditText(
-        title: 'Enter Value',
-        name: 'value',
+        title: 'Enter Volume',
+        name: 'volume',
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^[0-9\.]+$')),
+        ],
         hintText: AddTestStrings.enterVolume,
         onChange: (value) {
           bloc.add(VolumeUpdated(value));
@@ -541,6 +563,10 @@ class _AddTestState extends State<AddTest> {
     return _buildBlocComponent(CommonEditText(
         title: 'Enter Temperature',
         name: 'temperature',
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(3),
+        ],
         hintText: AddTestStrings.enterTemperature,
         onChange: (value) {
           bloc.add(TemperatureUpdated(value));
@@ -562,14 +588,18 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter price", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(
-        title: 'Enter price',
-        name: 'price',
+    return _buildBlocComponent(
+      CommonEditText(
+        title: 'Total price',
+        name: 'totalPrice',
         hintText: "total price",
+        readOnly: true,
         onChange: (value) {
           bloc.add(TotalPriceUpdated(int.parse(value)));
         },
-        controller: totalPriceEditingController));
+        controller: totalPriceEditingController,
+      ),
+    );
   }
 
   Widget _enterObservations() {

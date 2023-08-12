@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "2.1.1"
   build:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build
       sha256: "80184af8b6cb3e5c1c4ec6d8544d27711700bc3e6d2efad04238c7b5290889f0"
@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "2.2.1"
   build_runner:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build_runner
       sha256: "10c6bcdbf9d049a0b666702cf1cee4ddfdc38f02a19d35ae392863b47519848b"

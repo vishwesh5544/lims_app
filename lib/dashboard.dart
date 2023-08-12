@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-                onTap: (){
+                onTap: () {
                   showToast(msg: "LIMS");
                 },
                 child: Container(
@@ -90,21 +90,21 @@ class _MyHomePageState extends State<MyHomePage> {
           SideMenu(
             controller: sideMenu,
             style: SideMenuStyle(
-              // showTooltip: false,
-              compactSideMenuWidth: 100,
-              openSideMenuWidth: 200,
-              displayMode: SideMenuDisplayMode.auto,
-              hoverColor: Colors.blue[100],
-              selectedHoverColor: Colors.blue[100],
-              selectedColor: ColorProvider.blueDarkShade,
-              selectedTitleTextStyle: const TextStyle(color: Colors.white),
-              selectedIconColor: Colors.white,
-              backgroundColor: ColorProvider.blueDarkShade
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.all(Radius.circular(10)),
-              // ),
-              // backgroundColor: Colors.blueGrey[700]
-            ),
+                // showTooltip: false,
+                compactSideMenuWidth: 100,
+                openSideMenuWidth: 200,
+                displayMode: SideMenuDisplayMode.auto,
+                hoverColor: Colors.blue[100],
+                selectedHoverColor: Colors.blue[100],
+                selectedColor: ColorProvider.blueDarkShade,
+                selectedTitleTextStyle: const TextStyle(color: Colors.white),
+                selectedIconColor: Colors.white,
+                backgroundColor: ColorProvider.blueDarkShade
+                // decoration: BoxDecoration(
+                //   borderRadius: BorderRadius.all(Radius.circular(10)),
+                // ),
+                // backgroundColor: Colors.blueGrey[700]
+                ),
             footer: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -122,29 +122,55 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             items: [
-              sideMenuItem(index: 0, title: "Patient\n Management", iconName: "ic_management",isSelected: sideMenu.currentPage == 0),
-              // sideMenuItem(index: 1, title: "Test\n Management", iconName: "ic_Layer",isSelected: sideMenu.currentPage == 1),
-              // sideMenuItem(index: 2, title: "Sample\n Management", iconName: "ic_chemistry", isSelected: sideMenu.currentPage == 2),
-              // sideMenuItem(index: 3, title: "In Transit\n Management", iconName: "ic_in_transit_mgmt", isSelected:
-              // sideMenu
-              //     .currentPage == 3),
-              // sideMenuItem(index: 4, title: "Process\n Management",iconName: "ic_process_mgmt", isSelected: sideMenu
-              //     .currentPage == 4),
-              // sideMenuItem(index: 5, title: "Lab\n Management", iconName: "ic_Lab_Report",isSelected: sideMenu.currentPage == 5),
-              // sideMenuItem(index: 6, title: "Test\n Status", iconName: "ic_processing_time",isSelected: sideMenu.currentPage == 6),
+              sideMenuItem(
+                  index: 0,
+                  title: "Patient\n Management",
+                  iconName: "ic_management",
+                  isSelected: sideMenu.currentPage == 0),
+              sideMenuItem(
+                  index: 1,
+                  title: "Test\n Management",
+                  iconName: "ic_Layer",
+                  isSelected: sideMenu.currentPage == 1),
+              sideMenuItem(
+                  index: 2,
+                  title: "Sample\n Management",
+                  iconName: "ic_chemistry",
+                  isSelected: sideMenu.currentPage == 2),
+              sideMenuItem(
+                  index: 3,
+                  title: "In Transit\n Management",
+                  iconName: "ic_in_transit_mgmt",
+                  isSelected: sideMenu.currentPage == 3),
+              sideMenuItem(
+                  index: 4,
+                  title: "Process\n Management",
+                  iconName: "ic_process_mgmt",
+                  isSelected: sideMenu.currentPage == 4),
+              sideMenuItem(
+                  index: 5,
+                  title: "Lab\n Management",
+                  iconName: "ic_Lab_Report",
+                  isSelected: sideMenu.currentPage == 5),
+              sideMenuItem(
+                  index: 6,
+                  title: "Test\n Status",
+                  iconName: "ic_processing_time",
+                  isSelected: sideMenu.currentPage == 6),
             ],
           ),
           Expanded(
             child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
               children: const [
                 PatientManagement(),
-                // TestManagement(),
-                // SampleManagement(),
-                // TransitManagement(),
-                // ProcessManagement(),
-                // LabManagement(),
-                // TestStatus(),
+                TestManagement(),
+                SampleManagement(),
+                TransitManagement(),
+                ProcessManagement(),
+                LabManagement(),
+                TestStatus(),
               ],
             ),
           ),
@@ -153,7 +179,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  sideMenuItem({required int index, String iconName = "ic_home",required String title, bool isSelected = false}) {
+  sideMenuItem(
+      {required int index,
+      String iconName = "ic_home",
+      required String title,
+      bool isSelected = false}) {
     return SideMenuItem(
       builder: (context, displayMode) {
         return InkWell(
@@ -165,13 +195,17 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 2),
             padding: const EdgeInsets.symmetric(vertical: 10),
-            color: isSelected ? Colors.black: Colors.transparent,
+            color: isSelected ? Colors.black : Colors.transparent,
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset("assets/$iconName.png",
-                  height: 26, width: 26, color: Colors.transparent,),
+                  Image.asset(
+                    "assets/$iconName.png",
+                    height: 26,
+                    width: 26,
+                    color: Colors.transparent,
+                  ),
                   // const Icon(Icons.home, size: 40, color: Colors.white,),
                   Text(title,
                       style: TextUtility.getStyle(18, color: Colors.white),
@@ -188,15 +222,20 @@ class _MyHomePageState extends State<MyHomePage> {
   logoutWidget() {
     return Row(
       children: [
-        const Icon(Icons.notifications, size: 30, color: Colors.white,),
+        const Icon(
+          Icons.notifications,
+          size: 30,
+          color: Colors.white,
+        ),
         InkWell(
-          onTap: (){
+          onTap: () {
             SharedPreferences.getInstance().then((value) {
               value.clear();
             });
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),);
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
           },
           child: Container(
               margin: const EdgeInsets.all(20),
