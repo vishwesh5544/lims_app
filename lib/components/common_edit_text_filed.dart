@@ -12,11 +12,19 @@ class CommonEditText extends StatelessWidget {
   TextEditingController controller;
   String hintText;
   String title;
-  CommonEditText({required this.onChange, required this.title, this.onSubmit, required this.controller, required this.hintText,Key? key}) : super(key: key);
+
+  CommonEditText({
+    required this.onChange,
+    required this.title,
+    this.onSubmit,
+    required this.controller,
+    required this.hintText,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return  Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(title, style: TextUtility.getStyle(13)),
       const SizedBox(height: 6),
       TextField(
@@ -39,7 +47,7 @@ class CommonEditText extends StatelessWidget {
     ]);
   }
 
-  // getBorder(){
-  //   return OutlineInputBorder(borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),);
-  // }
+// getBorder(){
+//   return OutlineInputBorder(borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),);
+// }
 }

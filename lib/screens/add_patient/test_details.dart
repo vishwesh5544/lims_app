@@ -82,6 +82,9 @@ class _TestDetailsState extends State<TestDetails> {
                 BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
                 // BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
                 _showInvoiceDialog();
+                /// refresh patients list
+                BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
               });
             }),
       ]
@@ -154,17 +157,10 @@ class _TestDetailsState extends State<TestDetails> {
                                 TextUtility.getTextWithBoldAndPlain("MobileNumber", state.mobileNumber.toString()),
                               ],
                             ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black, width: 2),
-                                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-                              child: state.createdPatientInvoices.isNotEmpty ? barCodeWidget(
-                                text: "",
-                                barCode: state.createdPatientInvoices.first.invoiceId.toString(),
-                              ) : Container(),
-                            )
+                            state.createdPatientInvoices.isNotEmpty ? barCodeWidget(
+                              text: "",
+                              barCode: state.createdPatientInvoices.first.invoiceId.toString(),
+                            ) : Container()
                           ],
                         ),
                         // Row(
@@ -202,7 +198,7 @@ class _TestDetailsState extends State<TestDetails> {
                               "Total",
                             ],
                             tableType: TableType.viewPatient,
-                            tableRowHeight: 85,
+                            tableRowHeight: 95,
                             rowData: state.selectedTests,
                             onEditClick: (value) {}),
                         Container(
@@ -222,9 +218,13 @@ class _TestDetailsState extends State<TestDetails> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: commonBtn(
-                              text: "Generate Invoice",
+                              text: "Close",
                               isEnable: true,
                               calll: () {
+                                Navigator.pop(context, "Cancel");
+                                /// refresh listing
+                                BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                                BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
                                 // BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
                               }),
                         ) // SvgPicture.string(barcodeOne)
