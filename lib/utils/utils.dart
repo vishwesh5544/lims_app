@@ -5,55 +5,66 @@ import 'color_provider.dart';
 
 const String dateFormat = "yyyy-MM-dd";
 
-showToast({String msg = ""}){
+showToast({String msg = ""}) {
   Fluttertoast.showToast(
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
-      fontSize: 16.0
+      fontSize: 16.0);
+}
+
+getBorder() {
+  return BorderSide(width: 0.1, color: Colors.grey);
+  OutlineInputBorder(
+    borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),
   );
 }
 
-getBorder(){
-  return BorderSide(width: 0.1, color: Colors.grey);
-  OutlineInputBorder(borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),);
+getOutLineBorder() {
+  return OutlineInputBorder(
+    borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),
+  );
 }
 
-getOutLineBorder(){
-  return OutlineInputBorder(borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),);
-}
-
-commonBtn({String text = "Next", Color? bgColor, bool isEnable = false, required Function calll,
-double width = 140}){
-  bgColor = bgColor??ColorProvider.blueDarkShade;
- return GestureDetector(
-    onTap: (){
-      calll.call();
-    },
+commonBtn(
+    {String text = "Next",
+    Color? bgColor,
+    bool isEnable = false,
+    required Function calll,
+    double width = 140}) {
+  bgColor = bgColor ?? ColorProvider.blueDarkShade;
+  return GestureDetector(
+    onTap: isEnable
+        ? () {
+            calll.call();
+          }
+        : null,
     child: Container(
         height: 45,
         width: width,
         decoration: BoxDecoration(
-            border: Border.all(
-                color: ColorProvider.blueDarkShade,
-                width: 2
-            ),
+            border: Border.all(color: ColorProvider.blueDarkShade, width: 2),
             color: isEnable ? bgColor : Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(5))
-        ),
-        child: Center(child: Text(text, style:
-        TextUtility.getStyle(16, color: isEnable? Colors.white: Colors.black),))
-    ),
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
+        child: Center(
+            child: Text(
+          text,
+          style: TextUtility.getStyle(16,
+              color: isEnable ? Colors.white : Colors.black),
+        ))),
   );
 }
 
-
-commonIconBtn({String text = "Next",
-  Icon? icon, Color? bgColor, bool isEnable = false, required Function calll,
-  double width = 140}){
-  bgColor = bgColor??ColorProvider.blueDarkShade;
+commonIconBtn(
+    {String text = "Next",
+    Icon? icon,
+    Color? bgColor,
+    bool isEnable = false,
+    required Function calll,
+    double width = 140}) {
+  bgColor = bgColor ?? ColorProvider.blueDarkShade;
   return GestureDetector(
-    onTap: (){
+    onTap: () {
       calll.call();
     },
     child: Container(
@@ -61,26 +72,30 @@ commonIconBtn({String text = "Next",
         // width: width,
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: ColorProvider.blueDarkShade,
-                width: 2
-            ),
+            border: Border.all(color: ColorProvider.blueDarkShade, width: 2),
             color: isEnable ? bgColor : Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(5))
-        ),
-        child: Center(child: Row(
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
+        child: Center(
+            child: Row(
           children: [
-            if(icon!=null)Container(child: icon, padding: EdgeInsets.only(right: 8)),
-            Text(text, style: TextUtility.getStyle(16, color: isEnable? Colors.white: Colors.black),),
+            if (icon != null)
+              Container(child: icon, padding: EdgeInsets.only(right: 8)),
+            Text(
+              text,
+              style: TextUtility.getStyle(16,
+                  color: isEnable ? Colors.white : Colors.black),
+            ),
           ],
-        ))
-    ),
+        ))),
   );
 }
 
-
-commonSearchArea({required String title, String hint = "Next", required TextEditingController textController, required Function onSubmit}){
- return Column(
+commonSearchArea(
+    {required String title,
+    String hint = "Next",
+    required TextEditingController textController,
+    required Function onSubmit}) {
+  return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(title, style: TextUtility.getStyle(13)),
@@ -92,10 +107,10 @@ commonSearchArea({required String title, String hint = "Next", required TextEdit
             textAlignVertical: TextAlignVertical.bottom,
             maxLines: 1,
             minLines: 1,
-            onChanged: (text){
-                onSubmit.call(textController.text.trim());
+            onChanged: (text) {
+              onSubmit.call(textController.text.trim());
             },
-            onSubmitted: (text){
+            onSubmitted: (text) {
               onSubmit.call(textController.text.trim());
             },
             controller: textController,
@@ -106,7 +121,7 @@ commonSearchArea({required String title, String hint = "Next", required TextEdit
                 filled: true,
                 hintText: hint,
                 suffixIcon: InkWell(
-                    onTap: (){
+                    onTap: () {
                       onSubmit.call(textController.text.trim());
                     },
                     child: const Icon(Icons.search)),
@@ -122,9 +137,11 @@ commonSearchArea({required String title, String hint = "Next", required TextEdit
   );
 }
 
-
 /// date picker
-Widget datePicker({required Function onClick, String title = "From Date", required TextEditingController datePickerTextController}) {
+Widget datePicker(
+    {required Function onClick,
+    String title = "From Date",
+    required TextEditingController datePickerTextController}) {
   String dateText = datePickerTextController.text;
 
   return Column(
@@ -137,8 +154,8 @@ Widget datePicker({required Function onClick, String title = "From Date", requir
       TextFormField(
         controller: datePickerTextController,
         decoration: InputDecoration(
-            constraints: const BoxConstraints(maxWidth: 200, minWidth: 150,
-                minHeight: 40, maxHeight: 45),
+            constraints: const BoxConstraints(
+                maxWidth: 200, minWidth: 150, minHeight: 40, maxHeight: 45),
             border: const OutlineInputBorder(),
             suffixIcon: const Icon(Icons.calendar_today),
             hintText: dateText.isNotEmpty ? dateText : "Select Date"),
@@ -150,5 +167,4 @@ Widget datePicker({required Function onClick, String title = "From Date", requir
       )
     ],
   );
-
 }

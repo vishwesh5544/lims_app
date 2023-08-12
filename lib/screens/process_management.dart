@@ -165,8 +165,6 @@ class _ProcessManagementState extends State<ProcessManagement> {
         return true;
       }
       return false;
-    }).map((e) {
-      return state.invoiceMappings?.firstWhere((element) => element.id == e.id);
     }).toList();
   }
 }

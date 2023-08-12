@@ -159,8 +159,6 @@ class _TransitManagementState extends State<TransitManagement> {
         return true;
       }
       return false;
-    }).map((e) {
-      return state.invoiceMappings?.firstWhere((element) => element.id == e.id);
     }).toList();
   }
 }
