@@ -201,8 +201,8 @@ class _AddCentreState extends State<AddCentre> {
 
     // return _getColumnAndFormInput("Email ID", textField);
     return CommonEditText(
-        name: 'labName',
-        title: 'Lab Name',
+        name: 'labEmail',
+        title: 'Lab Email',
         hintText: "Enter Email",
         onChange: (value) {},
         controller: _emailIdController);
@@ -306,7 +306,7 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'state',
         title: 'State',
-        hintText: "Enter Name",
+        hintText: "Enter State Name",
         onChange: (value) {},
         controller: _stateController);
   }
@@ -323,7 +323,7 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'country',
         title: 'Country',
-        hintText: "Enter Name",
+        hintText: "Enter Country Name",
         onChange: (value) {},
         controller: _countryController);
   }
