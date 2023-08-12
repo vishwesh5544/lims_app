@@ -21,8 +21,8 @@ Widget barCodeWidget({required String text, required String barCode}) {
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: SvgPicture.string(
             BarcodeUtility.getBarcodeSvgString(barCode),
-            width: 80,
-            height: 40,
+            width: 120,
+            height: 60,
           ),
         )
       ]);

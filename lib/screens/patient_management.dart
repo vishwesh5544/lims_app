@@ -163,7 +163,7 @@ class _PatientManagementState extends State<PatientManagement> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           DataTable(
-                              dataRowHeight: 100,
+                              dataRowHeight: 120,
                               dividerThickness: 0.2,
                               headingRowHeight: 50,
                               headingRowColor:
