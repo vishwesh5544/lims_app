@@ -19,6 +19,7 @@ class CommonEditText extends StatelessWidget {
   final List<FormFieldValidator<String>>? validators;
   final String name;
   final bool readOnly;
+  final bool required;
 
   CommonEditText({
     required this.name,
@@ -30,6 +31,7 @@ class CommonEditText extends StatelessWidget {
     this.inputFormatters,
     this.validators,
     this.readOnly = false,
+    this.required = true,
     Key? key,
   }) : super(key: key);
 
@@ -45,7 +47,7 @@ class CommonEditText extends StatelessWidget {
           name: name,
           readOnly: readOnly,
           validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
+            if (required) FormBuilderValidators.required(),
             if (validators != null) ...validators!,
           ]),
           controller: controller,

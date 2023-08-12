@@ -65,11 +65,16 @@ class _TestDetailsState extends State<TestDetails> {
           width: double.infinity,
           color: Colors.black,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                "Total Price: \$${totalPrice.toString()}",
-                style: TextUtility.getStyle(16, color: Colors.white),
-              )
+              const Spacer(flex: 8),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  "Total Price: \$${totalPrice.toString()}",
+                  style: TextUtility.getStyle(16, color: Colors.white),
+                ),
+              ),
             ],
           ),
         ),
@@ -77,11 +82,13 @@ class _TestDetailsState extends State<TestDetails> {
             text: "Submit", // "Preview Invoice"
             isEnable: true,
             calll: () {
-              BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
+              BlocProvider.of<PatientBloc>(context)
+                  .add(GenerateInvoiceNumber());
               Future.delayed(const Duration(seconds: 1), () {
                 BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
                 // BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
                 _showInvoiceDialog();
+
                 /// refresh patients list
                 BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
                 BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
@@ -106,7 +113,10 @@ class _TestDetailsState extends State<TestDetails> {
             return AlertDialog(
                 insetPadding: EdgeInsets.zero,
                 backgroundColor: Colors.white,
-                titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
+                titleTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
                 titlePadding: EdgeInsets.zero,
                 title: Container(
                   padding: const EdgeInsets.all(10.0),
@@ -118,7 +128,8 @@ class _TestDetailsState extends State<TestDetails> {
                       const SizedBox(),
                       const Text('Invoice'),
                       InkWell(
-                        child: const Icon(Icons.cancel_rounded, color: Colors.white),
+                        child: const Icon(Icons.cancel_rounded,
+                            color: Colors.white),
                         onTap: () => Navigator.pop(context, "Cancel"),
                       )
                     ],
@@ -133,8 +144,13 @@ class _TestDetailsState extends State<TestDetails> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18, color: Colors.black))],
+                          children: [
+                            Text('Invoice Receipt',
+                                style: TextUtility.getBoldStyle(18,
+                                    color: Colors.black))
+                          ],
                         ),
+
                         /// receipt header row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,25 +158,37 @@ class _TestDetailsState extends State<TestDetails> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                TextUtility.getTextWithBoldAndPlain("Invoice Number", state.invoiceNumber),
-                                TextUtility.getTextWithBoldAndPlain("UMR Number", state.umrNumber),
                                 TextUtility.getTextWithBoldAndPlain(
-                                    "Date", DateFormat("yyyy-MM-dd").format(DateTime.now())),
+                                    "Invoice Number", state.invoiceNumber),
+                                TextUtility.getTextWithBoldAndPlain(
+                                    "UMR Number", state.umrNumber),
+                                TextUtility.getTextWithBoldAndPlain(
+                                    "Date",
+                                    DateFormat("yyyy-MM-dd")
+                                        .format(DateTime.now())),
                               ],
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 TextUtility.getTextWithBoldAndPlain(
-                                    "Patient Name", "${state.firstName} ${state.lastName}"),
-                                TextUtility.getTextWithBoldAndPlain("Age/Sex", "${state.age}/${state.gender}"),
-                                TextUtility.getTextWithBoldAndPlain("MobileNumber", state.mobileNumber.toString()),
+                                    "Patient Name",
+                                    "${state.firstName} ${state.lastName}"),
+                                TextUtility.getTextWithBoldAndPlain(
+                                    "Age/Sex", "${state.age}/${state.gender}"),
+                                TextUtility.getTextWithBoldAndPlain(
+                                    "MobileNumber",
+                                    state.mobileNumber.toString()),
                               ],
                             ),
-                            state.createdPatientInvoices.isNotEmpty ? barCodeWidget(
-                              text: "",
-                              barCode: state.createdPatientInvoices.first.invoiceId.toString(),
-                            ) : Container()
+                            state.createdPatientInvoices.isNotEmpty
+                                ? barCodeWidget(
+                                    text: "",
+                                    barCode: state
+                                        .createdPatientInvoices.first.invoiceId
+                                        .toString(),
+                                  )
+                                : Container()
                           ],
                         ),
                         // Row(
@@ -210,7 +238,8 @@ class _TestDetailsState extends State<TestDetails> {
                             children: [
                               Text(
                                 "Total Price: \$${totalPrice.toString()}",
-                                style: TextUtility.getStyle(16, color: Colors.white),
+                                style: TextUtility.getStyle(16,
+                                    color: Colors.white),
                               )
                             ],
                           ),
@@ -222,9 +251,12 @@ class _TestDetailsState extends State<TestDetails> {
                               isEnable: true,
                               calll: () {
                                 Navigator.pop(context, "Cancel");
+
                                 /// refresh listing
-                                BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
-                                BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+                                BlocProvider.of<PatientBloc>(context)
+                                    .add(FetchAllPatients());
+                                BlocProvider.of<PatientBloc>(context)
+                                    .add(OnAddPatient());
                                 // BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
                               }),
                         ) // SvgPicture.string(barcodeOne)
@@ -251,8 +283,10 @@ class _TestDetailsState extends State<TestDetails> {
             return DropdownButtonFormField(
               icon: IconStore.downwardArrow,
               decoration: InputDecoration(
-                hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-                constraints: const BoxConstraints(maxWidth: 800, minWidth: 500, minHeight: 47, maxHeight: 60),
+                hintStyle: TextUtility.getStyle(14,
+                    color: ColorProvider.darkGreyColor),
+                constraints: const BoxConstraints(
+                    maxWidth: 800, minWidth: 500, minHeight: 47, maxHeight: 60),
                 border: getOutLineBorder(),
                 focusedErrorBorder: getOutLineBorder(),
                 errorBorder: getOutLineBorder(),
@@ -262,17 +296,22 @@ class _TestDetailsState extends State<TestDetails> {
                 hintText: AddPatientStrings.selectTest,
               ),
               items: state.testsList.map((test) {
-                return DropdownMenuItem(value: test, child: Text(test.testName));
+                return DropdownMenuItem(
+                    value: test, child: Text(test.testName));
               }).toList(),
               onChanged: (value) {
                 setState(() {
                   totalPrice = 0;
 
-                  if (selectedTests.isEmpty || selectedTests.indexWhere((element) => element.id == value!.id) != 0) {
+                  if (selectedTests.isEmpty ||
+                      selectedTests.indexWhere(
+                              (element) => element.id == value!.id) !=
+                          0) {
                     selectedTests.add(value!);
                     patientBloc.add(SelectedTestsUpdated(selectedTests));
                   } else {
-                    int index = selectedTests.indexWhere((element) => element.id == value!.id);
+                    int index = selectedTests
+                        .indexWhere((element) => element.id == value!.id);
                     selectedTests.removeAt(index);
                   }
 
@@ -314,8 +353,13 @@ class _TestDetailsState extends State<TestDetails> {
               dividerThickness: 0.2,
               headingRowHeight: 50,
               border: TableBorder(
-                  horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
-              columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
+                  horizontalInside: getBorder(),
+                  verticalInside: getBorder(),
+                  right: getBorder(),
+                  left: getBorder()),
+              columns: columnNames
+                  .map((name) => DataColumn(label: Text(name)))
+                  .toList(),
               rows: selectedTests.map((value) {
                 var currentIndex = selectedTests.indexOf(value) + 1;
                 return _buildDataRowForTest(value, currentIndex);

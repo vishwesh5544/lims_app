@@ -20,7 +20,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
   Stream<PatientState> mapEventToState(PatientEvent event) async* {
     if (event is FetchAllPatients) {
       final response = await patientRepository.getAllPatients();
-      yield state.copyWith(patientsList: response.data, searchPatientsList: response.data);
+      yield state.copyWith(
+          patientsList: response.data, searchPatientsList: response.data);
     } else if (event is GenerateUmrNumber) {
       var random = Random();
       var next = random.nextDouble() * 1000000;
@@ -73,12 +74,15 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
             age: state.age);
         ResponseCallback<Patient> response;
         if (event.isUpdate) {
-          response = await patientRepository.updatePatient(newPatient, event.userId!);
+          response =
+              await patientRepository.updatePatient(newPatient, event.userId!);
         } else {
           response = await patientRepository.addPatient(newPatient);
         }
-        yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
-        LimsLogger.log("*** Patient successfully created => ${response.data?.toJson()}");
+        yield state.copyWith(
+            createdPatient: response.data, formStatus: SubmissionSuccess());
+        LimsLogger.log(
+            "*** Patient successfully created => ${response.data?.toJson()}");
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
@@ -101,11 +105,17 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
 
       for (Test test in state.selectedTests) {
         if (state.createdPatient?.id != null && test.id != null) {
-          InvoiceMapping invoice = InvoiceMapping(state.createdPatient!.id!, test.id!, state.invoiceNumber, status: 0);
+          InvoiceMapping invoice = InvoiceMapping(
+            state.createdPatient!.id!,
+            test.id!,
+            state.invoiceNumber,
+            status: 1,
+          );
           invoices.add(invoice);
         }
       }
 
+      await patientRepository.addInvoice(invoices);
       final response = await patientRepository.addInvoice(invoices);
       yield state.copyWith(createdPatientInvoices: response.data);
     } else if (event is OnSearch) {
@@ -121,7 +131,9 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
 
       yield state.copyWith(searchPatientsList: data);
     } else if (event is OnAddPatient) {
-      yield state.copyWith(isAddPatient: event.value, currentSelectedPriview: event.currentSelectedPriview);
+      yield state.copyWith(
+          isAddPatient: event.value,
+          currentSelectedPriview: event.currentSelectedPriview);
     } else if (event is IsPatient) {
       yield state.copyWith(isPatient: event.value);
     }

@@ -11,4 +11,7 @@ class FormFormatters {
     FilteringTextInputFormatter.allow(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"),
   ];
+  static List<TextInputFormatter> name = [
+    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z.]'))
+  ];
 }

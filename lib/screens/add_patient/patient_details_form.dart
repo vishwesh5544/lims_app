@@ -242,6 +242,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
       name: 'firstName',
       title: 'First Name',
+      inputFormatters: FormFormatters.name,
       hintText: AddPatientStrings.enterFirstName,
       onChange: (value) {
         bloc.add(FirstNameUpdated(value));
@@ -268,6 +269,8 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
       name: 'middleName',
       title: 'Middle Name',
+      inputFormatters: FormFormatters.name,
+      required: false,
       hintText: AddPatientStrings.enterMiddleName,
       onChange: (value) {
         bloc.add(MiddleNameUpdated(value));
@@ -294,6 +297,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
         name: 'lastName',
         title: 'Last Name',
+        inputFormatters: FormFormatters.name,
         controller: _lastNameController,
         hintText: AddPatientStrings.enterLastName,
         onChange: (value) {
@@ -425,6 +429,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
         name: 'consultedDoctor',
         title: 'Consulted Doctor',
+        inputFormatters: FormFormatters.name,
         controller: _consultedDoctorController,
         hintText: "Enter Doctor Name",
         onChange: (value) {
@@ -558,14 +563,24 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //     )
     //   ],
     // );
+    final genderMapping = {
+      "male": "Male",
+      "female": "Female",
+      "other": "Prefer not to say",
+    };
 
-    return _buildBlocComponent(CommonDropDown(
+    return _buildBlocComponent(
+      CommonDropDown(
         title: "Gender",
         hintText: AddPatientStrings.gender,
-        list: const ["male", "female"],
+        list: genderMapping.values.toList(),
         onSubmit: (value) {
-          bloc.add(GenderUpdated(value));
-        }));
+          final gender = genderMapping.keys
+              .firstWhere((key) => genderMapping[key] == value);
+          bloc.add(GenderUpdated(gender));
+        },
+      ),
+    );
   }
 
   Widget _consultantDoctorDropdown() {
