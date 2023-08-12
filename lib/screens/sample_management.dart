@@ -18,6 +18,7 @@ import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
 import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/barcode_utility.dart";
+import "package:lims_app/utils/lims_logger.dart";
 import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
@@ -40,9 +41,16 @@ class SampleManagement extends StatefulWidget {
 }
 
 class _SampleManagementState extends State<SampleManagement> {
-  TextEditingController textController = TextEditingController(text: "sudovish@gmail.com");
+  TextEditingController textController =
+      TextEditingController(text: "sudovish@gmail.com");
   late final InTransitBloc bloc;
-  static List<String> columnNames = ["#", "Name of the Test", "Process Unit", "Actions", ""];
+  static List<String> columnNames = [
+    "#",
+    "Name of the Test",
+    "Process Unit",
+    "Actions",
+    ""
+  ];
 
   String processingUnit = "";
 
@@ -57,7 +65,8 @@ class _SampleManagementState extends State<SampleManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<InTransitBloc, InTransitState>(listener: (context, state) {
+    return BlocConsumer<InTransitBloc, InTransitState>(
+        listener: (context, state) {
       if (state.updateStatus is Updated) {}
     }, builder: (context, state) {
       return WillPopScope(
@@ -94,8 +103,11 @@ class _SampleManagementState extends State<SampleManagement> {
                     margin: EdgeInsets.only(bottom: 15),
                     child: Row(
                       children: [
-                        CommonGreyFiled(title: "UMR Number", value: state.patient?.umrNumber ?? ""),
-                        const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+                        CommonGreyFiled(
+                            title: "UMR Number",
+                            value: state.patient?.umrNumber ?? ""),
+                        const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20)),
                         CommonGreyFiled(
                             title: "Patient Name",
                             value:
@@ -115,27 +127,35 @@ class _SampleManagementState extends State<SampleManagement> {
                         },
                         onSubmit: (test) {
                           if (processingUnit.isNotEmpty) {
-                            int invoiceId =
-                                state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                            int invoiceId = state.invoiceMappings!
+                                .firstWhere(
+                                    (element) => element.testId == test.id)
+                                .id!;
 
-                            BlocProvider.of<InTransitBloc>(context).add(UpdateInTransit(
-                                invoiceId: invoiceId,
-                                userId: state.patient!.id!,
-                                processingUnit: processingUnit,
-                                status: 2));
-                            ScreenHelper.showAlertPopup("Sample status updated successfully", context);
+                            BlocProvider.of<InTransitBloc>(context).add(
+                                UpdateInTransit(
+                                    invoiceId: invoiceId,
+                                    userId: state.patient!.id!,
+                                    processingUnit: processingUnit,
+                                    status: 2));
+                            ScreenHelper.showAlertPopup(
+                                "Sample status updated successfully", context);
                           } else {
-                            ScreenHelper.showAlertPopup("Please select Processing Unit first!", context);
+                            ScreenHelper.showAlertPopup(
+                                "Please select Processing Unit first!",
+                                context);
                           }
                         },
                         onPrintPdf: (Test test) {
                           var testId = test.id;
                           var userId = state.patient?.id;
                           var invoiceId = state.invoiceMappings
-                              ?.firstWhere(
-                                  (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
+                              ?.firstWhere((invoice) =>
+                                  invoice.testId == test.id &&
+                                  invoice.patientId == state.patient!.id)
                               .id;
-                          var barcodeString = "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
+                          var barcodeString =
+                              "testId:, $testId, userId: $userId, invoiceId: $invoiceId";
                           PdfUtility.savePdf(context, barcodeString.toString());
                         },
                         rowData: getTestList(state)),
@@ -148,26 +168,34 @@ class _SampleManagementState extends State<SampleManagement> {
   }
 
   Widget _barCodeWidget({required String text, required String barCode}) {
-    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(text),
-      Container(
-        padding: EdgeInsets.all(6),
-        margin: EdgeInsets.all(3),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 2),
-            borderRadius: const BorderRadius.all(Radius.circular(5))),
-        child: SvgPicture.string(
-          BarcodeUtility.getBarcodeSvgString(barCode),
-          width: 80,
-          height: 40,
-        ),
-      )
-    ]);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(text),
+          Container(
+            padding: EdgeInsets.all(6),
+            margin: EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
+            child: SvgPicture.string(
+              BarcodeUtility.getBarcodeSvgString(barCode),
+              width: 80,
+              height: 40,
+            ),
+          )
+        ]);
   }
 
   getTestList(InTransitState state) {
-    return  state.testsList!.map((e) {
-      return state.invoiceMappings?.where((element) => element.testId == e.id && element.status > 1);
+    return state.testsList!.where((test) {
+      final invoiceMappings = state.invoiceMappings?.where(
+          (invoice) => invoice.testId == test.id && invoice.status >= 1);
+      if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
+        return true;
+      }
+      return false;
     }).toList();
   }
 }

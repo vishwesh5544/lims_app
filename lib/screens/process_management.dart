@@ -33,7 +33,8 @@ class ProcessManagement extends StatefulWidget {
 }
 
 class _ProcessManagementState extends State<ProcessManagement> {
-  TextEditingController textController = TextEditingController(text: "sudovish@gmail.com");
+  TextEditingController textController =
+      TextEditingController(text: "sudovish@gmail.com");
   late final InTransitBloc bloc;
   String status = "";
   static List<String> columnNames = [
@@ -43,7 +44,8 @@ class _ProcessManagementState extends State<ProcessManagement> {
     "Sample type",
     "Process Unit",
     "Status",
-    "Submit", ""
+    "Submit",
+    ""
   ];
 
   @override
@@ -58,9 +60,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InTransitBloc, InTransitState>(
-        listener: (context, state) {
-
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           return WillPopScope(
               onWillPop: () async {
@@ -68,64 +68,79 @@ class _ProcessManagementState extends State<ProcessManagement> {
                 return true;
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CommonHeader(title:  "Process Management"),
+                      CommonHeader(title: "Process Management"),
                       Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: commonSearchArea(
                               title: "UMR No./Patient Name",
                               hint: "Search by URM No./Patient Name",
-                              textController: textController, onSubmit: (value){
-                            bloc.add(SearchPatient(value));
-                          })
-                      ),
+                              textController: textController,
+                              onSubmit: (value) {
+                                bloc.add(SearchPatient(value));
+                              })),
 
                       Container(
                         margin: const EdgeInsets.only(bottom: 15),
                         child: Row(
                           children: [
-                            CommonGreyFiled(title: "UMR Number", value: state.patient?.umrNumber ?? ""),
-                            const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
-                            CommonGreyFiled(title: "Patient Name", value: "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
+                            CommonGreyFiled(
+                                title: "UMR Number",
+                                value: state.patient?.umrNumber ?? ""),
+                            const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20)),
+                            CommonGreyFiled(
+                                title: "Patient Name",
+                                value:
+                                    "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
                           ],
                         ),
                       ),
 
                       Visibility(
-                        visible: state.testsList?.isNotEmpty??false,
-                        child: LimsTable(columnNames: columnNames,
+                        visible: state.testsList?.isNotEmpty ?? false,
+                        child: LimsTable(
+                            columnNames: columnNames,
                             tableType: TableType.process,
                             tableRowHeight: 95,
-                            onEditClick: (value){
-                          status = value;
-
+                            onEditClick: (value) {
+                              status = value;
                             },
-                            onSubmit: (test){
-                              int invoiceId = state.invoiceMappings!.firstWhere((element) => element.testId == test.id).id!;
+                            onSubmit: (test) {
+                              int invoiceId = state.invoiceMappings!
+                                  .firstWhere(
+                                      (element) => element.testId == test.id)
+                                  .id!;
 
-                            bloc.add(UpdateInTransit(
-                            invoiceId: invoiceId,
-                            userId: state.patient!.id!,
-                            status: int.parse(status)));
+                              bloc.add(UpdateInTransit(
+                                  invoiceId: invoiceId,
+                                  userId: state.patient!.id!,
+                                  status: int.parse(status)));
 
-                            ScreenHelper.showAlertPopup("Process status updated successfully", context);
-                          },
-                          onPrintPdf: (Test test) {
-                            var testId = test.id;
-                            var userId = state.patient?.id;
-                            var invoiceId = state.invoiceMappings
-                                ?.firstWhere(
-                                    (invoice) => invoice.testId == test.id && invoice.patientId == state.patient!.id)
-                                .id;
-                            var barcodeString = "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
-                            PdfUtility.savePdf(context, barcodeString.toString());
-                          },
-                          rowData: getTestList(state)),
+                              ScreenHelper.showAlertPopup(
+                                  "Process status updated successfully",
+                                  context);
+                            },
+                            onPrintPdf: (Test test) {
+                              var testId = test.id;
+                              var userId = state.patient?.id;
+                              var invoiceId = state.invoiceMappings
+                                  ?.firstWhere((invoice) =>
+                                      invoice.testId == test.id &&
+                                      invoice.patientId == state.patient!.id)
+                                  .id;
+                              var barcodeString =
+                                  "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
+                              PdfUtility.savePdf(
+                                  context, barcodeString.toString());
+                            },
+                            rowData: getTestList(state)),
                       )
 
                       // Container(
@@ -138,16 +153,20 @@ class _ProcessManagementState extends State<ProcessManagement> {
                     ],
                   ),
                 ),
-              )
-          );
-        }
-    );
+              ));
+        });
   }
 
   getTestList(InTransitState state) {
-    return  state.testsList!.map((e) {
-      return state.invoiceMappings?.where((element) => element.testId == e.id && element.status > 3);
+    return state.testsList!.where((test) {
+      final invoiceMappings = state.invoiceMappings?.where(
+          (invoice) => invoice.testId == test.id && invoice.status >= 3);
+      if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
+        return true;
+      }
+      return false;
+    }).map((e) {
+      return state.invoiceMappings?.firstWhere((element) => element.id == e.id);
     }).toList();
   }
-
 }
