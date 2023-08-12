@@ -24,7 +24,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<Patient>> updatePatient(Patient patient, int id) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/${id.toString()}");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/${id.toString()}");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var patch = {
@@ -60,7 +60,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<Patient>> addPatient(Patient patient) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/add");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var req = patient.toJson();
@@ -84,7 +84,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<List<Patient>>> getAllPatients() async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/getallpatient");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/getallpatient");
     ResponseCallback<List<Patient>> responseCallback = ResponseCallback();
     try {
       final response = await http.get(url, headers: _headers);
