@@ -1,7 +1,9 @@
 import "dart:async";
 
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_form_builder/flutter_form_builder.dart";
 import "package:lims_app/bloc/lab_bloc/lab_bloc.dart";
 import "package:lims_app/bloc/lab_bloc/lab_event.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
@@ -11,6 +13,7 @@ import "package:lims_app/models/lab_test_detail.dart";
 import "package:lims_app/models/test.dart";
 import "package:lims_app/test_items/test_data.dart";
 import "package:lims_app/utils/color_provider.dart";
+import "package:lims_app/utils/formatters.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 import "package:lims_app/utils/strings/add_centre_strings.dart";
 import "package:lims_app/utils/text_utility.dart";
@@ -28,6 +31,7 @@ class AddCentre extends StatefulWidget {
 }
 
 class _AddCentreState extends State<AddCentre> {
+  late final GlobalKey<FormBuilderState> formKey;
   late final LabBloc bloc;
   final TextEditingController _labNameController = TextEditingController();
   final TextEditingController _emailIdController = TextEditingController();
@@ -44,6 +48,7 @@ class _AddCentreState extends State<AddCentre> {
 
   @override
   void initState() {
+    formKey = GlobalKey<FormBuilderState>();
     BlocProvider.of<TestBloc>(context).add(FetchAllTests());
     bloc = context.read<LabBloc>();
 
@@ -108,7 +113,8 @@ class _AddCentreState extends State<AddCentre> {
   }
 
   Widget _createForm() {
-    return Form(
+    return FormBuilder(
+      key: formKey,
       child: Column(
         children: [
           Row(
@@ -213,6 +219,7 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'contactNumber',
         title: 'Contact Number',
+        inputFormatters: FormFormatters.phone,
         hintText: "Enter number",
         onChange: (value) {},
         controller: _contactNumberController);
@@ -263,6 +270,9 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'addressLine2',
         title: 'Postal Code',
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+        ],
         hintText: "Enter Code",
         onChange: (value) {},
         controller: _postalCodeController);
@@ -449,39 +459,40 @@ class _AddCentreState extends State<AddCentre> {
         text: "Add Centre",
         isEnable: true,
         calll: () {
-          {
-            if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
-              bloc.add(AddCentreFormSubmitted(
-                  contactNumber: _contactNumberController.text,
-                  emailId: _emailIdController.text,
-                  labName: _labNameController.text,
-                  addressOne: _addressOneController.text,
-                  addressTwo: _addressTwoController.text,
-                  city: _cityController.text,
-                  country: _countryController.text,
-                  state: _stateController.text,
-                  testDetails: selectedTestDetails,
-                  unitType: unitTypeValue));
-            } else {
-              showDialog<void>(
-                context: context,
-                builder: (context) {
-                  Future.delayed(const Duration(seconds: 3), () {
-                    Navigator.of(context).pop();
-                  });
+          if (!formKey.currentState!.validate()) {
+            return;
+          }
+          if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
+            bloc.add(AddCentreFormSubmitted(
+                contactNumber: _contactNumberController.text,
+                emailId: _emailIdController.text,
+                labName: _labNameController.text,
+                addressOne: _addressOneController.text,
+                addressTwo: _addressTwoController.text,
+                city: _cityController.text,
+                country: _countryController.text,
+                state: _stateController.text,
+                testDetails: selectedTestDetails,
+                unitType: unitTypeValue));
+          } else {
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                Future.delayed(const Duration(seconds: 3), () {
+                  Navigator.of(context).pop();
+                });
 
-                  return AlertDialog(
-                    content: const Text(
-                        "Please select Collection Unit/Processing Unit and Select Tests"),
-                    actions: <Widget>[
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("Close"))
-                    ],
-                  );
-                },
-              );
-            }
+                return AlertDialog(
+                  content: const Text(
+                      "Please select Collection Unit/Processing Unit and Select Tests"),
+                  actions: <Widget>[
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("Close"))
+                  ],
+                );
+              },
+            );
           }
         });
     /*return ElevatedButton(
