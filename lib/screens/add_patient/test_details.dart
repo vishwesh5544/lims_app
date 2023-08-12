@@ -74,15 +74,15 @@ class _TestDetailsState extends State<TestDetails> {
           ),
         ),
         commonBtn(
-            text: "Preview Invoice",
+            text: "Submit", // "Preview Invoice"
             isEnable: true,
             calll: () {
               BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
               Future.delayed(const Duration(seconds: 1), () {
                 BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
-                BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
+                // BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
+                _showInvoiceDialog();
               });
-              _showInvoiceDialog();
             }),
       ]
           .map((el) => Padding(
@@ -132,6 +132,7 @@ class _TestDetailsState extends State<TestDetails> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18, color: Colors.black))],
                         ),
+                        /// receipt header row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -159,33 +160,10 @@ class _TestDetailsState extends State<TestDetails> {
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black, width: 2),
                                   borderRadius: const BorderRadius.all(Radius.circular(5))),
-                              child: BlocConsumer<InTransitBloc, InTransitState>(
-                                listener: (context, state) {},
-                                builder: (context, inState) {
-                                  if (inState.invoiceMappings != null && inState.invoiceMappings!.isNotEmpty) {
-                                    // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
-                                    //     .createdPatient?.id).;
-
-                                    int ptid = 13;
-                                    if (ptid.toString().length == 11 || ptid.toString().length == 12) {
-                                      try {
-                                        return barCodeWidget(
-                                          text: "",
-                                          barCode: "12345678901",
-                                        );
-                                      } on Exception catch (e) {
-                                        print(e);
-                                      }
-                                    } else {
-                                      return Container();
-                                    }
-                                  } else {
-                                    return Container();
-                                  }
-
-                                  return Container();
-                                },
-                              ),
+                              child: state.createdPatientInvoices.isNotEmpty ? barCodeWidget(
+                                text: "",
+                                barCode: state.createdPatientInvoices.first.invoiceId.toString(),
+                              ) : Container(),
                             )
                           ],
                         ),
@@ -242,7 +220,7 @@ class _TestDetailsState extends State<TestDetails> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(top: 10),
                           child: commonBtn(
                               text: "Generate Invoice",
                               isEnable: true,
@@ -274,7 +252,7 @@ class _TestDetailsState extends State<TestDetails> {
               icon: IconStore.downwardArrow,
               decoration: InputDecoration(
                 hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-                constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
+                constraints: const BoxConstraints(maxWidth: 800, minWidth: 500, minHeight: 47, maxHeight: 60),
                 border: getOutLineBorder(),
                 focusedErrorBorder: getOutLineBorder(),
                 errorBorder: getOutLineBorder(),

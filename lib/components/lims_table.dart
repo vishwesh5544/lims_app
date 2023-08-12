@@ -6,6 +6,8 @@ import "package:flutter_svg/svg.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
+import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
+import "package:lims_app/bloc/patient_bloc/patient_state.dart";
 import "package:lims_app/models/lab.dart";
 import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
@@ -171,11 +173,11 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForTestBarCode(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(  BlocConsumer<InTransitBloc, InTransitState>(
+      DataCell(  BlocConsumer<PatientBloc, PatientState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if(state.invoiceMappings!=null && state.invoiceMappings!.isNotEmpty) {
-            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+          if(state.createdPatientInvoices.isNotEmpty) {
+            var ptid = state.createdPatientInvoices.firstWhere((element) => element.testId == test.id).ptid;
             return barCodeWidget(
               text: test.testName,
               barCode: "${ptid}",

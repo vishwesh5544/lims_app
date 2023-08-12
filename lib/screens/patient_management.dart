@@ -119,7 +119,6 @@ class _PatientManagementState extends State<PatientManagement> {
       "Barcode",
       ""
     ];
-    print(patient.emailId);
     return showDialog(
       context: context,
       builder: (BuildContext context) {

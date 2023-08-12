@@ -161,7 +161,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<InvoiceMapping>> updateInvoiceMapping(InTransit invoiceMapping, int invoiceId) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/${invoiceId.toString()}");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/testpatient/${invoiceId.toString()}");
     ResponseCallback<InvoiceMapping> responseCallback = ResponseCallback();
     try {
       var requestJson = {

@@ -222,7 +222,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(title: 'Mobile Number',
         controller: _mobileNameController,
         hintText: AddPatientStrings.enterMobileNumber, onChange: (value){
-          bloc.add(MobileNumberUpdated(value));
+          bloc.add(MobileNumberUpdated(int.parse(value)));
         }));
   }
 
