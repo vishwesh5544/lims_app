@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_form_builder/flutter_form_builder.dart";
+import "package:form_builder_validators/form_builder_validators.dart";
 import "package:intl/intl.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
@@ -26,6 +28,7 @@ class PatientDetailsForm extends StatefulWidget {
 }
 
 class _PatientDetailsFormState extends State<PatientDetailsForm> {
+  late GlobalKey<FormBuilderState> formKey;
   late final PatientBloc bloc;
   final TextEditingController _datePickerTextController =
       TextEditingController();
@@ -46,6 +49,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
 
   @override
   void initState() {
+    formKey = GlobalKey<FormBuilderState>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<PatientBloc>();
       bloc.add(GenerateUmrNumber());
@@ -109,8 +113,9 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
   }
 
   /// forms
-  Form _patientDetailsForm() {
-    return Form(
+  FormBuilder _patientDetailsForm() {
+    return FormBuilder(
+      key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -158,6 +163,9 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
               text: "Next",
               isEnable: true,
               calll: () {
+                if (!formKey.currentState!.validate()) {
+                  return;
+                }
                 if (_firstNameController.text.isEmpty &&
                     _middleNameController.text.isEmpty &&
                     _lastNameController.text.isEmpty &&
@@ -232,6 +240,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);
 
     return _buildBlocComponent(CommonEditText(
+      name: 'firstName',
       title: 'First Name',
       hintText: AddPatientStrings.enterFirstName,
       onChange: (value) {
@@ -257,6 +266,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);
 
     return _buildBlocComponent(CommonEditText(
+      name: 'middleName',
       title: 'Middle Name',
       hintText: AddPatientStrings.enterMiddleName,
       onChange: (value) {
@@ -282,6 +292,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);
 
     return _buildBlocComponent(CommonEditText(
+        name: 'lastName',
         title: 'Last Name',
         controller: _lastNameController,
         hintText: AddPatientStrings.enterLastName,
@@ -306,6 +317,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);0
 
     return _buildBlocComponent(CommonEditText(
+        name: 'mobileNumber',
         title: 'Mobile Number',
         controller: _mobileNameController,
         inputFormatters: FormFormatters.phone,
@@ -331,9 +343,12 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);
 
     return _buildBlocComponent(CommonEditText(
+        name: 'email',
         title: 'Email',
         controller: _emailIdController,
-        inputFormatters: FormFormatters.email,
+        validators: [
+          FormBuilderValidators.email(),
+        ],
         hintText: AddPatientStrings.enterEmailId,
         onChange: (value) {
           bloc.add(EmailUpdated(value));
@@ -355,6 +370,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
     return _buildBlocComponent(CommonEditText(
+        name: 'insuranceProvider',
         title: 'Insurance Provider',
         controller: _insuranceProviderController,
         hintText: AddPatientStrings.enterInsuranceProviderName,
@@ -379,6 +395,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);
 
     return _buildBlocComponent(CommonEditText(
+        name: 'insuranceNumber',
         title: 'Insurance Number',
         controller: _insuranceNumberController,
         inputFormatters: [
@@ -406,6 +423,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     // ]);
 
     return _buildBlocComponent(CommonEditText(
+        name: 'consultedDoctor',
         title: 'Consulted Doctor',
         controller: _consultedDoctorController,
         hintText: "Enter Doctor Name",

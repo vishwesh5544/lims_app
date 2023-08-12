@@ -45,41 +45,74 @@ class _AddTestState extends State<AddTest> {
       bloc = context.read<TestBloc>();
 
       if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
-        bloc.add(TestCodeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].testCode));
-        bloc.add(TestNameUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].testName));
-        bloc.add(SampleTypeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType));
-        bloc.add(VacutainerUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].vacutainer));
-        bloc.add(VolumeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].volume));
-        bloc.add(TypeOfVolumeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume));
-        bloc.add(TemperatureUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].temperature));
-        bloc.add(TypeOfTemperatureUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature));
-        bloc.add(MethodUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].method));
-        bloc.add(TurnAroundTimeUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].turnAroundTime));
-        bloc.add(PriceUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].price));
-        bloc.add(TaxPercentageUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage));
-        bloc.add(TotalPriceUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].totalPrice));
-        bloc.add(IndicationsUpdated(bloc.state.testsList[bloc.state.currentSelectedPriview].indications));
+        bloc.add(TestCodeUpdated(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].testCode));
+        bloc.add(TestNameUpdated(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].testName));
+        bloc.add(SampleTypeUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].sampleType));
+        bloc.add(VacutainerUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].vacutainer));
+        bloc.add(VolumeUpdated(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].volume));
+        bloc.add(TypeOfVolumeUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume));
+        bloc.add(TemperatureUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].temperature));
+        bloc.add(TypeOfTemperatureUpdated(bloc.state
+            .testsList[bloc.state.currentSelectedPriview].typeOfTemperature));
+        bloc.add(MethodUpdated(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].method));
+        bloc.add(TurnAroundTimeUpdated(bloc.state
+            .testsList[bloc.state.currentSelectedPriview].turnAroundTime));
+        bloc.add(PriceUpdated(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].price));
+        bloc.add(TaxPercentageUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].taxPercentage));
+        bloc.add(TotalPriceUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].totalPrice));
+        bloc.add(IndicationsUpdated(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].indications));
 
-        sampleTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
-        departmentValue = bloc.state.testsList[bloc.state.currentSelectedPriview].department;
-        temperatureTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
-        volumeTypeValue = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
-        tatValue = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        sampleTypeValue =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
+        departmentValue =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].department;
+        temperatureTypeValue = bloc.state
+            .testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        volumeTypeValue = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
+        tatValue = bloc.state.testsList[bloc.state.currentSelectedPriview]
+            .typeOfTemperature;
 
-        testCodeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].testCode;
-        testNameEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].testName;
-        sampleTypeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
-        vacutainerEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].vacutainer;
-        volumeEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].volume;
-        temperatureEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
-        methodEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
-        turnAroundTimeEditingController.text =
-            bloc.state.testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
-        priceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].price.toString();
-        taxPercentageEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
-        totalPriceEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].totalPrice.toString();
-        indicationsEditingController.text =
-            bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
+        testCodeEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].testCode;
+        testNameEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].testName;
+        sampleTypeEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
+        vacutainerEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].vacutainer;
+        volumeEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].volume;
+        temperatureEditingController.text = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
+        methodEditingController.text =
+            bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
+        turnAroundTimeEditingController.text = bloc.state
+            .testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        priceEditingController.text = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].price
+            .toString();
+        taxPercentageEditingController.text = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].taxPercentage
+            .toString();
+        totalPriceEditingController.text = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].totalPrice
+            .toString();
+        indicationsEditingController.text = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].taxPercentage
+            .toString();
       }
     });
     super.initState();
@@ -104,11 +137,13 @@ class _AddTestState extends State<AddTest> {
                     _backButton(),
                     Text(
                       AddTestStrings.title,
-                      style: TextUtility.getBoldStyle(15.0, color: Colors.white),
+                      style:
+                          TextUtility.getBoldStyle(15.0, color: Colors.white),
                     ),
                     Text(
                       "",
-                      style: TextUtility.getBoldStyle(15.0, color: Colors.white),
+                      style:
+                          TextUtility.getBoldStyle(15.0, color: Colors.white),
                     )
                   ],
                 ),
@@ -144,43 +179,79 @@ class _AddTestState extends State<AddTest> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_enterCodeField(), _enterTestNameField(), _selectDepartmentDropdown()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+            children: [
+              _enterCodeField(),
+              _enterTestNameField(),
+              _selectDepartmentDropdown()
+            ]
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_temperatureField(), _enterTemperatureDropdown(), _selectTypeDropdown(), _enterDetailField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+            children: [
+              _temperatureField(),
+              _enterTemperatureDropdown(),
+              _selectTypeDropdown(),
+              _enterDetailField()
+            ]
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_volumeField(), _volumeTypeDropdown(), _enterMethodField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+            children: [
+              _volumeField(),
+              _volumeTypeDropdown(),
+              _enterMethodField()
+            ]
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_priceField(), _taxField(), _totalPriceField(), _tatDropdown()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+            children: [
+              _priceField(),
+              _taxField(),
+              _totalPriceField(),
+              _tatDropdown()
+            ]
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [_enterObservations()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [submitButton()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           )
         ],
@@ -193,64 +264,69 @@ class _AddTestState extends State<AddTest> {
     return BlocBuilder<TestBloc, TestState>(
       builder: (context, state) {
         return commonBtn(
-          isEnable: true,
-          text: AddTestStrings.title,
-            calll: (){
+            isEnable: true,
+            text: AddTestStrings.title,
+            calll: () {
               TestBloc bloc = BlocProvider.of<TestBloc>(context);
 
-          int price = int.parse(priceEditingController.text);
-          int tax = int.parse(taxPercentageEditingController.text);
-          int totalPrice = (price + (price * tax / 100)).ceil();
+              int price = int.parse(priceEditingController.text);
+              int tax = int.parse(taxPercentageEditingController.text);
+              int totalPrice = (price + (price * tax / 100)).ceil();
 
-          AddTestFormSubmitted submitEvent;
-          if (/*bloc.state.isAddTest &&*/ bloc.state.currentSelectedPriview != -1) {
-            submitEvent = AddTestFormSubmitted(
-                isUpdate: true,
-                id: bloc.state.testsList[bloc.state.currentSelectedPriview].id,
-                testCode: testCodeEditingController.text,
-                testName: testNameEditingController.text,
-                department: departmentValue,
-                temperature: temperatureEditingController.text,
-                typeOfTemperature: temperatureTypeValue,
-                sampleType: sampleTypeValue,
-                vacutainer: vacutainerEditingController.text,
-                volume: volumeEditingController.text,
-                typeOfVolume: volumeTypeValue,
-                method: methodEditingController.text,
-                turnAroundTime: turnAroundTimeEditingController.text,
-                price: price,
-                taxPercentage: tax,
-                totalPrice: totalPrice,
-                indications: indicationsEditingController.text);
-          } else {
-            submitEvent = AddTestFormSubmitted(
-                isUpdate: false,
-                testCode: testCodeEditingController.text,
-                testName: testNameEditingController.text,
-                department: departmentValue,
-                temperature: temperatureEditingController.text,
-                typeOfTemperature: temperatureTypeValue,
-                sampleType: sampleTypeValue,
-                vacutainer: vacutainerEditingController.text,
-                volume: volumeEditingController.text,
-                typeOfVolume: volumeTypeValue,
-                method: methodEditingController.text,
-                turnAroundTime: turnAroundTimeEditingController.text,
-                price: price,
-                taxPercentage: tax,
-                totalPrice: totalPrice,
-                indications: indicationsEditingController.text);
-          }
+              AddTestFormSubmitted submitEvent;
+              if (/*bloc.state.isAddTest &&*/ bloc
+                      .state.currentSelectedPriview !=
+                  -1) {
+                submitEvent = AddTestFormSubmitted(
+                    isUpdate: true,
+                    id: bloc
+                        .state.testsList[bloc.state.currentSelectedPriview].id,
+                    testCode: testCodeEditingController.text,
+                    testName: testNameEditingController.text,
+                    department: departmentValue,
+                    temperature: temperatureEditingController.text,
+                    typeOfTemperature: temperatureTypeValue,
+                    sampleType: sampleTypeValue,
+                    vacutainer: vacutainerEditingController.text,
+                    volume: volumeEditingController.text,
+                    typeOfVolume: volumeTypeValue,
+                    method: methodEditingController.text,
+                    turnAroundTime: turnAroundTimeEditingController.text,
+                    price: price,
+                    taxPercentage: tax,
+                    totalPrice: totalPrice,
+                    indications: indicationsEditingController.text);
+              } else {
+                submitEvent = AddTestFormSubmitted(
+                    isUpdate: false,
+                    testCode: testCodeEditingController.text,
+                    testName: testNameEditingController.text,
+                    department: departmentValue,
+                    temperature: temperatureEditingController.text,
+                    typeOfTemperature: temperatureTypeValue,
+                    sampleType: sampleTypeValue,
+                    vacutainer: vacutainerEditingController.text,
+                    volume: volumeEditingController.text,
+                    typeOfVolume: volumeTypeValue,
+                    method: methodEditingController.text,
+                    turnAroundTime: turnAroundTimeEditingController.text,
+                    price: price,
+                    taxPercentage: tax,
+                    totalPrice: totalPrice,
+                    indications: indicationsEditingController.text);
+              }
 
-          bloc.add(submitEvent);
+              bloc.add(submitEvent);
 
-          BlocProvider.of<TestBloc>(context).add(OnAddTest());
+              BlocProvider.of<TestBloc>(context).add(OnAddTest());
 
-          ScreenHelper.showAlertPopup("Process status ${bloc.state.currentSelectedPriview != -1 ? 'added':'updated'} successfully", context);
-          // if (state.formStatus is SubmissionSuccess) {
-          // Navigator.pushReplacementNamed(context, RouteStrings.viewTests);
-          // }
-        });
+              ScreenHelper.showAlertPopup(
+                  "Process status ${bloc.state.currentSelectedPriview != -1 ? 'added' : 'updated'} successfully",
+                  context);
+              // if (state.formStatus is SubmissionSuccess) {
+              // Navigator.pushReplacementNamed(context, RouteStrings.viewTests);
+              // }
+            });
       },
     );
   }
@@ -269,9 +345,13 @@ class _AddTestState extends State<AddTest> {
     //     controller: testCodeEditingController));
     //
     //  _getColumnAndFormInput("Enter Code", blocComponent);
-    return _buildBlocComponent(CommonEditText(title: 'Enter Code',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter Code',
+        name: 'code',
         hintText: AddTestStrings.enterCode,
-        onChange: (value){bloc.add(TestCodeUpdated(value));},
+        onChange: (value) {
+          bloc.add(TestCodeUpdated(value));
+        },
         controller: testCodeEditingController));
   }
 
@@ -293,9 +373,13 @@ class _AddTestState extends State<AddTest> {
     //     onChange: (value){bloc.add(TestNameUpdated(value));},
     //     controller: testNameEditingController));
     // return _getColumnAndFormInput("Enter Name", blocComponent);
-    return _buildBlocComponent(CommonEditText(title: 'Enter Name',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter Name',
+        name: 'name',
         hintText: AddTestStrings.enterTestName,
-        onChange: (value){bloc.add(TestNameUpdated(value));},
+        onChange: (value) {
+          bloc.add(TestNameUpdated(value));
+        },
         controller: testNameEditingController));
   }
 
@@ -316,9 +400,13 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Vacutainer", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(title: 'Vacutainer',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Vacutainer',
+        name: 'cacutainer',
         hintText: AddTestStrings.enterDetail,
-        onChange: (value){bloc.add(VacutainerUpdated(value));},
+        onChange: (value) {
+          bloc.add(VacutainerUpdated(value));
+        },
         controller: vacutainerEditingController));
   }
 
@@ -334,9 +422,13 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter method", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(title: 'Enter method',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter method',
+        name: 'method',
         hintText: AddTestStrings.enterMethod,
-        onChange: (value){bloc.add(MethodUpdated(value));},
+        onChange: (value) {
+          bloc.add(MethodUpdated(value));
+        },
         controller: methodEditingController));
   }
 
@@ -358,11 +450,17 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter price", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(title: 'Enter price',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter price',
+        name: 'price',
         hintText: AddTestStrings.enterPrice,
-        onChange: (value){
-          int price = priceEditingController.text.isNotEmpty ? int.parse(priceEditingController.text) : 0;
-          int tax = taxPercentageEditingController.text.isNotEmpty ? int.parse(taxPercentageEditingController.text) : 0;
+        onChange: (value) {
+          int price = priceEditingController.text.isNotEmpty
+              ? int.parse(priceEditingController.text)
+              : 0;
+          int tax = taxPercentageEditingController.text.isNotEmpty
+              ? int.parse(taxPercentageEditingController.text)
+              : 0;
           int totalPrice = price + (price * tax);
           bloc.add(PriceUpdated(price));
           bloc.add(TotalPriceUpdated(totalPrice));
@@ -388,11 +486,17 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter tax", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(title: 'Enter tax',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter tax',
+        name: 'tax',
         hintText: AddTestStrings.enterTaxPercentage,
-        onChange: (value){
-          int price = priceEditingController.text.isNotEmpty ? int.parse(priceEditingController.text) : 0;
-          int tax = taxPercentageEditingController.text.isNotEmpty ? int.parse(taxPercentageEditingController.text) : 0;
+        onChange: (value) {
+          int price = priceEditingController.text.isNotEmpty
+              ? int.parse(priceEditingController.text)
+              : 0;
+          int tax = taxPercentageEditingController.text.isNotEmpty
+              ? int.parse(taxPercentageEditingController.text)
+              : 0;
           int totalPrice = price + (price * tax);
           bloc.add(TaxPercentageUpdated(tax));
           bloc.add(TotalPriceUpdated(totalPrice));
@@ -412,9 +516,13 @@ class _AddTestState extends State<AddTest> {
     // var blocComponent = _buildBlocComponent(textField);
     // return _getColumnAndFormInput("Enter Value", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(title: 'Enter Value',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter Value',
+        name: 'value',
         hintText: AddTestStrings.enterVolume,
-        onChange: (value){bloc.add(VolumeUpdated(value));},
+        onChange: (value) {
+          bloc.add(VolumeUpdated(value));
+        },
         controller: volumeEditingController));
   }
 
@@ -430,9 +538,13 @@ class _AddTestState extends State<AddTest> {
     // var blocComponent = _buildBlocComponent(textField);
     // return _getColumnAndFormInput("Enter Temperature", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(title: 'Enter Temperature',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter Temperature',
+        name: 'temperature',
         hintText: AddTestStrings.enterTemperature,
-        onChange: (value){bloc.add(TemperatureUpdated(value));},
+        onChange: (value) {
+          bloc.add(TemperatureUpdated(value));
+        },
         controller: temperatureEditingController));
   }
 
@@ -450,10 +562,13 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter price", blocComponent);
 
-
-    return _buildBlocComponent(CommonEditText(title: 'Enter price',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Enter price',
+        name: 'price',
         hintText: "total price",
-        onChange: (value){bloc.add(TotalPriceUpdated(int.parse(value)));},
+        onChange: (value) {
+          bloc.add(TotalPriceUpdated(int.parse(value)));
+        },
         controller: totalPriceEditingController));
   }
 
@@ -471,10 +586,13 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Indication(Observation)", blocComponent);
 
-
-    return _buildBlocComponent(CommonEditText(title: 'Indication(Observation)',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Indication(Observation)',
+        name: 'indication',
         hintText: AddTestStrings.typeObservations,
-        onChange: (value){bloc.add(IndicationsUpdated(value));},
+        onChange: (value) {
+          bloc.add(IndicationsUpdated(value));
+        },
         controller: indicationsEditingController));
   }
 
@@ -521,9 +639,11 @@ class _AddTestState extends State<AddTest> {
     // var blocComponent = _buildBlocComponent(dropdown);
 
     // return _getColumnAndFormInput("Sample Type", blocComponent);
-    return _buildBlocComponent(CommonDropDown(title: "Sample Type",
+    return _buildBlocComponent(CommonDropDown(
+        title: "Sample Type",
         hintText: AddTestStrings.selectType,
-        list: const ["one", "two"], onSubmit: (value){
+        list: const ["one", "two"],
+        onSubmit: (value) {
           setState(() {
             sampleTypeValue = value;
           });
@@ -552,9 +672,11 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Volume Type", blocComponent);
 
-    return _buildBlocComponent(CommonDropDown(title: "Volume Type",
+    return _buildBlocComponent(CommonDropDown(
+        title: "Volume Type",
         hintText: AddTestStrings.enterVolume,
-        list: const ["mg", "ml"], onSubmit: (value){
+        list: const ["mg", "ml"],
+        onSubmit: (value) {
           setState(() {
             volumeTypeValue = value;
           });
@@ -584,9 +706,11 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Select department", blocComponent);
 
-    return _buildBlocComponent(CommonDropDown(title: "Select department",
+    return _buildBlocComponent(CommonDropDown(
+        title: "Select department",
         hintText: AddTestStrings.selectDepartment,
-        list: const ["one", "two"], onSubmit: (value){
+        list: const ["one", "two"],
+        onSubmit: (value) {
           setState(() {
             departmentValue = value;
           });
@@ -598,7 +722,8 @@ class _AddTestState extends State<AddTest> {
       icon: IconStore.downwardArrow,
       decoration: InputDecoration(
         hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-        constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
+        constraints: const BoxConstraints(
+            maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
         border: getOutLineBorder(),
         focusedErrorBorder: getOutLineBorder(),
         errorBorder: getOutLineBorder(),
@@ -645,9 +770,11 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter TAT (Hrs./days)", blocComponent);
 
-    return _buildBlocComponent(CommonDropDown(title: "Enter TAT (Hrs./days)",
+    return _buildBlocComponent(CommonDropDown(
+        title: "Enter TAT (Hrs./days)",
         hintText: AddTestStrings.enterTemperature,
-        list: const ["one", "two"], onSubmit: (value){
+        list: const ["one", "two"],
+        onSubmit: (value) {
           setState(() {
             tatValue = value;
           });

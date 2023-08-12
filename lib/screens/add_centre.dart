@@ -31,7 +31,8 @@ class _AddCentreState extends State<AddCentre> {
   late final LabBloc bloc;
   final TextEditingController _labNameController = TextEditingController();
   final TextEditingController _emailIdController = TextEditingController();
-  final TextEditingController _contactNumberController = TextEditingController();
+  final TextEditingController _contactNumberController =
+      TextEditingController();
   final TextEditingController _addressOneController = TextEditingController();
   final TextEditingController _addressTwoController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -47,14 +48,22 @@ class _AddCentreState extends State<AddCentre> {
     bloc = context.read<LabBloc>();
 
     if (bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1) {
-      _labNameController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].labName;
-      _emailIdController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].emailId;
-      _contactNumberController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].contactNumber;
-      _addressOneController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].addressOne;
-      _addressTwoController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].addressTwo;
-      _cityController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].city;
-      _stateController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].state;
-      _countryController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].country;
+      _labNameController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].labName;
+      _emailIdController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].emailId;
+      _contactNumberController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].contactNumber;
+      _addressOneController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].addressOne;
+      _addressTwoController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].addressTwo;
+      _cityController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].city;
+      _stateController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].state;
+      _countryController.text =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].country;
       // _postalCodeController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].;
       // indicationsEditingController.text = bloc.state.testsList[bloc.state.currentSelectedPriview].taxPercentage.toString();
     }
@@ -104,22 +113,34 @@ class _AddCentreState extends State<AddCentre> {
         children: [
           Row(
             children: [_labNameField(), _emailIdField(), _contactNumberField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_addressOneField(), _addressTwoField(), _cityField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_postalCodeField(), _stateField(), _countryField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_collectionCentreDropdown()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           ),
           // Row(
@@ -135,7 +156,10 @@ class _AddCentreState extends State<AddCentre> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [_addCentreButton()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), child: el))
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
                 .toList(),
           )
         ],
@@ -153,10 +177,13 @@ class _AddCentreState extends State<AddCentre> {
     //         hintText: "Enter Name"));
     //
     // return _getColumnAndFormInput("Lab Name", textField);
-    return CommonEditText(title: 'Lab Name',
-        hintText: "Enter Name",
-        onChange: (value){},
-        controller: _labNameController);
+    return CommonEditText(
+      name: 'labName',
+      title: 'Lab Name',
+      hintText: "Enter Name",
+      onChange: (value) {},
+      controller: _labNameController,
+    );
   }
 
   Widget _emailIdField() {
@@ -167,9 +194,11 @@ class _AddCentreState extends State<AddCentre> {
     //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Email"));
 
     // return _getColumnAndFormInput("Email ID", textField);
-    return CommonEditText(title: 'Lab Name',
+    return CommonEditText(
+        name: 'labName',
+        title: 'Lab Name',
         hintText: "Enter Email",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _emailIdController);
   }
 
@@ -181,9 +210,11 @@ class _AddCentreState extends State<AddCentre> {
     //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter number"));
 
     // return _getColumnAndFormInput("Contact Number", textField);
-    return CommonEditText(title: 'Contact Number',
+    return CommonEditText(
+        name: 'contactNumber',
+        title: 'Contact Number',
         hintText: "Enter number",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _contactNumberController);
   }
 
@@ -195,9 +226,11 @@ class _AddCentreState extends State<AddCentre> {
     //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Type Address..."));
 
     // return _getColumnAndFormInput("Address Line 1", textField);
-    return CommonEditText(title: 'Address Line 1',
+    return CommonEditText(
+        name: 'addressLine1',
+        title: 'Address Line 1',
         hintText: "Type Address...",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _addressOneController);
   }
 
@@ -210,9 +243,11 @@ class _AddCentreState extends State<AddCentre> {
 
     // return _getColumnAndFormInput("Address Line 2", textField);
 
-    return CommonEditText(title: 'Address Line 2',
+    return CommonEditText(
+        name: 'addressLine2',
+        title: 'Address Line 2',
         hintText: "Type Address...",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _addressTwoController);
   }
 
@@ -225,9 +260,11 @@ class _AddCentreState extends State<AddCentre> {
 
     // return _getColumnAndFormInput("Postal Code", textField);
 
-    return CommonEditText(title: 'Postal Code',
+    return CommonEditText(
+        name: 'addressLine2',
+        title: 'Postal Code',
         hintText: "Enter Code",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _postalCodeController);
   }
 
@@ -240,9 +277,11 @@ class _AddCentreState extends State<AddCentre> {
 
     // return _getColumnAndFormInput("City", textField);
 
-    return CommonEditText(title: 'City',
+    return CommonEditText(
+        name: 'city',
+        title: 'City',
         hintText: "Enter Name",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _cityController);
   }
 
@@ -254,9 +293,11 @@ class _AddCentreState extends State<AddCentre> {
     //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
 
     // return _getColumnAndFormInput("State", textField);
-    return CommonEditText(title: 'State',
+    return CommonEditText(
+        name: 'state',
+        title: 'State',
         hintText: "Enter Name",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _stateController);
   }
 
@@ -269,17 +310,20 @@ class _AddCentreState extends State<AddCentre> {
 
     // return _getColumnAndFormInput("Country", textField);
 
-    return CommonEditText(title: 'Country',
+    return CommonEditText(
+        name: 'country',
+        title: 'Country',
         hintText: "Enter Name",
-        onChange: (value){},
+        onChange: (value) {},
         controller: _countryController);
   }
 
   /// form dropdowns
   Widget _collectionCentreDropdown() {
     String hintText = "";
-    if(bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1) {
-      hintText = bloc.state.labsList[bloc.state.currentSelectedPriview].unitType;
+    if (bloc.state.isAddNewCenter && bloc.state.currentSelectedPriview != -1) {
+      hintText =
+          bloc.state.labsList[bloc.state.currentSelectedPriview].unitType;
     } else {
       hintText = "Select";
     }
@@ -304,9 +348,11 @@ class _AddCentreState extends State<AddCentre> {
 
     // return _getColumnAndFormInput("Collection Centre/Processing Unit", dropdown);
 
-    return CommonDropDown(title: "Collection Centre/Processing Unit",
+    return CommonDropDown(
+        title: "Collection Centre/Processing Unit",
         hintText: hintText,
-        list: const ["Collection Unit", "Processing Unit", "Both"], onSubmit: (value){
+        list: const ["Collection Unit", "Processing Unit", "Both"],
+        onSubmit: (value) {
           setState(() {
             unitTypeValue = value;
           });
@@ -319,7 +365,8 @@ class _AddCentreState extends State<AddCentre> {
         return DropdownButtonFormField(
           icon: IconStore.downwardArrow,
           decoration: const InputDecoration(
-            constraints: BoxConstraints(maxWidth: 400, minWidth: 400, minHeight: 40, maxHeight: 45),
+            constraints: BoxConstraints(
+                maxWidth: 400, minWidth: 400, minHeight: 40, maxHeight: 45),
             border: OutlineInputBorder(),
             hintText: "Select Test",
           ),
@@ -329,7 +376,8 @@ class _AddCentreState extends State<AddCentre> {
           onChanged: (value) {
             setState(() {
               if (value != null) {
-                selectedTestDetails.add(LabTestDetail(value.testName, value.testCode));
+                selectedTestDetails
+                    .add(LabTestDetail(value.testName, value.testCode));
               }
             });
           },
@@ -346,7 +394,8 @@ class _AddCentreState extends State<AddCentre> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(sectionName, style: TextUtility.getBoldStyle(15, color: Colors.black)),
+        Text(sectionName,
+            style: TextUtility.getBoldStyle(15, color: Colors.black)),
         const SizedBox(height: 10),
         widget,
       ],
@@ -365,7 +414,8 @@ class _AddCentreState extends State<AddCentre> {
       headingRowColor: MaterialStateProperty.all(Colors.black),
       headingTextStyle: const TextStyle(color: Colors.white),
       dataRowColor: MaterialStateProperty.all(Colors.grey.shade300),
-      columns: columnNames.map((name) => DataColumn(label: Text(name))).toList(),
+      columns:
+          columnNames.map((name) => DataColumn(label: Text(name))).toList(),
       rows: selectedTestDetails.map((value) {
         var currentIndex = selectedTestDetails.indexOf(value) + 1;
         return _buildDataRowForTestDetail(value, currentIndex);
@@ -375,8 +425,11 @@ class _AddCentreState extends State<AddCentre> {
   }
 
   DataRow _buildDataRowForTestDetail(LabTestDetail test, int currentIndex) {
-    return DataRow(
-        cells: [DataCell(Text(currentIndex.toString())), DataCell(Text(test.testCode)), DataCell(Text(test.name))]);
+    return DataRow(cells: [
+      DataCell(Text(currentIndex.toString())),
+      DataCell(Text(test.testCode)),
+      DataCell(Text(test.name))
+    ]);
   }
 
   /// buttons
@@ -393,41 +446,44 @@ class _AddCentreState extends State<AddCentre> {
 
   Widget _addCentreButton() {
     return commonBtn(
-      text: "Add Centre",
-      isEnable: true,
-      calll: (){
-        {
-          if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
-            bloc.add(AddCentreFormSubmitted(
-                contactNumber: _contactNumberController.text,
-                emailId: _emailIdController.text,
-                labName: _labNameController.text,
-                addressOne: _addressOneController.text,
-                addressTwo: _addressTwoController.text,
-                city: _cityController.text,
-                country: _countryController.text,
-                state: _stateController.text,
-                testDetails: selectedTestDetails,
-                unitType: unitTypeValue));
-          } else {
-            showDialog<void>(
-              context: context,
-              builder: (context) {
-                Future.delayed(const Duration(seconds: 3), () {
-                  Navigator.of(context).pop();
-                });
+        text: "Add Centre",
+        isEnable: true,
+        calll: () {
+          {
+            if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
+              bloc.add(AddCentreFormSubmitted(
+                  contactNumber: _contactNumberController.text,
+                  emailId: _emailIdController.text,
+                  labName: _labNameController.text,
+                  addressOne: _addressOneController.text,
+                  addressTwo: _addressTwoController.text,
+                  city: _cityController.text,
+                  country: _countryController.text,
+                  state: _stateController.text,
+                  testDetails: selectedTestDetails,
+                  unitType: unitTypeValue));
+            } else {
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  Future.delayed(const Duration(seconds: 3), () {
+                    Navigator.of(context).pop();
+                  });
 
-                return AlertDialog(
-                  content: const Text("Please select Collection Unit/Processing Unit and Select Tests"),
-                  actions: <Widget>[
-                    TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Close"))
-                  ],
-                );
-              },
-            );
+                  return AlertDialog(
+                    content: const Text(
+                        "Please select Collection Unit/Processing Unit and Select Tests"),
+                    actions: <Widget>[
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Close"))
+                    ],
+                  );
+                },
+              );
+            }
           }
-        }
-      });
+        });
     /*return ElevatedButton(
         onPressed: () async {
           if (selectedTestDetails.isNotEmpty && unitTypeValue.isNotEmpty) {
