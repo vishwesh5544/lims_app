@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/patient_bloc/patient_state.dart";
 import "package:lims_app/utils/extensions.dart";
+import "package:lims_app/utils/formatters.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
@@ -25,18 +27,22 @@ class PatientDetailsForm extends StatefulWidget {
 
 class _PatientDetailsFormState extends State<PatientDetailsForm> {
   late final PatientBloc bloc;
-  final TextEditingController _datePickerTextController = TextEditingController();
+  final TextEditingController _datePickerTextController =
+      TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _middleNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _mobileNameController = TextEditingController();
   final TextEditingController _emailIdController = TextEditingController();
-  final TextEditingController _insuranceProviderController = TextEditingController();
-  final TextEditingController _insuranceNumberController = TextEditingController();
+  final TextEditingController _insuranceProviderController =
+      TextEditingController();
+  final TextEditingController _insuranceNumberController =
+      TextEditingController();
   final TextEditingController _umrNumberController = TextEditingController();
-  final TextEditingController _consultedDoctorController = TextEditingController();
-  final BoxConstraints _commonBoxConstraint =
-      const BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
+  final TextEditingController _consultedDoctorController =
+      TextEditingController();
+  final BoxConstraints _commonBoxConstraint = const BoxConstraints(
+      maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
 
   @override
   void initState() {
@@ -45,32 +51,52 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       bloc.add(GenerateUmrNumber());
 
       if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
-        bloc.add(GenderUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
+        bloc.add(GenderUpdated(
+            bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
 
-        bloc.add(FirstNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].firstName));
-        bloc.add(MiddleNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].middleName));
-        bloc.add(LastNameUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].lastName));
-        bloc.add(MobileNumberUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].mobileNumber));
-        bloc.add(EmailUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].emailId));
-        bloc.add(InsuranceProviderUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceProvider));
-        bloc.add(InsuranceNumberUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceNumber));
-        bloc.add(ConsultedDoctorUpdated(bloc.state.patientsList[bloc.state.currentSelectedPriview].consultedDoctor));
+        bloc.add(FirstNameUpdated(bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].firstName));
+        bloc.add(MiddleNameUpdated(bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].middleName));
+        bloc.add(LastNameUpdated(bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].lastName));
+        bloc.add(MobileNumberUpdated(bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].mobileNumber));
+        bloc.add(EmailUpdated(bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].emailId));
+        bloc.add(InsuranceProviderUpdated(bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].insuraceProvider));
+        bloc.add(InsuranceNumberUpdated(bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].insuraceNumber));
+        bloc.add(ConsultedDoctorUpdated(bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].consultedDoctor));
 
-        _datePickerTextController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].dob;
+        _datePickerTextController.text =
+            bloc.state.patientsList[bloc.state.currentSelectedPriview].dob;
 
         String dateText = _datePickerTextController.text;
         bloc.add(DobUpdated(dateText));
-        var age = bloc.state.patientsList[bloc.state.currentSelectedPriview].age;
+        var age =
+            bloc.state.patientsList[bloc.state.currentSelectedPriview].age;
         bloc.add(AgeUpdated(age.toString()));
 
-        _firstNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].firstName;
-        _middleNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].middleName;
-        _lastNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].lastName;
-        _mobileNameController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].mobileNumber.toString();
-        _emailIdController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].emailId;
-        _insuranceProviderController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceProvider;
-        _insuranceNumberController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].insuraceNumber;
-        _umrNumberController.text = bloc.state.patientsList[bloc.state.currentSelectedPriview].consultedDoctor;
+        _firstNameController.text = bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].firstName;
+        _middleNameController.text = bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].middleName;
+        _lastNameController.text =
+            bloc.state.patientsList[bloc.state.currentSelectedPriview].lastName;
+        _mobileNameController.text = bloc
+            .state.patientsList[bloc.state.currentSelectedPriview].mobileNumber
+            .toString();
+        _emailIdController.text =
+            bloc.state.patientsList[bloc.state.currentSelectedPriview].emailId;
+        _insuranceProviderController.text = bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].insuraceProvider;
+        _insuranceNumberController.text = bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].insuraceNumber;
+        _umrNumberController.text = bloc.state
+            .patientsList[bloc.state.currentSelectedPriview].consultedDoctor;
       }
     });
 
@@ -90,27 +116,42 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
         children: [
           Row(
             children: [_firstNameField(), _middleNameField(), _lastNameField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
+                .map((el) => Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_datePicker(), _ageField(), _genderDropdown()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
+                .map((el) => Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_mobileNumberField(), _emailField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
+                .map((el) => Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_insuranceProviderField(), _insuranceNumberField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
+                .map((el) => Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: el))
                 .toList(),
           ),
           Row(
             children: [_consultedDoctorField(), _umrNumberField()]
-                .map((el) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8), child: el))
+                .map((el) => Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: el))
                 .toList(),
           ),
           commonBtn(
@@ -128,28 +169,42 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                     _consultedDoctorController.text.isEmpty) {
                   /// form validation
 
-                  ScreenHelper.showAlertPopup("Form fields cannot be Empty", context);
+                  ScreenHelper.showAlertPopup(
+                      "Form fields cannot be Empty", context);
                 } else if (!_mobileNameController.text.isNumeric) {
-                  ScreenHelper.showAlertPopup("Mobile Number should be numeric and contain 10 digits.", context);
+                  ScreenHelper.showAlertPopup(
+                      "Mobile Number should be numeric and contain 10 digits.",
+                      context);
                 } else if (!_emailIdController.text.isValidEmail) {
                   ScreenHelper.showAlertPopup("Invalid email format", context);
                 } else {
                   /// submit form
 
-                  if (/*!bloc.state.isAddPatient &&*/ bloc.state.currentSelectedPriview != -1) {
-                    int userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id!;
+                  if (/*!bloc.state.isAddPatient &&*/ bloc
+                          .state.currentSelectedPriview !=
+                      -1) {
+                    int userId = bloc.state
+                        .patientsList[bloc.state.currentSelectedPriview].id!;
                     // update?
-                    BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: true, userId: userId));
+                    BlocProvider.of<PatientBloc>(context).add(
+                        AddPatientFormSubmitted(
+                            isUpdate: true, userId: userId));
                   } else {
-                    BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: false));
+                    BlocProvider.of<PatientBloc>(context)
+                        .add(AddPatientFormSubmitted(isUpdate: false));
                   }
 
-                  if (/*bloc.state.isAddPatient && */ bloc.state.currentSelectedPriview == -1) {
+                  if (/*bloc.state.isAddPatient && */ bloc
+                          .state.currentSelectedPriview ==
+                      -1) {
                     BlocProvider.of<PatientBloc>(context).add(IsPatient());
                   } else {
-                    ScreenHelper.showAlertPopup("Patient updated successfully ", context).then((value) {
+                    ScreenHelper.showAlertPopup(
+                            "Patient updated successfully ", context)
+                        .then((value) {
                       ///to refresh listing screen.
-                      BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                      BlocProvider.of<PatientBloc>(context)
+                          .add(FetchAllPatients());
                       BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
                     });
                   }
@@ -253,6 +308,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
         title: 'Mobile Number',
         controller: _mobileNameController,
+        inputFormatters: FormFormatters.phone,
         hintText: AddPatientStrings.enterMobileNumber,
         onChange: (value) {
           bloc.add(MobileNumberUpdated(int.parse(value)));
@@ -277,6 +333,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
         title: 'Email',
         controller: _emailIdController,
+        inputFormatters: FormFormatters.email,
         hintText: AddPatientStrings.enterEmailId,
         onChange: (value) {
           bloc.add(EmailUpdated(value));
@@ -324,6 +381,9 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(CommonEditText(
         title: 'Insurance Number',
         controller: _insuranceNumberController,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+        ],
         hintText: AddPatientStrings.enterInsuranceNumber,
         onChange: (value) {
           bloc.add(InsuranceNumberUpdated(value));
@@ -375,13 +435,18 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
             const SizedBox(height: 6),
             Container(
               decoration: BoxDecoration(
-                  color: ColorProvider.lightGreyColor, borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: ColorProvider.lightGreyColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextField(
                 onChanged: (value) {},
                 readOnly: true,
                 enabled: false,
                 decoration: InputDecoration(
-                    constraints: const BoxConstraints(maxWidth: 80, minWidth: 50, minHeight: 40, maxHeight: 45),
+                    constraints: const BoxConstraints(
+                        maxWidth: 80,
+                        minWidth: 50,
+                        minHeight: 40,
+                        maxHeight: 45),
                     border: const OutlineInputBorder(),
                     hintText: state.age),
               ),
@@ -412,8 +477,10 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
         TextFormField(
           controller: _datePickerTextController,
           decoration: InputDecoration(
-              hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-              constraints: const BoxConstraints(maxWidth: 160, minWidth: 150, minHeight: 35, maxHeight: 50),
+              hintStyle:
+                  TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
+              constraints: const BoxConstraints(
+                  maxWidth: 160, minWidth: 150, minHeight: 35, maxHeight: 50),
               border: getOutLineBorder(),
               focusedErrorBorder: getOutLineBorder(),
               errorBorder: getOutLineBorder(),
@@ -434,9 +501,13 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
 
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
-        context: context, initialDate: DateTime.now(), firstDate: DateTime(1947), lastDate: DateTime.now());
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1947),
+        lastDate: DateTime.now());
     if (pickedDate != null) {
-      _datePickerTextController.text = DateFormat(dateFormat).format(pickedDate);
+      _datePickerTextController.text =
+          DateFormat(dateFormat).format(pickedDate);
       String dateText = _datePickerTextController.text;
       bloc.add(DobUpdated(dateText));
       var age = AgeCalculator.age(pickedDate).years;

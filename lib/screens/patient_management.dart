@@ -28,7 +28,6 @@ class PatientManagement extends StatefulWidget {
 }
 
 class _PatientManagementState extends State<PatientManagement> {
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -40,20 +39,21 @@ class _PatientManagementState extends State<PatientManagement> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PatientBloc, PatientState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return WillPopScope(
-            onWillPop: () async {
-              BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
-              return true;
-            },
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: state.isAddPatient
-                    ? const AddPatient()
-                    : patientWidget(state)),
-          );
-        });
+      listener: (context, state) {},
+      builder: (context, state) {
+        return WillPopScope(
+          onWillPop: () async {
+            BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+            return true;
+          },
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: state.isAddPatient
+                  ? const AddPatient()
+                  : patientWidget(state)),
+        );
+      },
+    );
   }
 
   patientWidget(PatientState state) {
@@ -90,8 +90,10 @@ class _PatientManagementState extends State<PatientManagement> {
               columnNames: TestData.patientsColumnsList(),
               tableType: TableType.addPatient,
               onEditClick: (value) {
-                BlocProvider.of<PatientBloc>(context).add(IsPatient(value: true));
-                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true, currentSelectedPriview: value));
+                BlocProvider.of<PatientBloc>(context)
+                    .add(IsPatient(value: true));
+                BlocProvider.of<PatientBloc>(context).add(
+                    OnAddPatient(value: true, currentSelectedPriview: value));
               },
               onViewClick: (value) {
                 _showPreviewDialog(value);
@@ -164,10 +166,17 @@ class _PatientManagementState extends State<PatientManagement> {
                               dataRowHeight: 100,
                               dividerThickness: 0.2,
                               headingRowHeight: 50,
-                              headingRowColor: MaterialStateProperty.all(Colors.black),
-                              headingTextStyle: const TextStyle(color: Colors.white),
-                              dataRowColor: MaterialStateProperty.all(Colors.white),
-                              border: TableBorder(horizontalInside: getBorder(), verticalInside: getBorder(), right: getBorder(), left: getBorder()),
+                              headingRowColor:
+                                  MaterialStateProperty.all(Colors.black),
+                              headingTextStyle:
+                                  const TextStyle(color: Colors.white),
+                              dataRowColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              border: TableBorder(
+                                  horizontalInside: getBorder(),
+                                  verticalInside: getBorder(),
+                                  right: getBorder(),
+                                  left: getBorder()),
                               columns: columns
                                   .map((el) => DataColumn(label: Text(el)))
                                   .toList(),
