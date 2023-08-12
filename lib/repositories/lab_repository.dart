@@ -19,7 +19,7 @@ class LabRepository implements ILabRepository {
 
   @override
   Future<ResponseCallback<Lab>> addLab(Lab lab) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Labinfo/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Labinfo/add");
     ResponseCallback<Lab> responseCallback = ResponseCallback();
     try {
       var r = {
@@ -54,7 +54,7 @@ class LabRepository implements ILabRepository {
 
   @override
   Future<ResponseCallback<List<Lab>>> getAllLabs() async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Labinfo/getalllabinfo");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Labinfo/getalllabinfo");
     ResponseCallback<List<Lab>> responseCallback = ResponseCallback();
 
     try {

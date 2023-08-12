@@ -35,7 +35,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<List<SearchResult>>> getSearchResultsByFirstName(String firstname) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/testlist");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/tests/testlist");
     ResponseCallback<List<SearchResult>> responseCallback = ResponseCallback();
 
     try {
@@ -67,7 +67,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<List<SearchResult>>> getSearchResultsByInvoiceId(int invoiceId) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/testpatient/SearchInvoiceid");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/testpatient/SearchInvoiceid");
     ResponseCallback<List<SearchResult>> responseCallback = ResponseCallback();
 
     try {
@@ -98,7 +98,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<List<SearchResult>>> getSearchResultsByPtid(int ptid) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/tests/SearchPTID");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/tests/SearchPTID");
     ResponseCallback<List<SearchResult>> responseCallback = ResponseCallback();
 
     try {
@@ -130,7 +130,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<PatientAndTests>> getPatientByEmail(String emailId) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/searchumr");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/searchumr");
     ResponseCallback<PatientAndTests> responseCallback = ResponseCallback();
     try {
       var requestBody = {"UMR": emailId};
@@ -161,7 +161,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<InvoiceMapping>> updateInvoiceMapping(InTransit invoiceMapping, int invoiceId) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/${invoiceId.toString()}");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/testpatient/${invoiceId.toString()}");
     ResponseCallback<InvoiceMapping> responseCallback = ResponseCallback();
     try {
       var requestJson = {
@@ -188,7 +188,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<List<InvoiceMapping>>> getInvoiceMappingsForUser(int userId) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/testpatient/searchtests");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/testpatient/searchtests");
     ResponseCallback<List<InvoiceMapping>> responseCallback = ResponseCallback();
     try {
       var requestBody = {"invoice_no": userId.toString()};
@@ -219,7 +219,7 @@ class InTransitRepository implements IInTransitRepository {
 
   @override
   Future<ResponseCallback<List<Lab>>> getAllFilteredLabs() async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Labinfo/filterdata");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Labinfo/filterdata");
     ResponseCallback<List<Lab>> responseCallback = ResponseCallback();
 
     try {

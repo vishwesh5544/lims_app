@@ -1,3 +1,5 @@
+import 'package:lims_app/models/invoice.dart';
+import 'package:lims_app/models/invoice_mapping.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/test.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
@@ -19,19 +21,23 @@ class PatientState {
   final FormSubmissionStatus formStatus;
   final List<Patient> patientsList;
   final List<Patient> searchPatientsList;
+  final List<InvoiceMapping> createdPatientInvoices;
   final List<Test> selectedTests;
   final Patient? createdPatient;
 
   bool isAddPatient = false;
   bool isPatient = true;
+
+  /// flag for add/edit flow in patient
   int currentSelectedPriview = -1;
 
   PatientState(
       {this.invoiceNumber = "",
       this.selectedTests = const [],
-        this.isAddPatient = false,
-        this.currentSelectedPriview = -1,
-        this.isPatient = true,
+      this.createdPatientInvoices = const [],
+      this.isAddPatient = false,
+      this.currentSelectedPriview = -1,
+      this.isPatient = true,
       this.createdPatient,
       this.umrNumber = "",
       this.firstName = "",
@@ -67,11 +73,13 @@ class PatientState {
       List<Patient>? patientsList,
       List<Patient>? searchPatientsList,
       List<Test>? selectedTests,
-        bool? isAddPatient,
-        int? currentSelectedPriview = -1,
-        bool? isPatient,
+      List<InvoiceMapping>? createdPatientInvoices,
+      bool? isAddPatient,
+      int? currentSelectedPriview = -1,
+      bool? isPatient,
       FormSubmissionStatus? formStatus}) {
     return PatientState(
+        createdPatientInvoices: createdPatientInvoices ?? this.createdPatientInvoices,
         invoiceNumber: invoiceNumber ?? this.invoiceNumber,
         selectedTests: selectedTests ?? this.selectedTests,
         createdPatient: createdPatient ?? this.createdPatient,
@@ -80,9 +88,9 @@ class PatientState {
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
         middleName: middleName ?? this.middleName,
-        isAddPatient: isAddPatient?? this.isAddPatient,
-        currentSelectedPriview: currentSelectedPriview?? this.currentSelectedPriview,
-        isPatient: isPatient?? this.isPatient,
+        isAddPatient: isAddPatient ?? this.isAddPatient,
+        currentSelectedPriview: currentSelectedPriview ?? this.currentSelectedPriview,
+        isPatient: isPatient ?? this.isPatient,
         dob: dob ?? this.dob,
         age: age ?? this.age,
         gender: gender ?? this.gender,

@@ -74,15 +74,18 @@ class _TestDetailsState extends State<TestDetails> {
           ),
         ),
         commonBtn(
-            text: "Preview Invoice",
+            text: "Submit", // "Preview Invoice"
             isEnable: true,
             calll: () {
               BlocProvider.of<PatientBloc>(context).add(GenerateInvoiceNumber());
               Future.delayed(const Duration(seconds: 1), () {
                 BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
-                BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
+                // BlocProvider.of<InTransitBloc>(context).add(FetchAllInvoiceMapping());
+                _showInvoiceDialog();
+                /// refresh patients list
+                BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
               });
-              _showInvoiceDialog();
             }),
       ]
           .map((el) => Padding(
@@ -132,6 +135,7 @@ class _TestDetailsState extends State<TestDetails> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [Text('Invoice Receipt', style: TextUtility.getBoldStyle(18, color: Colors.black))],
                         ),
+                        /// receipt header row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -153,40 +157,10 @@ class _TestDetailsState extends State<TestDetails> {
                                 TextUtility.getTextWithBoldAndPlain("MobileNumber", state.mobileNumber.toString()),
                               ],
                             ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black, width: 2),
-                                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-                              child: BlocConsumer<InTransitBloc, InTransitState>(
-                                listener: (context, state) {},
-                                builder: (context, inState) {
-                                  if (inState.invoiceMappings != null && inState.invoiceMappings!.isNotEmpty) {
-                                    // var invoiceNumber = inState.invoiceMappings?.firstWhere((e) => e.patientId == state
-                                    //     .createdPatient?.id).;
-
-                                    int ptid = 13;
-                                    if (ptid.toString().length == 11 || ptid.toString().length == 12) {
-                                      try {
-                                        return barCodeWidget(
-                                          text: "",
-                                          barCode: "12345678901",
-                                        );
-                                      } on Exception catch (e) {
-                                        print(e);
-                                      }
-                                    } else {
-                                      return Container();
-                                    }
-                                  } else {
-                                    return Container();
-                                  }
-
-                                  return Container();
-                                },
-                              ),
-                            )
+                            state.createdPatientInvoices.isNotEmpty ? barCodeWidget(
+                              text: "",
+                              barCode: state.createdPatientInvoices.first.invoiceId.toString(),
+                            ) : Container()
                           ],
                         ),
                         // Row(
@@ -224,7 +198,7 @@ class _TestDetailsState extends State<TestDetails> {
                               "Total",
                             ],
                             tableType: TableType.viewPatient,
-                            tableRowHeight: 85,
+                            tableRowHeight: 95,
                             rowData: state.selectedTests,
                             onEditClick: (value) {}),
                         Container(
@@ -242,11 +216,15 @@ class _TestDetailsState extends State<TestDetails> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(top: 10),
                           child: commonBtn(
-                              text: "Generate Invoice",
+                              text: "Close",
                               isEnable: true,
                               calll: () {
+                                Navigator.pop(context, "Cancel");
+                                /// refresh listing
+                                BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                                BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
                                 // BlocProvider.of<PatientBloc>(context).add(GenerateInvoice());
                               }),
                         ) // SvgPicture.string(barcodeOne)
@@ -274,7 +252,7 @@ class _TestDetailsState extends State<TestDetails> {
               icon: IconStore.downwardArrow,
               decoration: InputDecoration(
                 hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-                constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
+                constraints: const BoxConstraints(maxWidth: 800, minWidth: 500, minHeight: 47, maxHeight: 60),
                 border: getOutLineBorder(),
                 focusedErrorBorder: getOutLineBorder(),
                 errorBorder: getOutLineBorder(),

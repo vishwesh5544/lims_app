@@ -77,7 +77,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         } else {
           response = await patientRepository.addPatient(newPatient);
         }
-          yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
+        yield state.copyWith(createdPatient: response.data, formStatus: SubmissionSuccess());
         LimsLogger.log("*** Patient successfully created => ${response.data?.toJson()}");
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
@@ -85,6 +85,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     } else if (event is SelectedTestsUpdated) {
       yield state.copyWith(selectedTests: event.selectedTests);
     } else if (event is GenerateInvoiceNumber) {
+      /// event to generate invoice number and save in state
+      // generate random number
       var random = Random();
       var next = random.nextDouble() * 1000000;
       while (next < 100000) {
@@ -94,21 +96,25 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       String generatedInvoiceNumber = "IN${next.ceil()}";
       yield state.copyWith(invoiceNumber: generatedInvoiceNumber);
     } else if (event is GenerateInvoice) {
+      /// add invoice details
       List<InvoiceMapping> invoices = [];
 
       for (Test test in state.selectedTests) {
-        if(state.createdPatient?.id != null && test.id != null) {
+        if (state.createdPatient?.id != null && test.id != null) {
           InvoiceMapping invoice = InvoiceMapping(state.createdPatient!.id!, test.id!, state.invoiceNumber, status: 0);
           invoices.add(invoice);
         }
       }
 
-      patientRepository.addInvoice(invoices);
+      final response = await patientRepository.addInvoice(invoices);
+      yield state.copyWith(createdPatientInvoices: response.data);
     } else if (event is OnSearch) {
       List<Patient> data = [];
 
       for (Patient patient in state.patientsList) {
-        if ("${patient.lastName} ${patient.middleName} ${patient.firstName}".toLowerCase().contains(event.value.trim())) {
+        if ("${patient.lastName} ${patient.middleName} ${patient.firstName}"
+            .toLowerCase()
+            .contains(event.value.trim())) {
           data.add(patient);
         }
       }

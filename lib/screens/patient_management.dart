@@ -119,7 +119,6 @@ class _PatientManagementState extends State<PatientManagement> {
       "Barcode",
       ""
     ];
-    print(patient.emailId);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -152,7 +151,7 @@ class _PatientManagementState extends State<PatientManagement> {
                   ),
                   content: Container(
                     // height: 600,
-                    width: 1080,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1),
                         borderRadius:
@@ -162,7 +161,7 @@ class _PatientManagementState extends State<PatientManagement> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           DataTable(
-                              dataRowHeight: 95,
+                              dataRowHeight: 100,
                               dividerThickness: 0.2,
                               headingRowHeight: 50,
                               headingRowColor: MaterialStateProperty.all(Colors.black),

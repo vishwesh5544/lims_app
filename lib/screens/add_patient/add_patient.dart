@@ -56,7 +56,7 @@ class _AddPatientState extends State<AddPatient> {
                     ),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: state.isPatient? PatientDetailsForm() : TestDetails(),
+                        child: state.isPatient? const PatientDetailsForm() : const TestDetails(),
                       )
                     ),
                   ],

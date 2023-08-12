@@ -24,7 +24,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<Patient>> updatePatient(Patient patient, int id) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/${id.toString()}");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/${id.toString()}");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var patch = {
@@ -60,7 +60,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<Patient>> addPatient(Patient patient) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/add");
     ResponseCallback<Patient> responseCallback = ResponseCallback();
     try {
       var req = patient.toJson();
@@ -84,7 +84,7 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<List<Patient>>> getAllPatients() async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/lms/api/Patient/getallpatient");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Patient/getallpatient");
     ResponseCallback<List<Patient>> responseCallback = ResponseCallback();
     try {
       final response = await http.get(url, headers: _headers);
@@ -114,20 +114,17 @@ class PatientRepository implements IPatientRepository {
 
   @override
   Future<ResponseCallback<List<InvoiceMapping>>> addInvoice(List<InvoiceMapping> invoiceMappingList) async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "lms/api/testpatient/add");
+    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/testpatient/add");
     ResponseCallback<List<InvoiceMapping>> responseCallback = ResponseCallback();
-
     try {
       var requestBody = jsonEncode(invoiceMappingList.map((e) => e.toJson()).toList());
-      print(requestBody);
       final response = await http.post(url, body: requestBody, headers: _headers);
       List<InvoiceMapping> invoices = [];
       var body = jsonDecode(response.body);
-      print(body);
-      // for (var invoiceMapping in body) {
-      //   print(invoiceMapping);
-      //   invoices.add(InvoiceMapping.fromJson(invoiceMapping));
-      // }
+      var invoiceMappingBody = body["data"][0]; // TODO: Ask backend team to send properly structured data
+      for (var invoiceMapping in invoiceMappingBody) {
+        invoices.add(InvoiceMapping.fromJson(invoiceMapping));
+      }
       responseCallback.data = invoices;
       responseCallback.code = response.statusCode;
     } on http.ClientException catch (e) {

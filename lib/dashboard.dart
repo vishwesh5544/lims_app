@@ -123,15 +123,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             items: [
               sideMenuItem(index: 0, title: "Patient\n Management", iconName: "ic_management",isSelected: sideMenu.currentPage == 0),
-              sideMenuItem(index: 1, title: "Test\n Management", iconName: "ic_Layer",isSelected: sideMenu.currentPage == 1),
-              sideMenuItem(index: 2, title: "Sample\n Management", iconName: "ic_chemistry", isSelected: sideMenu.currentPage == 2),
-              sideMenuItem(index: 3, title: "In Transit\n Management", iconName: "ic_in_transit_mgmt", isSelected:
-              sideMenu
-                  .currentPage == 3),
-              sideMenuItem(index: 4, title: "Process\n Management",iconName: "ic_process_mgmt", isSelected: sideMenu
-                  .currentPage == 4),
-              sideMenuItem(index: 5, title: "Lab\n Management", iconName: "ic_Lab_Report",isSelected: sideMenu.currentPage == 5),
-              sideMenuItem(index: 6, title: "Test\n Status", iconName: "ic_processing_time",isSelected: sideMenu.currentPage == 6),
+              // sideMenuItem(index: 1, title: "Test\n Management", iconName: "ic_Layer",isSelected: sideMenu.currentPage == 1),
+              // sideMenuItem(index: 2, title: "Sample\n Management", iconName: "ic_chemistry", isSelected: sideMenu.currentPage == 2),
+              // sideMenuItem(index: 3, title: "In Transit\n Management", iconName: "ic_in_transit_mgmt", isSelected:
+              // sideMenu
+              //     .currentPage == 3),
+              // sideMenuItem(index: 4, title: "Process\n Management",iconName: "ic_process_mgmt", isSelected: sideMenu
+              //     .currentPage == 4),
+              // sideMenuItem(index: 5, title: "Lab\n Management", iconName: "ic_Lab_Report",isSelected: sideMenu.currentPage == 5),
+              // sideMenuItem(index: 6, title: "Test\n Status", iconName: "ic_processing_time",isSelected: sideMenu.currentPage == 6),
             ],
           ),
           Expanded(
@@ -139,12 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: pageController,
               children: const [
                 PatientManagement(),
-                TestManagement(),
-                SampleManagement(),
-                TransitManagement(),
-                ProcessManagement(),
-                LabManagement(),
-                TestStatus()],
+                // TestManagement(),
+                // SampleManagement(),
+                // TransitManagement(),
+                // ProcessManagement(),
+                // LabManagement(),
+                // TestStatus(),
+              ],
             ),
           ),
         ],

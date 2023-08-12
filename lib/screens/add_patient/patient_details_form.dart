@@ -4,6 +4,7 @@ import "package:intl/intl.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/patient_bloc/patient_state.dart";
+import "package:lims_app/utils/extensions.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
 import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/strings/add_patient_strings.dart";
@@ -116,24 +117,42 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
               text: "Next",
               isEnable: true,
               calll: () {
-                if (/*!bloc.state.isAddPatient &&*/ bloc.state.currentSelectedPriview != -1) {
-                  int userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id!;
-                  // update?
-                  BlocProvider.of<PatientBloc>(context)
-                      .add(AddPatientFormSubmitted(isUpdate: true, userId: userId));
+                if (_firstNameController.text.isEmpty &&
+                    _middleNameController.text.isEmpty &&
+                    _lastNameController.text.isEmpty &&
+                    _mobileNameController.text.isEmpty &&
+                    _datePickerTextController.text.isEmpty &&
+                    _emailIdController.text.isEmpty &&
+                    _insuranceNumberController.text.isEmpty &&
+                    _insuranceProviderController.text.isEmpty &&
+                    _consultedDoctorController.text.isEmpty) {
+                  /// form validation
 
+                  ScreenHelper.showAlertPopup("Form fields cannot be Empty", context);
+                } else if (!_mobileNameController.text.isNumeric) {
+                  ScreenHelper.showAlertPopup("Mobile Number should be numeric and contain 10 digits.", context);
+                } else if (!_emailIdController.text.isValidEmail) {
+                  ScreenHelper.showAlertPopup("Invalid email format", context);
                 } else {
-                  BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: false));
-                }
+                  /// submit form
 
-                if (/*bloc.state.isAddPatient && */bloc.state.currentSelectedPriview == -1) {
-                  BlocProvider.of<PatientBloc>(context).add(IsPatient());
-                }else {
-                  ScreenHelper.showAlertPopup("Patient updated successfully ", context).then((value){
-                    ///to refresh listing screen.
-                    BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
-                    BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
-                  });
+                  if (/*!bloc.state.isAddPatient &&*/ bloc.state.currentSelectedPriview != -1) {
+                    int userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id!;
+                    // update?
+                    BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: true, userId: userId));
+                  } else {
+                    BlocProvider.of<PatientBloc>(context).add(AddPatientFormSubmitted(isUpdate: false));
+                  }
+
+                  if (/*bloc.state.isAddPatient && */ bloc.state.currentSelectedPriview == -1) {
+                    BlocProvider.of<PatientBloc>(context).add(IsPatient());
+                  } else {
+                    ScreenHelper.showAlertPopup("Patient updated successfully ", context).then((value) {
+                      ///to refresh listing screen.
+                      BlocProvider.of<PatientBloc>(context).add(FetchAllPatients());
+                      BlocProvider.of<PatientBloc>(context).add(OnAddPatient());
+                    });
+                  }
                 }
               }),
         ],
@@ -157,9 +176,14 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
 
-    return _buildBlocComponent(CommonEditText(title: 'First Name', hintText: AddPatientStrings.enterFirstName, onChange: (value){
-      bloc.add(FirstNameUpdated(value));
-    },controller: _firstNameController,));
+    return _buildBlocComponent(CommonEditText(
+      title: 'First Name',
+      hintText: AddPatientStrings.enterFirstName,
+      onChange: (value) {
+        bloc.add(FirstNameUpdated(value));
+      },
+      controller: _firstNameController,
+    ));
   }
 
   Widget _middleNameField() {
@@ -177,9 +201,14 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
 
-    return _buildBlocComponent(CommonEditText(title: 'Middle Name', hintText: AddPatientStrings.enterMiddleName, onChange: (value){
-      bloc.add(MiddleNameUpdated(value));
-    },controller: _middleNameController,));
+    return _buildBlocComponent(CommonEditText(
+      title: 'Middle Name',
+      hintText: AddPatientStrings.enterMiddleName,
+      onChange: (value) {
+        bloc.add(MiddleNameUpdated(value));
+      },
+      controller: _middleNameController,
+    ));
   }
 
   Widget _lastNameField() {
@@ -197,11 +226,13 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
 
-    return _buildBlocComponent(CommonEditText(title: 'Last Name',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Last Name',
         controller: _lastNameController,
-      hintText: AddPatientStrings.enterLastName, onChange: (value){
-      bloc.add(LastNameUpdated(value));
-    }));
+        hintText: AddPatientStrings.enterLastName,
+        onChange: (value) {
+          bloc.add(LastNameUpdated(value));
+        }));
   }
 
   Widget _mobileNumberField() {
@@ -217,12 +248,14 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //         border: const OutlineInputBorder(),
     //         hintText: AddPatientStrings.enterMobileNumber),
     //   )
-    // ]);
+    // ]);0
 
-    return _buildBlocComponent(CommonEditText(title: 'Mobile Number',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Mobile Number',
         controller: _mobileNameController,
-        hintText: AddPatientStrings.enterMobileNumber, onChange: (value){
-          bloc.add(MobileNumberUpdated(value));
+        hintText: AddPatientStrings.enterMobileNumber,
+        onChange: (value) {
+          bloc.add(MobileNumberUpdated(int.parse(value)));
         }));
   }
 
@@ -241,9 +274,11 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
 
-    return _buildBlocComponent(CommonEditText(title: 'Email',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Email',
         controller: _emailIdController,
-        hintText: AddPatientStrings.enterEmailId, onChange: (value){
+        hintText: AddPatientStrings.enterEmailId,
+        onChange: (value) {
           bloc.add(EmailUpdated(value));
         }));
   }
@@ -262,9 +297,11 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //         hintText: AddPatientStrings.enterInsuranceProviderName),
     //   )
     // ]);
-    return _buildBlocComponent(CommonEditText(title: 'Insurance Provider',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Insurance Provider',
         controller: _insuranceProviderController,
-        hintText: AddPatientStrings.enterInsuranceProviderName, onChange: (value){
+        hintText: AddPatientStrings.enterInsuranceProviderName,
+        onChange: (value) {
           bloc.add(InsuranceProviderUpdated(value));
         }));
   }
@@ -284,9 +321,11 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
 
-    return _buildBlocComponent(CommonEditText(title: 'Insurance Number',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Insurance Number',
         controller: _insuranceNumberController,
-        hintText: AddPatientStrings.enterInsuranceNumber, onChange: (value){
+        hintText: AddPatientStrings.enterInsuranceNumber,
+        onChange: (value) {
           bloc.add(InsuranceNumberUpdated(value));
         }));
   }
@@ -306,13 +345,14 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   )
     // ]);
 
-    return _buildBlocComponent(CommonEditText(title: 'Consulted Doctor',
+    return _buildBlocComponent(CommonEditText(
+        title: 'Consulted Doctor',
         controller: _consultedDoctorController,
-        hintText: "Enter Doctor Name", onChange: (value){
+        hintText: "Enter Doctor Name",
+        onChange: (value) {
           bloc.add(ConsultedDoctorUpdated(value));
         }));
   }
-
 
   /// bloc builder
   Widget _buildBlocComponent(Widget widget) {
@@ -335,9 +375,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
             const SizedBox(height: 6),
             Container(
               decoration: BoxDecoration(
-                  color: ColorProvider.lightGreyColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))
-              ),
+                  color: ColorProvider.lightGreyColor, borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: TextField(
                 onChanged: (value) {},
                 readOnly: true,
@@ -432,8 +470,11 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //   ],
     // );
 
-    return _buildBlocComponent(CommonDropDown(title: "Gender", hintText: AddPatientStrings.gender,
-        list: const ["male", "female"], onSubmit: (value){
+    return _buildBlocComponent(CommonDropDown(
+        title: "Gender",
+        hintText: AddPatientStrings.gender,
+        list: const ["male", "female"],
+        onSubmit: (value) {
           bloc.add(GenderUpdated(value));
         }));
   }
