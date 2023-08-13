@@ -101,8 +101,8 @@ class _AddTestState extends State<AddTest> {
             .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
         methodEditingController.text =
             bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
-        turnAroundTimeEditingController.text = bloc.state
-            .testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
+        turnAroundTimeEditingController.text = bloc
+            .state.testsList[bloc.state.currentSelectedPriview].turnAroundTime;
         priceEditingController.text = bloc
             .state.testsList[bloc.state.currentSelectedPriview].price
             .toString();
@@ -799,11 +799,12 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter TAT (Hrs./days)", blocComponent);
 
-    return _buildBlocComponent(CommonDropDown(
+    return _buildBlocComponent(CommonEditText(
         title: "Enter TAT (Hrs./days)",
         name: 'tat',
-        hintText: AddTestStrings.enterTemperature,
-        list: const ["one", "two"],
+        hintText: AddTestStrings.enterTAT,
+        controller: turnAroundTimeEditingController,
+        onChange: (v) {},
         // value: tatValue,
         onSubmit: (value) {}));
   }
