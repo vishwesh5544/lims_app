@@ -19,52 +19,65 @@ class AddPatient extends StatefulWidget {
 
 class _AddPatientState extends State<AddPatient> {
   late final PatientBloc bloc;
+  bool isEdit = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc = context.read<PatientBloc>();
+      if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
+        setState(() {
+          isEdit = true;
+        });
+      }
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: BlocBuilder<PatientBloc, PatientState>(
-            builder: (context, state) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric( vertical: 20),
-                child: Column(
-                  children: [
-                    _header(state),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        children: [
-                          commonBtn(text: "Patient Details ", isEnable: state.isPatient,calll: (){
-                            BlocProvider.of<PatientBloc>(context).add(IsPatient(value: true));
-                          }),
-                          commonBtn(text: "Add Test ", isEnable: !state.isPatient, calll: (){
-                            BlocProvider.of<PatientBloc>(context).add(IsPatient());
-                          }),
-                        ],
-                      ),
+        body: BlocBuilder<PatientBloc, PatientState>(builder: (context, state) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  _header(state),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      children: [
+                        commonBtn(
+                            text: "Patient Details ",
+                            isEnable: state.isPatient,
+                            calll: () {
+                              BlocProvider.of<PatientBloc>(context)
+                                  .add(IsPatient(value: true));
+                            }),
+                        if (!isEdit)
+                          commonBtn(
+                              text: "Add Test ",
+                              isEnable: !state.isPatient,
+                              calll: () {
+                                BlocProvider.of<PatientBloc>(context)
+                                    .add(IsPatient());
+                              }),
+                      ],
                     ),
-                    Expanded(
+                  ),
+                  Expanded(
                       child: SingleChildScrollView(
-                        child: state.isPatient? const PatientDetailsForm() : const TestDetails(),
-                      )
-                    ),
-                  ],
-                ),
+                    child: state.isPatient
+                        ? const PatientDetailsForm()
+                        : const TestDetails(),
+                  )),
+                ],
               ),
-            );
-          }
-        ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -117,5 +130,4 @@ class _AddPatientState extends State<AddPatient> {
       onPressed: () {},
     );
   }
-
 }
