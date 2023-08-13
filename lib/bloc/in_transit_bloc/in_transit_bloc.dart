@@ -24,6 +24,9 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
     required this.patientRepository,
   }) : super(InTransitState());
 
+  List<Test> cachedTests = <Test>[];
+  List<InvoiceMapping> cachedInvoiceMapping = <InvoiceMapping>[];
+
   Future<({List<Test> test, List<InvoiceMapping> invoiceMappings})>
       getInvoiceMappingForPatient(Patient patient) async {
     final result = await Future.wait([
@@ -57,6 +60,10 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       yield state.copyWith(filteredLabs: response.data);
     } else if (event is SearchPatient) {
       if (event.searchString.trim().isEmpty) {
+        yield state.copyWith(
+          testsList: cachedTests,
+          invoiceMappings: cachedInvoiceMapping,
+        );
         final patientsData = await patientRepository.getAllPatients();
         final patients = patientsData.data;
         if (patients == null || patients.isEmpty) {
@@ -70,6 +77,8 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
             <InvoiceMapping>[],
             (previousValue, element) => previousValue + element.invoiceMappings,
           );
+          cachedTests = tests;
+          cachedInvoiceMapping = invoiceMappings;
           yield state.copyWith(
             testsList: tests,
             invoiceMappings: invoiceMappings,

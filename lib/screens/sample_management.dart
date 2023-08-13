@@ -59,6 +59,7 @@ class _SampleManagementState extends State<SampleManagement> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
       bloc = context.read<InTransitBloc>();
+      bloc.add(ResetState());
     });
     super.initState();
   }
