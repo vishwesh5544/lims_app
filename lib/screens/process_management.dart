@@ -117,17 +117,13 @@ class _ProcessManagementState extends State<ProcessManagement> {
                                   context);
                             },
                             onPrintPdf: (Test test) {
-                              var testId = test.id;
-                              var userId = state.patient?.id;
-                              var invoiceId = state.invoiceMappings
+                              var ptid = state.invoiceMappings
                                   ?.firstWhere((invoice) =>
                                       invoice.testId == test.id &&
                                       invoice.patientId == state.patient!.id)
-                                  .id;
-                              var barcodeString =
-                                  "{testId:, $testId, userId: $userId, invoiceId: $invoiceId}";
-                              PdfUtility.savePdf(
-                                  context, barcodeString.toString());
+                                  .ptid;
+
+                              PdfUtility.savePdf(context, ptid.toString());
                             },
                             rowData: getTestList(state)),
                       )
