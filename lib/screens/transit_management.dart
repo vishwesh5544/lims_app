@@ -149,21 +149,23 @@ class _TransitManagementState extends State<TransitManagement> {
 
   getTestListForTransit(InTransitState state) {
     if (inputToCheck is int) {
-      return state.testsList!.where((test) {
-        final invoiceMappings = state.invoiceMappings?.where(
-            (invoice) => invoice.testId == test.id && invoice.status >= 2);
-        if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
-          final expectedMap = invoiceMappings.where((mapping) =>
-              mapping.invoiceId == inputToCheck ||
-              mapping.ptid == inputToCheck);
-
-          if (expectedMap.isNotEmpty) {
-            return true;
-          }
-          return false;
+      final tests = <Test>[];
+      if (state.invoiceMappings != null && state.testsList != null) {
+        for (final invoice in state.invoiceMappings!) {
+          final test = state.testsList!
+              .where((test) =>
+                  test.id == invoice.testId &&
+                  invoice.status >= 2 &&
+                  (invoice.invoiceId == inputToCheck ||
+                      invoice.ptid.toString().substring(
+                              0, invoice.ptid.toString().length - 2) ==
+                          inputToCheck.toString().substring(
+                              0, inputToCheck.toString().length - 2)))
+              .toList();
+          tests.addAll(test);
         }
-        return false;
-      }).toList();
+      }
+      return tests.toSet().toList();
     } else {
       return state.testsList!.where((test) {
         final invoiceMappings = state.invoiceMappings?.where(
