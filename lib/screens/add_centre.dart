@@ -373,6 +373,7 @@ class _AddCentreState extends State<AddCentre> {
     return CommonDropDown(
         title: "Collection Centre/Processing Unit",
         hintText: hintText,
+        name: 'unitType',
         list: const ["Collection Unit", "Processing Unit", "Both"],
         onSubmit: (value) {
           setState(() {

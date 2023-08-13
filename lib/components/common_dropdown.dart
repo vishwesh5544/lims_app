@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../utils/color_provider.dart';
 import '../utils/icons/icon_store.dart';
 import '../utils/text_utility.dart';
@@ -10,8 +11,10 @@ class CommonDropDown extends StatelessWidget {
   String title;
   List<String> list;
   final String? value;
+  final String name;
   CommonDropDown(
       {required this.title,
+      required this.name,
       required this.list,
       required this.hintText,
       required this.onSubmit,
@@ -27,8 +30,9 @@ class CommonDropDown extends StatelessWidget {
       children: [
         Text(title, style: TextUtility.getStyle(13)),
         const SizedBox(height: 6),
-        DropdownButtonFormField(
-          value: value,
+        FormBuilderDropdown(
+          name: name,
+          initialValue: value,
           icon: IconStore.downwardArrow,
           decoration: InputDecoration(
             hintStyle:

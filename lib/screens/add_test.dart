@@ -37,11 +37,6 @@ class _AddTestState extends State<AddTest> {
   final taxPercentageEditingController = TextEditingController();
   final totalPriceEditingController = TextEditingController();
   final indicationsEditingController = TextEditingController();
-  String sampleTypeValue = "";
-  String departmentValue = "";
-  String temperatureTypeValue = "";
-  String volumeTypeValue = "";
-  String tatValue = "";
 
   @override
   void initState() {
@@ -79,16 +74,18 @@ class _AddTestState extends State<AddTest> {
         bloc.add(IndicationsUpdated(bloc
             .state.testsList[bloc.state.currentSelectedPriview].indications));
 
-        sampleTypeValue =
-            bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType;
-        departmentValue =
-            bloc.state.testsList[bloc.state.currentSelectedPriview].department;
-        temperatureTypeValue = bloc.state
-            .testsList[bloc.state.currentSelectedPriview].typeOfTemperature;
-        volumeTypeValue = bloc
-            .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
-        tatValue = bloc.state.testsList[bloc.state.currentSelectedPriview]
-            .typeOfTemperature;
+        formKey.currentState!.fields['sampleTypeValue']?.didChange(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].sampleType);
+        formKey.currentState!.fields['departmentValue']?.didChange(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].department);
+        formKey.currentState!.fields['temperatureTypeValue']?.didChange(bloc
+            .state
+            .testsList[bloc.state.currentSelectedPriview]
+            .typeOfTemperature);
+        formKey.currentState!.fields['volumeTypeValue']?.didChange(bloc
+            .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume);
+        formKey.currentState!.fields['tat']?.didChange(bloc.state
+            .testsList[bloc.state.currentSelectedPriview].typeOfTemperature);
 
         testCodeEditingController.text =
             bloc.state.testsList[bloc.state.currentSelectedPriview].testCode;
@@ -292,13 +289,17 @@ class _AddTestState extends State<AddTest> {
                         .state.testsList[bloc.state.currentSelectedPriview].id,
                     testCode: testCodeEditingController.text,
                     testName: testNameEditingController.text,
-                    department: departmentValue,
+                    department: formKey.currentState!.fields['departmentValue']
+                        ?.value as String,
                     temperature: temperatureEditingController.text,
-                    typeOfTemperature: temperatureTypeValue,
-                    sampleType: sampleTypeValue,
+                    typeOfTemperature: formKey.currentState!
+                        .fields['temperatureTypeValue']?.value as String,
+                    sampleType: formKey.currentState!.fields['sampleTypeValue']
+                        ?.value as String,
                     vacutainer: vacutainerEditingController.text,
                     volume: volumeEditingController.text,
-                    typeOfVolume: volumeTypeValue,
+                    typeOfVolume: formKey.currentState!
+                        .fields['volumeTypeValue']?.value as String,
                     method: methodEditingController.text,
                     turnAroundTime: turnAroundTimeEditingController.text,
                     price: price,
@@ -310,13 +311,17 @@ class _AddTestState extends State<AddTest> {
                     isUpdate: false,
                     testCode: testCodeEditingController.text,
                     testName: testNameEditingController.text,
-                    department: departmentValue,
+                    department: formKey.currentState!.fields['departmentValue']
+                        ?.value as String,
                     temperature: temperatureEditingController.text,
-                    typeOfTemperature: temperatureTypeValue,
-                    sampleType: sampleTypeValue,
+                    typeOfTemperature: formKey.currentState!
+                        .fields['temperatureTypeValue']?.value as String,
+                    sampleType: formKey.currentState!.fields['sampleTypeValue']
+                        ?.value as String,
                     vacutainer: vacutainerEditingController.text,
                     volume: volumeEditingController.text,
-                    typeOfVolume: volumeTypeValue,
+                    typeOfVolume: formKey.currentState!
+                        .fields['volumeTypeValue']?.value as String,
                     method: methodEditingController.text,
                     turnAroundTime: turnAroundTimeEditingController.text,
                     price: price,
@@ -671,14 +676,12 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Sample Type", blocComponent);
     return _buildBlocComponent(CommonDropDown(
-        title: "Sample Type",
-        hintText: AddTestStrings.selectType,
-        list: const ["one", "two"],
-        onSubmit: (value) {
-          setState(() {
-            sampleTypeValue = value;
-          });
-        }));
+      title: "Sample Type",
+      name: 'sampleTypeValue',
+      hintText: AddTestStrings.selectType,
+      list: const ["one", "two"],
+      onSubmit: (value) {},
+    ));
   }
 
   Widget _volumeTypeDropdown() {
@@ -705,13 +708,10 @@ class _AddTestState extends State<AddTest> {
 
     return _buildBlocComponent(CommonDropDown(
         title: "Volume Type",
+        name: 'volumeTypeValue',
         hintText: AddTestStrings.enterVolume,
         list: const ["mg", "ml"],
-        onSubmit: (value) {
-          setState(() {
-            volumeTypeValue = value;
-          });
-        }));
+        onSubmit: (value) {}));
   }
 
   Widget _selectDepartmentDropdown() {
@@ -739,17 +739,15 @@ class _AddTestState extends State<AddTest> {
 
     return _buildBlocComponent(CommonDropDown(
         title: "Select department",
+        name: 'departmentValue',
         hintText: AddTestStrings.selectDepartment,
         list: const ["one", "two"],
-        onSubmit: (value) {
-          setState(() {
-            departmentValue = value;
-          });
-        }));
+        onSubmit: (value) {}));
   }
 
   Widget _enterTemperatureDropdown() {
-    var dropdown = DropdownButtonFormField(
+    var dropdown = FormBuilderDropdown(
+      name: 'temperatureTypeValue',
       icon: IconStore.downwardArrow,
       decoration: InputDecoration(
         hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
@@ -767,11 +765,7 @@ class _AddTestState extends State<AddTest> {
         DropdownMenuItem(value: "celsius", child: Text('\u2103')),
         DropdownMenuItem(value: "fahrenheit", child: Text('\u2109'))
       ],
-      onChanged: (value) {
-        setState(() {
-          temperatureTypeValue = value;
-        });
-      },
+      onChanged: (value) {},
     );
     var blocComponent = _buildBlocComponent(dropdown);
 
@@ -803,12 +797,10 @@ class _AddTestState extends State<AddTest> {
 
     return _buildBlocComponent(CommonDropDown(
         title: "Enter TAT (Hrs./days)",
+        name: 'tat',
         hintText: AddTestStrings.enterTemperature,
         list: const ["one", "two"],
-        onSubmit: (value) {
-          setState(() {
-            tatValue = value;
-          });
-        }));
+        // value: tatValue,
+        onSubmit: (value) {}));
   }
 }

@@ -571,6 +571,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     return _buildBlocComponent(
       CommonDropDown(
         title: "Gender",
+        name: 'gender',
         hintText: AddPatientStrings.gender,
         value: genderMapping[gender],
         list: genderMapping.values.toList(),
