@@ -72,6 +72,8 @@ class _PatientManagementState extends State<PatientManagement> {
                     onClick: () {
                       BlocProvider.of<PatientBloc>(context)
                           .add(OnAddPatient(value: true));
+                      BlocProvider.of<PatientBloc>(context)
+                          .add(IsPatient(value: true));
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(builder: (context) => AddPatient()),);
