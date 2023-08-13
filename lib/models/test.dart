@@ -1,9 +1,10 @@
+import "package:equatable/equatable.dart";
 import "package:json_annotation/json_annotation.dart";
 
 part "test.g.dart";
 
 @JsonSerializable(explicitToJson: true)
-class Test {
+class Test extends Equatable {
   @JsonKey(name: "id")
   final int? id;
   @JsonKey(name: "test_code")
@@ -59,4 +60,6 @@ class Test {
 
   Map<String, dynamic> toJson() => _$TestToJson(this);
 
+  @override
+  List<Object?> get props => [id];
 }
