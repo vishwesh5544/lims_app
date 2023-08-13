@@ -103,7 +103,7 @@ class _SampleManagementState extends State<SampleManagement> {
                   Visibility(
                     visible: state.testsList?.isNotEmpty ?? false,
                     child: LimsTable(
-                        tableRowHeight: 95,
+                        tableRowHeight: 130,
                         columnNames: columnNames,
                         tableType: TableType.sample,
                         onEditClick: (value) {

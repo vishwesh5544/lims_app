@@ -96,7 +96,7 @@ class _TransitManagementState extends State<TransitManagement> {
                     visible: state.testsList?.isNotEmpty ?? false,
                     child: LimsTable(
                         columnNames: columnNames,
-                        tableRowHeight: 85,
+                        tableRowHeight: 130,
                         tableType: TableType.inTransit,
                         onEditClick: (value) {},
                         onSubmit: (test) {

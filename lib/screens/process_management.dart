@@ -97,7 +97,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                         child: LimsTable(
                             columnNames: columnNames,
                             tableType: TableType.process,
-                            tableRowHeight: 95,
+                            tableRowHeight: 130,
                             onEditClick: (value) {
                               status = value;
                             },
