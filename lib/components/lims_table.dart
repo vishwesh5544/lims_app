@@ -69,6 +69,46 @@ class _LimsTableState extends State<LimsTable> {
     super.initState();
   }
 
+  Future<bool> showAlertDialog(
+    BuildContext context,
+    String title,
+    String body,
+  ) async {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop(false);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Continue"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop(true);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+    if (result == null) return false;
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: create builder for ListView > DataTable
@@ -267,12 +307,20 @@ class _LimsTableState extends State<LimsTable> {
                 .status;
 
             return commonBtn(
-                text: "Approve Transit",
-                isEnable: status == 2,
-                width: 120,
-                calll: () {
+              text: "Approve Transit",
+              isEnable: status == 2,
+              width: 120,
+              calll: () async {
+                final result = await showAlertDialog(
+                  context,
+                  "Approve Transit",
+                  "Are you sure you want to approve this transit?",
+                );
+                if (result) {
                   widget.onSubmit!.call(test);
-                });
+                }
+              },
+            );
           } else {
             return Container();
           }
@@ -362,11 +410,19 @@ class _LimsTableState extends State<LimsTable> {
                 .status;
 
             return commonBtn(
-                text: "Submit",
-                isEnable: status == 3 || status == 4,
-                calll: () {
+              text: "Submit",
+              isEnable: status == 3 || status == 4,
+              calll: () async {
+                final result = await showAlertDialog(
+                  context,
+                  status == 3 ? "Process Sample" : "Submit Sample",
+                  "Are you sure you want to ${status == 3 ? "process" : "submit"} this sample?",
+                );
+                if (result) {
                   widget.onSubmit!.call(test);
-                });
+                }
+              },
+            );
           } else {
             return Container();
           }
@@ -442,11 +498,19 @@ class _LimsTableState extends State<LimsTable> {
             var currentMapping = state.invoiceMappings!
                 .firstWhere((element) => element.testId == test.id);
             return commonBtn(
-                text: "Collect Sample",
-                isEnable: currentMapping.status == 1,
-                calll: () {
+              text: "Collect Sample",
+              isEnable: currentMapping.status == 1,
+              calll: () async {
+                final result = await showAlertDialog(
+                  context,
+                  "Collect Sample",
+                  "Are you sure you want to collect sample for ${test.testName}?",
+                );
+                if (result) {
                   widget.onSubmit!.call(test);
-                });
+                }
+              },
+            );
           } else {
             return Container();
           }

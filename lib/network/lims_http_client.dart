@@ -19,7 +19,5 @@ class LimsHttpClient extends BaseClient {
   static Map<String, String> get headers => {
         "content-type": "application/json",
         'Accept': '*/*',
-        "Access-Control-Allow-Credentials": "true",
-        'Access-Control-Allow-Origin': "*"
       };
 }
