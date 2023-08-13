@@ -1,12 +1,6 @@
-import "dart:js_interop";
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_svg/svg.dart";
 import "package:intl/intl.dart";
-import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
-import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
-import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/patient_bloc/patient_bloc.dart";
 import "package:lims_app/bloc/patient_bloc/patient_event.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
@@ -19,7 +13,6 @@ import "package:lims_app/utils/icons/icon_store.dart";
 import "../../bloc/patient_bloc/patient_state.dart";
 import "../../components/barcode_widegt.dart";
 import "../../components/lims_table.dart";
-import "../../utils/barcode_utility.dart";
 import "../../utils/color_provider.dart";
 import "../../utils/text_utility.dart";
 import "../../utils/utils.dart";
@@ -116,7 +109,7 @@ class _TestDetailsState extends State<TestDetails> {
                     ],
                   ),
                 ),
-                content: Container(
+                content: SizedBox(
                   // height: 700,
                   width: 1200,
                   child: SingleChildScrollView(

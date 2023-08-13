@@ -10,8 +10,6 @@ import 'package:lims_app/repositories/lab_repository.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
 import 'package:lims_app/repositories/tests_repository.dart';
 import 'package:lims_app/repositories/user_repository.dart';
-import 'package:lims_app/screens/add_centre.dart';
-import 'package:lims_app/screens/lab_management.dart';
 import 'package:lims_app/screens/test_management.dart';
 import "package:lims_app/utils/router.dart";
 import 'package:lims_app/screens/login.dart';

@@ -5,7 +5,6 @@ import "package:lims_app/bloc/login_bloc/login_bloc.dart";
 import "package:lims_app/bloc/login_bloc/login_event.dart";
 import "package:lims_app/bloc/login_bloc/login_state.dart";
 import "package:lims_app/utils/form_submission_status.dart";
-import 'package:lims_app/utils/strings/route_strings.dart';
 import "package:lims_app/utils/text_utility.dart";
 
 import "../dashboard.dart";
@@ -18,9 +17,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController(text: "admin@gmail.com");
+  final TextEditingController _emailController =
+      TextEditingController(text: "admin@gmail.com");
 
-  final TextEditingController _passwordController = TextEditingController(text: "12345678");
+  final TextEditingController _passwordController =
+      TextEditingController(text: "12345678");
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -55,10 +56,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Form heading
-                            Text('LIMS', style: TextUtility.getBoldStyle(40.0, color: Colors.black)),
+                            Text('LIMS',
+                                style: TextUtility.getBoldStyle(40.0,
+                                    color: Colors.black)),
                             // Form sub heading
                             Text('Welcome Back',
-                                style: TextUtility.getBoldStyle(30.0, color: Colors.black)),
+                                style: TextUtility.getBoldStyle(30.0,
+                                    color: Colors.black)),
                             // Form instructions
                             const Text('Please enter your details to sign in'),
                             // Username/Email input field
@@ -130,7 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // Parth_parth
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),);
+          MaterialPageRoute(builder: (context) => const Dashboard()),
+        );
         // }
       },
       builder: (context, state) {
@@ -167,7 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
         RichText(
             text: TextSpan(children: [
           TextSpan(
-              text: "Forgot Password?", style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
+              text: "Forgot Password?",
+              style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
           const WidgetSpan(
               child: SizedBox(
             width: 4,

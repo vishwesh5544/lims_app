@@ -1,7 +1,6 @@
 import 'dart:convert';
 import "package:http/http.dart" as http;
 import 'package:lims_app/models/lab.dart';
-import 'package:lims_app/models/lab_test_detail.dart';
 import 'package:lims_app/models/response_callback.dart';
 import 'package:lims_app/network/lims_http_client.dart';
 import 'package:lims_app/utils/lims_logger.dart';
@@ -34,7 +33,8 @@ class LabRepository implements ILabRepository {
         "unit_type": lab.unitType,
         "tests_details": lab.testDetails.toString(),
       };
-      final response = await http.post(url, headers: _headers, body: jsonEncode(r));
+      final response =
+          await http.post(url, headers: _headers, body: jsonEncode(r));
       responseCallback.code = response.statusCode;
       responseCallback.data = lab;
       var responseMap = jsonDecode(response.body);
@@ -54,7 +54,8 @@ class LabRepository implements ILabRepository {
 
   @override
   Future<ResponseCallback<List<Lab>>> getAllLabs() async {
-    Uri url = Uri.http(CommonStrings.apiAuthority, "/api/Labinfo/getalllabinfo");
+    Uri url =
+        Uri.http(CommonStrings.apiAuthority, "/api/Labinfo/getalllabinfo");
     ResponseCallback<List<Lab>> responseCallback = ResponseCallback();
 
     try {

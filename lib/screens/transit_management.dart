@@ -5,27 +5,15 @@ import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
-import "package:lims_app/bloc/test_bloc/test_state.dart";
-import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
-import "package:lims_app/components/search_header.dart";
 import "package:lims_app/models/test.dart";
-import "package:lims_app/screens/add_test.dart";
-import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/screen_helper.dart";
-import "package:lims_app/utils/strings/button_strings.dart";
-import "package:lims_app/utils/strings/route_strings.dart";
-import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/update_status.dart";
 import "package:lims_app/utils/utils.dart";
 
 import "../components/common_disabled_field.dart";
 import "../components/common_header.dart";
-import "../models/invoice_mapping.dart";
-import "../utils/color_provider.dart";
-import "../utils/strings/add_test_strings.dart";
-import "../utils/text_utility.dart";
 
 class TransitManagement extends StatefulWidget {
   const TransitManagement({Key? key}) : super(key: key);
@@ -88,7 +76,7 @@ class _TransitManagementState extends State<TransitManagement> {
                           })),
 
                   Container(
-                    margin: EdgeInsets.only(bottom: 15),
+                    margin: const EdgeInsets.only(bottom: 15),
                     child: Row(
                       children: [
                         CommonGreyFiled(

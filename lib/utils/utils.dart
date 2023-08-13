@@ -14,10 +14,7 @@ showToast({String msg = ""}) {
 }
 
 getBorder() {
-  return BorderSide(width: 0.1, color: Colors.grey);
-  OutlineInputBorder(
-    borderSide: BorderSide(color: ColorProvider.greyColor, width: 0.2),
-  );
+  return const BorderSide(width: 0.1, color: Colors.grey);
 }
 
 getOutLineBorder() {
@@ -70,7 +67,7 @@ commonIconBtn(
     child: Container(
         height: 35,
         // width: width,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
             border: Border.all(color: ColorProvider.blueDarkShade, width: 2),
             color: isEnable ? bgColor : Colors.white,
@@ -79,7 +76,7 @@ commonIconBtn(
             child: Row(
           children: [
             if (icon != null)
-              Container(child: icon, padding: EdgeInsets.only(right: 8)),
+              Container(padding: const EdgeInsets.only(right: 8), child: icon),
             Text(
               text,
               style: TextUtility.getStyle(16,

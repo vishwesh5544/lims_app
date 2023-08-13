@@ -1,4 +1,3 @@
-import 'package:lims_app/models/invoice.dart';
 import 'package:lims_app/models/invoice_mapping.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/test.dart';
@@ -79,7 +78,8 @@ class PatientState {
       bool? isPatient,
       FormSubmissionStatus? formStatus}) {
     return PatientState(
-        createdPatientInvoices: createdPatientInvoices ?? this.createdPatientInvoices,
+        createdPatientInvoices:
+            createdPatientInvoices ?? this.createdPatientInvoices,
         invoiceNumber: invoiceNumber ?? this.invoiceNumber,
         selectedTests: selectedTests ?? this.selectedTests,
         createdPatient: createdPatient ?? this.createdPatient,
@@ -89,7 +89,8 @@ class PatientState {
         lastName: lastName ?? this.lastName,
         middleName: middleName ?? this.middleName,
         isAddPatient: isAddPatient ?? this.isAddPatient,
-        currentSelectedPriview: currentSelectedPriview ?? this.currentSelectedPriview,
+        currentSelectedPriview:
+            currentSelectedPriview ?? this.currentSelectedPriview,
         isPatient: isPatient ?? this.isPatient,
         dob: dob ?? this.dob,
         age: age ?? this.age,

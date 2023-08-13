@@ -11,8 +11,6 @@ import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/models/lab_test_detail.dart";
-import "package:lims_app/models/test.dart";
-import "package:lims_app/test_items/test_data.dart";
 import "package:lims_app/utils/color_provider.dart";
 import "package:lims_app/utils/formatters.dart";
 import "package:lims_app/utils/icons/icon_store.dart";
@@ -22,7 +20,6 @@ import "package:lims_app/utils/utils.dart";
 
 import "../components/common_dropdown.dart";
 import "../components/common_edit_text_filed.dart";
-import "../utils/strings/add_test_strings.dart";
 
 class AddCentre extends StatefulWidget {
   const AddCentre({Key? key}) : super(key: key);

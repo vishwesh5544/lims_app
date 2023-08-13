@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/lab_bloc/lab_event.dart';
 import 'package:lims_app/bloc/lab_bloc/lab_state.dart';
 import 'package:lims_app/models/lab.dart';
-import 'package:lims_app/models/lab_test_detail.dart';
 import 'package:lims_app/repositories/lab_repository.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
 
@@ -50,10 +49,10 @@ class LabBloc extends Bloc<LabEvent, LabState> {
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
-    }
-    else if (event is OnAddCenter) {
-
-      yield state.copyWith(isAddNewCenter: event.value, currentSelectedPriview: event.currentSelectedPriview);
+    } else if (event is OnAddCenter) {
+      yield state.copyWith(
+          isAddNewCenter: event.value,
+          currentSelectedPriview: event.currentSelectedPriview);
     }
   }
 }

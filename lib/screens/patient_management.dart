@@ -165,7 +165,8 @@ class _PatientManagementState extends State<PatientManagement> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           DataTable(
-                              dataRowHeight: 120,
+                              dataRowMinHeight: 120,
+                              dataRowMaxHeight: 120,
                               dividerThickness: 0.2,
                               headingRowHeight: 50,
                               headingRowColor:
@@ -228,7 +229,7 @@ class _PatientManagementState extends State<PatientManagement> {
                                                   .ptid;
                                               return barCodeWidget(
                                                 text: test.testName,
-                                                barCode: "${ptid}",
+                                                barCode: "$ptid",
                                               );
                                             } else {
                                               return Container();

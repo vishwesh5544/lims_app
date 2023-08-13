@@ -1,14 +1,22 @@
-import 'package:barcode/barcode.dart';
 import 'package:lims_app/models/patient.dart';
 import 'package:lims_app/models/test.dart';
 
 class TestData {
   static List<String> testsColumnsList() {
-    return ["#", "Test code", "Test name", "Department", "Sample type", "Turn Around Time (TAT)", "Price", "Actions"];
+    return [
+      "#",
+      "Test code",
+      "Test name",
+      "Department",
+      "Sample type",
+      "Turn Around Time (TAT)",
+      "Price",
+      "Actions"
+    ];
   }
 
   static List<Test> testsList() {
-    final barcode = Barcode.code128(useCode128A: false, useCode128C: false);
+    // final barcode = Barcode.code128(useCode128A: false, useCode128C: false);
     return [
       Test(
         testCode: "TEST001",

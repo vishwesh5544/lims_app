@@ -1,5 +1,3 @@
-import "dart:convert";
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
@@ -8,30 +6,16 @@ import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
-import "package:lims_app/bloc/test_bloc/test_state.dart";
-import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
-import "package:lims_app/components/search_header.dart";
-import "package:lims_app/models/in_transit.dart";
-import "package:lims_app/models/invoice_mapping.dart";
 import "package:lims_app/models/test.dart";
-import "package:lims_app/screens/add_test.dart";
-import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/barcode_utility.dart";
-import "package:lims_app/utils/lims_logger.dart";
 import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/screen_helper.dart";
-import "package:lims_app/utils/strings/button_strings.dart";
-import "package:lims_app/utils/strings/route_strings.dart";
-import "package:lims_app/utils/strings/search_header_strings.dart";
 import "package:lims_app/utils/update_status.dart";
 import "package:lims_app/utils/utils.dart";
 
 import "../components/common_disabled_field.dart";
 import "../components/common_header.dart";
-import "../utils/color_provider.dart";
-import "../utils/strings/add_test_strings.dart";
-import "../utils/text_utility.dart";
 
 class SampleManagement extends StatefulWidget {
   const SampleManagement({Key? key}) : super(key: key);
@@ -101,7 +85,7 @@ class _SampleManagementState extends State<SampleManagement> {
                             }
                           })),
                   Container(
-                    margin: EdgeInsets.only(bottom: 15),
+                    margin: const EdgeInsets.only(bottom: 15),
                     child: Row(
                       children: [
                         CommonGreyFiled(
@@ -175,8 +159,8 @@ class _SampleManagementState extends State<SampleManagement> {
         children: [
           Text(text),
           Container(
-            padding: EdgeInsets.all(6),
-            margin: EdgeInsets.all(3),
+            padding: const EdgeInsets.all(6),
+            margin: const EdgeInsets.all(3),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2),
                 borderRadius: const BorderRadius.all(Radius.circular(5))),

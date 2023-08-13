@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_event.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_state.dart';
@@ -157,8 +155,8 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
 
           yield state.copyWith(searchResults: responseForPtid.data);
         } else {
-          final responseForInvoiceId = await inTransitRepository
-              .getSearchResultsByInvoiceId(inputAsInt!);
+          final responseForInvoiceId =
+              await inTransitRepository.getSearchResultsByInvoiceId(inputAsInt);
           yield state.copyWith(searchResults: responseForInvoiceId.data);
         }
       } else {

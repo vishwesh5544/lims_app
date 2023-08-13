@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -11,7 +10,7 @@ Widget barCodeWidget({required String text, required String barCode}) {
       children: [
         Text(
           text,
-          style: TextStyle(fontSize: 10),
+          style: const TextStyle(fontSize: 10),
         ),
         Container(
           padding: const EdgeInsets.all(6),

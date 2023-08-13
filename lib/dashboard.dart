@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -72,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   showToast(msg: "LIMS");
                 },
                 child: Container(
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
                       'LIMS',
                       style: TextUtility.getBoldStyle(28),

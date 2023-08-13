@@ -6,14 +6,11 @@ import "package:lims_app/bloc/test_bloc/test_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
-import "package:lims_app/models/test.dart";
 import "package:lims_app/screens/add_test.dart";
-import "package:lims_app/test_items/redirect_to_test_menu.dart";
 import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
 import "package:lims_app/utils/strings/search_header_strings.dart";
 
-import "../bloc/patient_bloc/patient_bloc.dart";
 import "../utils/color_provider.dart";
 import "../utils/text_utility.dart";
 
@@ -47,22 +44,18 @@ class _TestManagementState extends State<TestManagement> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TestBloc, TestState>(
-        listener: (context, state) {
-
-        },
+        listener: (context, state) {},
         builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () async {
-            BlocProvider.of<TestBloc>(context).add(OnAddTest());
-            return true;
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: state.isAddTest? const AddTest(): testWidget(state)
-          ),
-        );
-      }
-    );
+          return WillPopScope(
+            onWillPop: () async {
+              BlocProvider.of<TestBloc>(context).add(OnAddTest());
+              return true;
+            },
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: state.isAddTest ? const AddTest() : testWidget(state)),
+          );
+        });
   }
 
   testWidget(TestState state) {
@@ -72,27 +65,36 @@ class _TestManagementState extends State<TestManagement> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              RedirectButton(buttonText: ButtonStrings.addTest, routeName: RouteStrings.addTest, onClick: (){
-                BlocProvider.of<TestBloc>(context).add(OnAddTest(value: true));
-              }),
+              RedirectButton(
+                  buttonText: ButtonStrings.addTest,
+                  routeName: RouteStrings.addTest,
+                  onClick: () {
+                    BlocProvider.of<TestBloc>(context)
+                        .add(OnAddTest(value: true));
+                  }),
             ],
           ),
           SearchHeader(
               headerTitle: SearchHeaderStrings.testsListTitle,
               placeholder: SearchHeaderStrings.searchTestsPlaceholder,
-              onClickSearch: (text){
+              onClickSearch: (text) {
                 BlocProvider.of<TestBloc>(context).add(OnSearch(value: text));
               }),
-          LimsTable(columnNames: columnNames,
+          LimsTable(
+              columnNames: columnNames,
               tableType: TableType.addTest,
-              onEditClick: (value){
-                BlocProvider.of<TestBloc>(context).add(OnAddTest(value: true, currentSelectedPriview: value));
+              onEditClick: (value) {
+                BlocProvider.of<TestBloc>(context)
+                    .add(OnAddTest(value: true, currentSelectedPriview: value));
               },
-              onViewClick: (value){
+              onViewClick: (value) {
                 _showPreviewDialog(value);
               },
               rowData: state.searchTestsList),
-        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
+        ]
+            .map((el) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10), child: el))
+            .toList(),
       ),
     );
   }
@@ -104,8 +106,10 @@ class _TestManagementState extends State<TestManagement> {
       builder: (BuildContext context) {
         return AlertDialog(
             insetPadding: EdgeInsets.zero,
-            titleTextStyle: const TextStyle(color: Colors.white,
-                fontWeight: FontWeight.bold, fontSize: 20.0),
+            titleTextStyle: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0),
             titlePadding: EdgeInsets.zero,
             title: Container(
               padding: const EdgeInsets.all(10.0),
@@ -117,7 +121,8 @@ class _TestManagementState extends State<TestManagement> {
                   const SizedBox(),
                   const Text('Test Details'),
                   InkWell(
-                    child: const Icon(Icons.cancel_rounded, color: Colors.white),
+                    child:
+                        const Icon(Icons.cancel_rounded, color: Colors.white),
                     onTap: () => Navigator.pop(context, "Cancel"),
                   )
                 ],
@@ -127,12 +132,8 @@ class _TestManagementState extends State<TestManagement> {
               // height: 600,
               width: 600,
               decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Colors.grey,
-                      width: 1
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))
-              ),
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: const BorderRadius.all(Radius.circular(5))),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -164,10 +165,12 @@ class _TestManagementState extends State<TestManagement> {
             color: ColorProvider.blueDarkShade,
             width: 250,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-            child: Text(title, style: TextUtility.getStyle(18,color: Colors.white))),
+            child: Text(title,
+                style: TextUtility.getStyle(18, color: Colors.white))),
         Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-            child: Text(data, style: TextUtility.getStyle(18,color: Colors.black)))
+            child: Text(data,
+                style: TextUtility.getStyle(18, color: Colors.black)))
       ],
     );
   }

@@ -1,8 +1,5 @@
-import "dart:js_interop";
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_svg/svg.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
@@ -13,7 +10,6 @@ import "package:lims_app/models/patient.dart";
 import "package:lims_app/models/test.dart";
 import "package:lims_app/utils/utils.dart";
 
-import "../utils/barcode_utility.dart";
 import "../utils/icons/icon_store.dart";
 import "barcode_widegt.dart";
 
@@ -119,7 +115,8 @@ class _LimsTableState extends State<LimsTable> {
           shrinkWrap: true,
           children: [
             DataTable(
-              dataRowHeight: widget.tableRowHeight,
+              dataRowMinHeight: widget.tableRowHeight,
+              dataRowMaxHeight: widget.tableRowHeight,
               dividerThickness: 0.2,
               headingRowHeight: 50,
               headingRowColor: MaterialStateProperty.all(Colors.black),
@@ -175,12 +172,12 @@ class _LimsTableState extends State<LimsTable> {
           onTap: () {
             widget.onEditClick.call(currentIndex - 1);
           },
-          child: Icon(Icons.note_alt_outlined)),
+          child: const Icon(Icons.note_alt_outlined)),
       InkWell(
           onTap: () {
             widget.onViewClick!.call(value);
           },
-          child: Icon(Icons.remove_red_eye_outlined))
+          child: const Icon(Icons.remove_red_eye_outlined))
     ]);
   }
 
@@ -241,7 +238,7 @@ class _LimsTableState extends State<LimsTable> {
                 .ptid;
             return barCodeWidget(
               text: test.testName,
-              barCode: "${ptid}",
+              barCode: "$ptid",
             );
           } else {
             return Container();
@@ -271,7 +268,7 @@ class _LimsTableState extends State<LimsTable> {
                 .ptid;
             return barCodeWidget(
               text: test.testName,
-              barCode: "${ptid}",
+              barCode: "$ptid",
             );
           } else {
             return Container();
@@ -350,7 +347,7 @@ class _LimsTableState extends State<LimsTable> {
                 .ptid;
             return barCodeWidget(
               text: test.testName,
-              barCode: "${ptid}",
+              barCode: "$ptid",
             );
           } else {
             return Container();
@@ -444,11 +441,11 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(Text(
           "${patient.firstName} ${patient.middleName} ${patient.lastName}")),
       DataCell(Text(patient.umrNumber)),
-      DataCell(Text("Test Name")),
-      DataCell(Text("Test Code")),
-      DataCell(Text("Sample Collection center")),
-      DataCell(Text("Proc.. unit")),
-      DataCell(Text("Status")),
+      const DataCell(Text("Test Name")),
+      const DataCell(Text("Test Code")),
+      const DataCell(Text("Sample Collection center")),
+      const DataCell(Text("Proc.. unit")),
+      const DataCell(Text("Status")),
       DataCell(commonBtn(text: "Report", isEnable: true, calll: () {}))
     ]);
   }
@@ -469,7 +466,7 @@ class _LimsTableState extends State<LimsTable> {
                 .ptid;
             return barCodeWidget(
               text: test.testName,
-              barCode: "${ptid}",
+              barCode: "$ptid",
             );
           } else {
             return Container();

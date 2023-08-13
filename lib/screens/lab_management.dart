@@ -6,11 +6,7 @@ import "package:lims_app/bloc/lab_bloc/lab_state.dart";
 import "package:lims_app/components/buttons/redirect_button.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/components/search_header.dart";
-import "package:lims_app/test_items/redirect_to_test_menu.dart";
-import "package:lims_app/test_items/test_data.dart";
-import "package:lims_app/utils/strings/button_strings.dart";
 import "package:lims_app/utils/strings/route_strings.dart";
-import "package:lims_app/utils/strings/search_header_strings.dart";
 
 import "add_centre.dart";
 
@@ -40,12 +36,12 @@ class _LabManagementState extends State<LabManagement> {
       body: BlocConsumer<LabBloc, LabState>(
           listener: (context, state) {},
           builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: state.isAddNewCenter ? const AddCentre() : lagWidget(state)
-          );
-        }
-      ),
+            return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: state.isAddNewCenter
+                    ? const AddCentre()
+                    : lagWidget(state));
+          }),
     ));
   }
 
@@ -56,25 +52,44 @@ class _LabManagementState extends State<LabManagement> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              RedirectButton(buttonText: "Add Centre", routeName: RouteStrings.addLab, onClick: (){
-                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true));
-              },),
+              RedirectButton(
+                buttonText: "Add Centre",
+                routeName: RouteStrings.addLab,
+                onClick: () {
+                  BlocProvider.of<LabBloc>(context)
+                      .add(OnAddCenter(value: true));
+                },
+              ),
             ],
           ),
-          SearchHeader(headerTitle: "List of Labs", placeholder: "Seach Lab", onClickSearch: (){
-
-          },),
-          LimsTable(columnNames: const ["#", "Lab Name", "Email Id", "Contact Number", "Action"],
+          SearchHeader(
+            headerTitle: "List of Labs",
+            placeholder: "Seach Lab",
+            onClickSearch: () {},
+          ),
+          LimsTable(
+              columnNames: const [
+                "#",
+                "Lab Name",
+                "Email Id",
+                "Contact Number",
+                "Action"
+              ],
               tableType: TableType.lab,
-              onEditClick: (value){
-                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true, currentSelectedPriview: value));
+              onEditClick: (value) {
+                BlocProvider.of<LabBloc>(context).add(
+                    OnAddCenter(value: true, currentSelectedPriview: value));
               },
-              onViewClick: (value){
-                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true, currentSelectedPriview: value));
+              onViewClick: (value) {
+                BlocProvider.of<LabBloc>(context).add(
+                    OnAddCenter(value: true, currentSelectedPriview: value));
               },
               rowData: state.labsList),
           // redirectToTestMenu(),
-        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
+        ]
+            .map((el) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10), child: el))
+            .toList(),
       ),
     );
   }
