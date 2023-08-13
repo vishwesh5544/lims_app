@@ -746,26 +746,30 @@ class _AddTestState extends State<AddTest> {
   }
 
   Widget _enterTemperatureDropdown() {
-    var dropdown = FormBuilderDropdown(
-      name: 'temperatureTypeValue',
-      icon: IconStore.downwardArrow,
-      decoration: InputDecoration(
-        hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-        constraints: const BoxConstraints(
-            maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 40),
-        border: getOutLineBorder(),
-        focusedErrorBorder: getOutLineBorder(),
-        errorBorder: getOutLineBorder(),
-        disabledBorder: getOutLineBorder(),
-        enabledBorder: getOutLineBorder(),
-        focusedBorder: getOutLineBorder(),
-        hintText: "${AddTestStrings.enterTemperature} (\u2103/\u2109)",
+    var dropdown = Transform.translate(
+      offset: const Offset(0, -5),
+      child: FormBuilderDropdown(
+        name: 'temperatureTypeValue',
+        icon: IconStore.downwardArrow,
+        decoration: InputDecoration(
+          hintStyle:
+              TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
+          constraints: const BoxConstraints(
+              maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 50),
+          border: getOutLineBorder(),
+          focusedErrorBorder: getOutLineBorder(),
+          errorBorder: getOutLineBorder(),
+          disabledBorder: getOutLineBorder(),
+          enabledBorder: getOutLineBorder(),
+          focusedBorder: getOutLineBorder(),
+          hintText: "${AddTestStrings.enterTemperature} (\u2103/\u2109)",
+        ),
+        items: const <DropdownMenuItem>[
+          DropdownMenuItem(value: "celsius", child: Text('\u2103')),
+          DropdownMenuItem(value: "fahrenheit", child: Text('\u2109'))
+        ],
+        onChanged: (value) {},
       ),
-      items: const <DropdownMenuItem>[
-        DropdownMenuItem(value: "celsius", child: Text('\u2103')),
-        DropdownMenuItem(value: "fahrenheit", child: Text('\u2109'))
-      ],
-      onChanged: (value) {},
     );
     var blocComponent = _buildBlocComponent(dropdown);
 
