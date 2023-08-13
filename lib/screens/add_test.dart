@@ -755,7 +755,7 @@ class _AddTestState extends State<AddTest> {
           hintStyle:
               TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
           constraints: const BoxConstraints(
-              maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 50),
+              maxWidth: 260, minWidth: 180, minHeight: 35, maxHeight: 55),
           border: getOutLineBorder(),
           focusedErrorBorder: getOutLineBorder(),
           errorBorder: getOutLineBorder(),
