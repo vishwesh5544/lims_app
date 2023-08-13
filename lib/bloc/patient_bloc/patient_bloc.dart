@@ -115,7 +115,6 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         }
       }
 
-      await patientRepository.addInvoice(invoices);
       final response = await patientRepository.addInvoice(invoices);
       yield state.copyWith(createdPatientInvoices: response.data);
     } else if (event is OnSearch) {
