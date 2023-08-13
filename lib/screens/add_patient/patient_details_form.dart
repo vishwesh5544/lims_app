@@ -30,6 +30,7 @@ class PatientDetailsForm extends StatefulWidget {
 class _PatientDetailsFormState extends State<PatientDetailsForm> {
   late GlobalKey<FormBuilderState> formKey;
   String? gender;
+  int? userId;
   late final PatientBloc bloc;
   final TextEditingController _datePickerTextController =
       TextEditingController();
@@ -55,6 +56,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       bloc.add(GenerateUmrNumber());
 
       if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
+        userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id;
         bloc.add(GenderUpdated(
             bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
         setState(() {
@@ -192,12 +194,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                 } else {
                   /// submit form
 
-                  if (/*!bloc.state.isAddPatient &&*/ bloc
-                          .state.currentSelectedPriview !=
-                      -1) {
-                    int userId = bloc.state
-                        .patientsList[bloc.state.currentSelectedPriview].id!;
-                    // update?
+                  if (userId != null) {
                     BlocProvider.of<PatientBloc>(context).add(
                         AddPatientFormSubmitted(
                             isUpdate: true, userId: userId));
@@ -206,9 +203,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                         .add(AddPatientFormSubmitted(isUpdate: false));
                   }
 
-                  if (/*bloc.state.isAddPatient && */ bloc
-                          .state.currentSelectedPriview ==
-                      -1) {
+                  if (userId == null) {
                     BlocProvider.of<PatientBloc>(context).add(IsPatient());
                   } else {
                     ScreenHelper.showAlertPopup(
