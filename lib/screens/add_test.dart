@@ -102,7 +102,16 @@ class _AddTestState extends State<AddTest> {
         methodEditingController.text =
             bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
         turnAroundTimeEditingController.text = bloc
-            .state.testsList[bloc.state.currentSelectedPriview].turnAroundTime;
+            .state.testsList[bloc.state.currentSelectedPriview].turnAroundTime
+            .replaceAll('Hrs', '')
+            .replaceAll('Days', '');
+        if (bloc
+            .state.testsList[bloc.state.currentSelectedPriview].turnAroundTime
+            .contains('Days')) {
+          formKey.currentState!.fields['tatType']?.didChange('Days');
+        } else {
+          formKey.currentState!.fields['tatType']?.didChange('Hrs');
+        }
         priceEditingController.text = bloc
             .state.testsList[bloc.state.currentSelectedPriview].price
             .toString();
@@ -229,7 +238,6 @@ class _AddTestState extends State<AddTest> {
               _priceField(),
               _taxField(),
               _totalPriceField(),
-              _tatDropdown()
             ]
                 .map((el) => Padding(
                     padding: const EdgeInsets.symmetric(
@@ -240,7 +248,7 @@ class _AddTestState extends State<AddTest> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_enterObservations()]
+            children: [_tatTextField(), _tatDropDown(), _enterObservations()]
                 .map((el) => Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
@@ -301,7 +309,8 @@ class _AddTestState extends State<AddTest> {
                     typeOfVolume: formKey.currentState!
                         .fields['volumeTypeValue']?.value as String,
                     method: methodEditingController.text,
-                    turnAroundTime: turnAroundTimeEditingController.text,
+                    turnAroundTime: turnAroundTimeEditingController.text +
+                        (formKey.currentState!.fields['tatType']?.value ?? ''),
                     price: price,
                     taxPercentage: tax,
                     totalPrice: totalPrice,
@@ -323,7 +332,8 @@ class _AddTestState extends State<AddTest> {
                     typeOfVolume: formKey.currentState!
                         .fields['volumeTypeValue']?.value as String,
                     method: methodEditingController.text,
-                    turnAroundTime: turnAroundTimeEditingController.text,
+                    turnAroundTime: turnAroundTimeEditingController.text +
+                        (formKey.currentState!.fields['tatType']?.value ?? ''),
                     price: price,
                     taxPercentage: tax,
                     totalPrice: totalPrice,
@@ -776,7 +786,7 @@ class _AddTestState extends State<AddTest> {
     return _getColumnAndFormInput("Temperature Type", blocComponent);
   }
 
-  Widget _tatDropdown() {
+  Widget _tatTextField() {
     // var dropdown = DropdownButtonFormField(
     //   icon: IconStore.downwardArrow,
     //   decoration: InputDecoration(
@@ -799,13 +809,27 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter TAT (Hrs./days)", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(
-        title: "Enter TAT (Hrs./days)",
-        name: 'tat',
-        hintText: AddTestStrings.enterTAT,
-        controller: turnAroundTimeEditingController,
-        onChange: (v) {},
-        // value: tatValue,
-        onSubmit: (value) {}));
+    return _buildBlocComponent(
+      CommonEditText(
+          title: "Enter TAT (Hrs./days)",
+          name: 'tat',
+          hintText: AddTestStrings.enterTAT,
+          controller: turnAroundTimeEditingController,
+          onChange: (v) {},
+          // value: tatValue,
+          onSubmit: (value) {}),
+    );
+  }
+
+  Widget _tatDropDown() {
+    return _buildBlocComponent(
+      CommonDropDown(
+          title: "Enter TAT (Hrs./days)",
+          name: 'tatType',
+          hintText: AddTestStrings.selectType,
+          list: const ['Hrs', 'Days'],
+          // value: tatValue,
+          onSubmit: (value) {}),
+    );
   }
 }
