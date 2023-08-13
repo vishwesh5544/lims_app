@@ -56,6 +56,31 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
     } else if (event is FetchFilteredLabs) {
       final response = await inTransitRepository.getAllFilteredLabs();
       yield state.copyWith(filteredLabs: response.data);
+    } else if (event is CacheAllPatient) {
+      yield state.copyWith(
+        testsList: cachedTests,
+        invoiceMappings: cachedInvoiceMapping,
+      );
+      final patientsData = await patientRepository.getAllPatients();
+      final patients = patientsData.data;
+      if (patients == null || patients.isEmpty) {
+        yield state.copyWith(testsList: [], patient: null);
+      } else {
+        final result = await Future.wait(
+            patients.map((e) => getInvoiceMappingForPatient(e)));
+        final tests = result.fold(
+            <Test>[], (previousValue, element) => previousValue + element.test);
+        final invoiceMappings = result.fold(
+          <InvoiceMapping>[],
+          (previousValue, element) => previousValue + element.invoiceMappings,
+        );
+        cachedTests = tests;
+        cachedInvoiceMapping = invoiceMappings;
+        yield state.copyWith(
+          testsList: tests,
+          invoiceMappings: invoiceMappings,
+        );
+      }
     } else if (event is SearchPatient) {
       if (event.searchString.trim().isEmpty) {
         yield state.copyWith(

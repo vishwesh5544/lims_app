@@ -8,6 +8,9 @@ class ViewQrCode extends InTransitEvent {
   ViewQrCode(this.value);
 }
 
+class CacheAllPatient extends InTransitEvent {
+  CacheAllPatient();
+}
 
 class SearchPatient extends InTransitEvent {
   final String searchString;
@@ -15,10 +18,7 @@ class SearchPatient extends InTransitEvent {
   SearchPatient(this.searchString);
 }
 
-class ResetState extends InTransitEvent {
-
-}
-
+class ResetState extends InTransitEvent {}
 
 class FetchSearchResults extends InTransitEvent {
   final String searchInput;

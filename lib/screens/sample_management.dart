@@ -38,12 +38,15 @@ class _SampleManagementState extends State<SampleManagement> {
 
   String processingUnit = "";
 
+  var inputToCheck;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<TestBloc>(context).add(FetchAllTests());
       bloc = context.read<InTransitBloc>();
       bloc.add(ResetState());
+      bloc.add(CacheAllPatient());
     });
     super.initState();
   }
@@ -78,10 +81,13 @@ class _SampleManagementState extends State<SampleManagement> {
                             if (value.length > 4) {
                               var parsed = int.tryParse(value);
 
-                              if (parsed.runtimeType is int) {
+                              if (parsed is int) {
+                                inputToCheck = parsed;
+                                bloc.add(CacheAllPatient());
+                                // bloc.add(FetchSearchResults(value));
                               } else {
+                                inputToCheck = value;
                                 bloc.add(SearchPatient(value));
-                                bloc.add(FetchSearchResults(value));
                               }
                             }
                           })),
@@ -172,13 +178,31 @@ class _SampleManagementState extends State<SampleManagement> {
   }
 
   getTestList(InTransitState state) {
-    return state.testsList!.where((test) {
-      final invoiceMappings = state.invoiceMappings?.where(
-          (invoice) => invoice.testId == test.id && invoice.status >= 1);
-      if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
-        return true;
-      }
-      return false;
-    }).toList();
+    if (inputToCheck is int) {
+      return state.testsList!.where((test) {
+        final invoiceMappings = state.invoiceMappings?.where(
+            (invoice) => invoice.testId == test.id && invoice.status >= 1);
+        if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
+          final expectedMap = invoiceMappings.where((mapping) =>
+              mapping.invoiceId == inputToCheck ||
+              mapping.ptid == inputToCheck);
+
+          if (expectedMap.isNotEmpty) {
+            return true;
+          }
+          return false;
+        }
+        return false;
+      }).toList();
+    } else {
+      return state.testsList!.where((test) {
+        final invoiceMappings = state.invoiceMappings?.where(
+            (invoice) => invoice.testId == test.id && invoice.status >= 1);
+        if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
+          return true;
+        }
+        return false;
+      }).toList();
+    }
   }
 }
