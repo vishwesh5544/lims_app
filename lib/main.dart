@@ -23,7 +23,7 @@ import 'dashboard.dart';
 
 Future<void> main() async {
   SharedPreferences value = await SharedPreferences.getInstance();
-  runApp( MyApp(value));
+  runApp(MyApp(value));
 }
 
 class MyApp extends StatelessWidget {
@@ -34,21 +34,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<UserRepository>(create: (context) => UserRepository()),
-        RepositoryProvider<TestRepository>(create: (context) => TestRepository()),
-        RepositoryProvider<PatientRepository>(create: (context) => PatientRepository()),
+        RepositoryProvider<UserRepository>(
+            create: (context) => UserRepository()),
+        RepositoryProvider<TestRepository>(
+            create: (context) => TestRepository()),
+        RepositoryProvider<PatientRepository>(
+            create: (context) => PatientRepository()),
         RepositoryProvider<LabRepository>(create: (context) => LabRepository()),
-        RepositoryProvider<InTransitRepository>(create: (context) => InTransitRepository(),)
+        RepositoryProvider<InTransitRepository>(
+          create: (context) => InTransitRepository(),
+        )
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<LoginBloc>(create: (context) => LoginBloc(userRepository: context.read<UserRepository>())),
-          BlocProvider<TestBloc>(create: (context) => TestBloc(testRepository: context.read<TestRepository>())),
+          BlocProvider<LoginBloc>(
+              create: (context) =>
+                  LoginBloc(userRepository: context.read<UserRepository>())),
+          BlocProvider<TestBloc>(
+              create: (context) =>
+                  TestBloc(testRepository: context.read<TestRepository>())),
           BlocProvider<PatientBloc>(
-              create: (context) => PatientBloc(patientRepository: context.read<PatientRepository>())),
-          BlocProvider<LabBloc>(create: (context) => LabBloc(labRepository: context.read<LabRepository>()),),
-          BlocProvider<InTransitBloc>(create: (context) => InTransitBloc(inTransitRepository: context
-              .read<InTransitRepository>()))
+              create: (context) => PatientBloc(
+                  patientRepository: context.read<PatientRepository>())),
+          BlocProvider<LabBloc>(
+            create: (context) =>
+                LabBloc(labRepository: context.read<LabRepository>()),
+          ),
+          BlocProvider<InTransitBloc>(
+            create: (context) => InTransitBloc(
+              inTransitRepository: context.read<InTransitRepository>(),
+              patientRepository: context.read<PatientRepository>(),
+            ),
+          )
         ],
         child: MaterialApp(
           title: 'LIMS Application',
@@ -57,7 +74,9 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           onGenerateRoute: LimsRouter.generateRoute,
-          home: instance.getBool("isLogin") == true ? const Dashboard() : const LoginScreen(),
+          home: instance.getBool("isLogin") == true
+              ? const Dashboard()
+              : const LoginScreen(),
         ),
       ),
     );
@@ -73,6 +92,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   List<Widget> screens = [const PatientManagement(), const TestManagement()];
+
   /// The currently selected index of the bar
   int _selectedIndex = 0;
 
@@ -84,7 +104,8 @@ class _AppState extends State<App> {
           SideNavigationBar(
             selectedIndex: _selectedIndex,
             items: const [
-              SideNavigationBarItem(icon: Icons.add, label: "Patient Management"),
+              SideNavigationBarItem(
+                  icon: Icons.add, label: "Patient Management"),
               SideNavigationBarItem(icon: Icons.add, label: "Test Management")
             ],
             onTap: (value) {
