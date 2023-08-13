@@ -81,6 +81,7 @@ class _SampleManagementState extends State<SampleManagement> {
                               if (parsed.runtimeType is int) {
                               } else {
                                 bloc.add(SearchPatient(value));
+                                bloc.add(FetchSearchResults(value));
                               }
                             }
                           })),

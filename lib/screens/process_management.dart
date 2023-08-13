@@ -73,6 +73,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                               textController: textController,
                               onSubmit: (value) {
                                 bloc.add(SearchPatient(value));
+                                bloc.add(FetchSearchResults(value));
                               })),
 
                       Container(

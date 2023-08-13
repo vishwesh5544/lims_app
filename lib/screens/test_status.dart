@@ -132,7 +132,7 @@ class _TestStatusState extends State<TestStatus> {
                           shrinkWrap: true,
                           children: [
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 DataTable(
                                     // dataRowHeight: 85,

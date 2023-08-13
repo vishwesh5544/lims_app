@@ -72,6 +72,8 @@ class _TransitManagementState extends State<TransitManagement> {
                           textController: textController,
                           onSubmit: (value) {
                             bloc.add(SearchPatient(value));
+                            bloc.add(FetchSearchResults(value));
+
                             // showToast(msg: value);
                           })),
 
