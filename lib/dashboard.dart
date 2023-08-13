@@ -1,7 +1,4 @@
-import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
-import 'package:lims_app/models/patient.dart';
-import 'package:lims_app/models/test.dart';
 import 'package:lims_app/screens/lab_management.dart';
 import 'package:lims_app/screens/login.dart';
 import 'package:lims_app/screens/patient_management.dart';
@@ -42,14 +39,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   PageController pageController = PageController();
-  SideMenuController sideMenu = SideMenuController();
+  int currentIndex = 0;
 
   @override
   void initState() {
-    sideMenu.addListener((index) {
-      pageController.jumpToPage(index);
-    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,80 +87,77 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SideMenu(
-            controller: sideMenu,
-            style: SideMenuStyle(
-                // showTooltip: false,
-                compactSideMenuWidth: 100,
-                openSideMenuWidth: 200,
-                displayMode: SideMenuDisplayMode.auto,
-                hoverColor: Colors.blue[100],
-                selectedHoverColor: Colors.blue[100],
-                selectedColor: ColorProvider.blueDarkShade,
-                selectedTitleTextStyle: const TextStyle(color: Colors.white),
-                selectedIconColor: Colors.white,
-                backgroundColor: ColorProvider.blueDarkShade
-                // decoration: BoxDecoration(
-                //   borderRadius: BorderRadius.all(Radius.circular(10)),
-                // ),
-                // backgroundColor: Colors.blueGrey[700]
-                ),
-            footer: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                // decoration: BoxDecoration(
-                //     color: Colors.lightBlue[100],
-                //     borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                  child: Text(
-                    '',
-                    style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-                  ),
-                ),
-              ),
-            ),
-            items: [
+          NavigationRail(
+            useIndicator: true,
+            backgroundColor: ColorProvider.blueDarkShade,
+            selectedIndex: currentIndex,
+            indicatorColor: Colors.black,
+            labelType: NavigationRailLabelType.all,
+            onDestinationSelected: (value) {
+              pageController.jumpToPage(value);
+            },
+            // style: SideMenuStyle(
+            //     // showTooltip: false,
+            //     compactSideMenuWidth: 100,
+            //     openSideMenuWidth: 200,
+            //     displayMode: SideMenuDisplayMode.open,
+            //     hoverColor: Colors.blue[100],
+            //     selectedHoverColor: Colors.blue[100],
+            //     selectedColor: ColorProvider.blueDarkShade,
+            //     selectedTitleTextStyle: const TextStyle(color: Colors.white),
+            //     selectedIconColor: Colors.white,
+
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.all(Radius.circular(10)),
+            // ),
+            // backgroundColor: Colors.blueGrey[700]
+            // ),
+
+            destinations: [
               sideMenuItem(
                   index: 0,
-                  title: "Patient\n Management",
+                  title: "Patient Management",
                   iconName: "ic_management",
-                  isSelected: sideMenu.currentPage == 0),
+                  isSelected: currentIndex == 0),
               sideMenuItem(
                   index: 1,
-                  title: "Test\n Management",
+                  title: "Test Management",
                   iconName: "ic_Layer",
-                  isSelected: sideMenu.currentPage == 1),
+                  isSelected: currentIndex == 1),
               sideMenuItem(
                   index: 2,
-                  title: "Sample\n Management",
+                  title: "Sample Management",
                   iconName: "ic_chemistry",
-                  isSelected: sideMenu.currentPage == 2),
+                  isSelected: currentIndex == 2),
               sideMenuItem(
                   index: 3,
-                  title: "In Transit\n Management",
+                  title: "In Transit Management",
                   iconName: "ic_in_transit_mgmt",
-                  isSelected: sideMenu.currentPage == 3),
+                  isSelected: currentIndex == 3),
               sideMenuItem(
                   index: 4,
-                  title: "Process\n Management",
+                  title: "Process Management",
                   iconName: "ic_process_mgmt",
-                  isSelected: sideMenu.currentPage == 4),
+                  isSelected: currentIndex == 4),
               sideMenuItem(
                   index: 5,
-                  title: "Lab\n Management",
+                  title: "Lab Management",
                   iconName: "ic_Lab_Report",
-                  isSelected: sideMenu.currentPage == 5),
+                  isSelected: currentIndex == 5),
               sideMenuItem(
                   index: 6,
-                  title: "Test\n Status",
+                  title: "Test Status",
                   iconName: "ic_processing_time",
-                  isSelected: sideMenu.currentPage == 6),
+                  isSelected: currentIndex == 6),
             ],
           ),
           Expanded(
             child: PageView(
+              onPageChanged: (value) {
+                setState(() {
+                  currentIndex = value;
+                });
+              },
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
               children: const [
@@ -184,38 +181,19 @@ class _MyHomePageState extends State<MyHomePage> {
       String iconName = "ic_home",
       required String title,
       bool isSelected = false}) {
-    return SideMenuItem(
-      builder: (context, displayMode) {
-        return InkWell(
-          onTap: () {
-            setState(() {
-              sideMenu.changePage(index);
-            });
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 2),
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            color: isSelected ? Colors.black : Colors.transparent,
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/$iconName.png",
-                    height: 26,
-                    width: 26,
-                    color: Colors.transparent,
-                  ),
-                  // const Icon(Icons.home, size: 40, color: Colors.white,),
-                  Text(title,
-                      style: TextUtility.getStyle(18, color: Colors.white),
-                      textAlign: TextAlign.center),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+    return NavigationRailDestination(
+      indicatorColor: Colors.black,
+      icon: Image.asset(
+        "assets/$iconName.png",
+        height: 26,
+        width: 26,
+        color: Colors.transparent,
+      ),
+      label: Text(
+        title,
+        style: TextUtility.getStyle(18, color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
