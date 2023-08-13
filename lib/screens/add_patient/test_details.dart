@@ -59,25 +59,6 @@ class _TestDetailsState extends State<TestDetails> {
       children: [
         _selectTestDropdown(),
         SingleChildScrollView(child: _selectedTestsTable()),
-        Container(
-          height: 50,
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          width: double.infinity,
-          color: Colors.black,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Spacer(flex: 8),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  "Total Price: \$${totalPrice.toString()}",
-                  style: TextUtility.getStyle(16, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
         commonBtn(
             text: "Submit", // "Preview Invoice"
             isEnable: true,
@@ -360,14 +341,40 @@ class _TestDetailsState extends State<TestDetails> {
               columns: columnNames
                   .map((name) => DataColumn(label: Text(name)))
                   .toList(),
-              rows: selectedTests.map((value) {
-                var currentIndex = selectedTests.indexOf(value) + 1;
-                return _buildDataRowForTest(value, currentIndex);
-              }).toList(),
+              rows: [
+                ...selectedTests.map((value) {
+                  var currentIndex = selectedTests.indexOf(value) + 1;
+                  return _buildDataRowForTest(value, currentIndex);
+                }),
+                _buildDataRowForTotalPrice(Colors.white),
+                _buildDataRowForTotalPrice(Colors.black),
+              ],
               showBottomBorder: true,
             )
           ],
         ),
+      ],
+    );
+  }
+
+  DataRow _buildDataRowForTotalPrice(Color color) {
+    return DataRow(
+      color: MaterialStatePropertyAll(color),
+      cells: [
+        const DataCell(Text("")),
+        const DataCell(Text("")),
+        const DataCell(Text("")),
+        const DataCell(Text("")),
+        const DataCell(Text("")),
+        const DataCell(Text("")),
+        DataCell(Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Total Price: \$$totalPrice",
+            style: const TextStyle(color: Colors.white),
+          ),
+        )),
+        const DataCell(Text("")),
       ],
     );
   }
