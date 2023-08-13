@@ -9,7 +9,15 @@ class CommonDropDown extends StatelessWidget {
   String hintText;
   String title;
   List<String> list;
-  CommonDropDown({required this.title, required this.list, required this.hintText, required this.onSubmit, Key? key}) : super(key: key);
+  final String? value;
+  CommonDropDown(
+      {required this.title,
+      required this.list,
+      required this.hintText,
+      required this.onSubmit,
+      this.value,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +28,13 @@ class CommonDropDown extends StatelessWidget {
         Text(title, style: TextUtility.getStyle(13)),
         const SizedBox(height: 6),
         DropdownButtonFormField(
+          value: value,
           icon: IconStore.downwardArrow,
           decoration: InputDecoration(
-            hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
-            constraints: const BoxConstraints(maxWidth: 260, minWidth: 180, minHeight: 45, maxHeight: 50),
+            hintStyle:
+                TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
+            constraints: const BoxConstraints(
+                maxWidth: 260, minWidth: 180, minHeight: 45, maxHeight: 50),
             border: getOutLineBorder(),
             focusedErrorBorder: getOutLineBorder(),
             errorBorder: getOutLineBorder(),
@@ -33,8 +44,10 @@ class CommonDropDown extends StatelessWidget {
             hintText: hintText,
           ),
           items: [
-            for(String value in list)
-              DropdownMenuItem(value: value, child: Text(value, style: TextUtility.getStyle(13))),
+            for (String value in list)
+              DropdownMenuItem(
+                  value: value,
+                  child: Text(value, style: TextUtility.getStyle(13))),
           ],
           onChanged: (value) {
             onSubmit.call(value);

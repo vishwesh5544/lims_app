@@ -29,6 +29,7 @@ class PatientDetailsForm extends StatefulWidget {
 
 class _PatientDetailsFormState extends State<PatientDetailsForm> {
   late GlobalKey<FormBuilderState> formKey;
+  String? gender;
   late final PatientBloc bloc;
   final TextEditingController _datePickerTextController =
       TextEditingController();
@@ -41,7 +42,6 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       TextEditingController();
   final TextEditingController _insuranceNumberController =
       TextEditingController();
-  final TextEditingController _umrNumberController = TextEditingController();
   final TextEditingController _consultedDoctorController =
       TextEditingController();
   final BoxConstraints _commonBoxConstraint = const BoxConstraints(
@@ -57,6 +57,10 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
         bloc.add(GenderUpdated(
             bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
+        setState(() {
+          gender =
+              bloc.state.patientsList[bloc.state.currentSelectedPriview].gender;
+        });
 
         bloc.add(FirstNameUpdated(bloc
             .state.patientsList[bloc.state.currentSelectedPriview].firstName));
@@ -99,7 +103,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
             .patientsList[bloc.state.currentSelectedPriview].insuraceProvider;
         _insuranceNumberController.text = bloc.state
             .patientsList[bloc.state.currentSelectedPriview].insuraceNumber;
-        _umrNumberController.text = bloc.state
+        _consultedDoctorController.text = bloc.state
             .patientsList[bloc.state.currentSelectedPriview].consultedDoctor;
       }
     });
@@ -573,6 +577,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       CommonDropDown(
         title: "Gender",
         hintText: AddPatientStrings.gender,
+        value: genderMapping[gender],
         list: genderMapping.values.toList(),
         onSubmit: (value) {
           final gender = genderMapping.keys
