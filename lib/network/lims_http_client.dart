@@ -13,12 +13,13 @@ class LimsHttpClient extends BaseClient {
     request.headers['Access-Control-Allow-Credentials'] = "true";
     request.headers['Access-Control-Allow-Origin'] = "*";
 
-
     return _client.send(request);
   }
 
   static Map<String, String> get headers => {
         "content-type": "application/json",
         'Accept': '*/*',
+        "Access-Control-Allow-Credentials": "true",
+        'Access-Control-Allow-Origin': "*"
       };
 }
