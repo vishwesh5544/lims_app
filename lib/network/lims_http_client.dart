@@ -10,6 +10,9 @@ class LimsHttpClient extends BaseClient {
   Future<StreamedResponse> send(BaseRequest request) {
     request.headers['user-agent'] = userAgent;
     request.headers['content-type'] = "application/json";
+    request.headers['Access-Control-Allow-Credentials'] = "true";
+    request.headers['Access-Control-Allow-Origin'] = "*";
+
 
     return _client.send(request);
   }
