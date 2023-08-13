@@ -29,7 +29,6 @@ class PatientDetailsForm extends StatefulWidget {
 
 class _PatientDetailsFormState extends State<PatientDetailsForm> {
   late GlobalKey<FormBuilderState> formKey;
-  String? gender;
   int? userId;
   late final PatientBloc bloc;
   final TextEditingController _datePickerTextController =
@@ -47,6 +46,11 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       TextEditingController();
   final BoxConstraints _commonBoxConstraint = const BoxConstraints(
       maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50);
+  final genderMapping = {
+    "male": "Male",
+    "female": "Female",
+    "other": "Prefer not to say",
+  };
 
   @override
   void initState() {
@@ -59,10 +63,8 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
         userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id;
         bloc.add(GenderUpdated(
             bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
-        setState(() {
-          gender =
-              bloc.state.patientsList[bloc.state.currentSelectedPriview].gender;
-        });
+        formKey.currentState!.fields['gender']?.didChange(genderMapping[
+            bloc.state.patientsList[bloc.state.currentSelectedPriview].gender]);
 
         bloc.add(FirstNameUpdated(bloc
             .state.patientsList[bloc.state.currentSelectedPriview].firstName));
@@ -562,18 +564,12 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
     //     )
     //   ],
     // );
-    final genderMapping = {
-      "male": "Male",
-      "female": "Female",
-      "other": "Prefer not to say",
-    };
 
     return _buildBlocComponent(
       CommonDropDown(
         title: "Gender",
         name: 'gender',
         hintText: AddPatientStrings.gender,
-        value: genderMapping[gender],
         list: genderMapping.values.toList(),
         onSubmit: (value) {
           final gender = genderMapping.keys
