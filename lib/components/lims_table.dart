@@ -15,7 +15,16 @@ import "package:lims_app/utils/utils.dart";
 import "../utils/icons/icon_store.dart";
 import "barcode_widegt.dart";
 
-enum TableType { addPatient, addTest, viewPatient, lab, inTransit, process, testStatus, sample }
+enum TableType {
+  addPatient,
+  addTest,
+  viewPatient,
+  lab,
+  inTransit,
+  process,
+  testStatus,
+  sample
+}
 
 class LimsTable extends StatefulWidget {
   LimsTable(
@@ -116,12 +125,12 @@ class _LimsTableState extends State<LimsTable> {
               headingRowHeight: 50,
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
-              dataRowColor: MaterialStateProperty.all(ColorProvider.lightGreyColor),
+              dataRowColor:
+                  MaterialStateProperty.all(ColorProvider.lightGreyColor),
               columnSpacing: 40,
               border: widget.tableBorder ??
                   TableBorder(
                     horizontalInside: getBorder(),
-                    verticalInside: getBorder(),
                     right: getBorder(),
                     left: getBorder(),
                   ),
@@ -155,7 +164,8 @@ class _LimsTableState extends State<LimsTable> {
                 } else if (widget.tableType == TableType.sample) {
                   return _buildDataRowForSampleManagement(value, currentIndex);
                 } else {
-                  throw Exception("*** Invalid type provided for ${value.toString()}");
+                  throw Exception(
+                      "*** Invalid type provided for ${value.toString()}");
                 }
               }).toList(),
               showBottomBorder: true,
@@ -211,7 +221,9 @@ class _LimsTableState extends State<LimsTable> {
         listener: (context, state) {},
         builder: (context, state) {
           if (state.createdPatientInvoices.isNotEmpty) {
-            var ptid = state.createdPatientInvoices.firstWhere((element) => element.testId == test.id).ptid;
+            var ptid = state.createdPatientInvoices
+                .firstWhere((element) => element.testId == test.id)
+                .ptid;
             return barCodeWidget(
               text: test.testName,
               barCode: "$ptid",
@@ -240,8 +252,11 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if (state.invoiceMappings != null && state.invoiceMappings!.isNotEmpty) {
-            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+          if (state.invoiceMappings != null &&
+              state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings
+                ?.firstWhere((element) => element.testId == test.id)
+                .ptid;
             return barCodeWidget(
               text: test.testName,
               barCode: "$ptid",
@@ -259,7 +274,9 @@ class _LimsTableState extends State<LimsTable> {
           var mappings = state.invoiceMappings;
 
           if (mappings != null && mappings.isNotEmpty) {
-            var name = mappings.firstWhere((element) => element.testId == test.id).processingUnit;
+            var name = mappings
+                .firstWhere((element) => element.testId == test.id)
+                .processingUnit;
 
             return Text(name ?? "");
           } else {
@@ -275,8 +292,10 @@ class _LimsTableState extends State<LimsTable> {
             builder: (context, state) {
               var mappings = state.invoiceMappings;
 
-          if (mappings != null && mappings.isNotEmpty) {
-            var status = mappings.firstWhere((element) => element.testId == test.id).status;
+              if (mappings != null && mappings.isNotEmpty) {
+                var status = mappings
+                    .firstWhere((element) => element.testId == test.id)
+                    .status;
 
                 return commonBtn(
                   text: "Approve Transit",
@@ -321,8 +340,11 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if (state.invoiceMappings != null && state.invoiceMappings!.isNotEmpty) {
-            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+          if (state.invoiceMappings != null &&
+              state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings
+                ?.firstWhere((element) => element.testId == test.id)
+                .ptid;
             return barCodeWidget(
               text: test.testName,
               barCode: "$ptid",
@@ -340,7 +362,9 @@ class _LimsTableState extends State<LimsTable> {
           var mappings = state.invoiceMappings;
 
           if (mappings != null && mappings.isNotEmpty) {
-            var name = mappings.firstWhere((element) => element.testId == test.id).processingUnit;
+            var name = mappings
+                .firstWhere((element) => element.testId == test.id)
+                .processingUnit;
 
             return Text(name ?? "");
           } else {
@@ -351,8 +375,11 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
           listener: (context, state) {},
           builder: (context, state) {
-            if (state.invoiceMappings != null && state.invoiceMappings!.isNotEmpty) {
-              var status = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).status;
+            if (state.invoiceMappings != null &&
+                state.invoiceMappings!.isNotEmpty) {
+              var status = state.invoiceMappings
+                  ?.firstWhere((element) => element.testId == test.id)
+                  .status;
               String? initialValue;
               if (status != null) {
                 if (status == 4) {
@@ -366,13 +393,18 @@ class _LimsTableState extends State<LimsTable> {
                 name: 'status',
                 icon: IconStore.downwardArrow,
                 decoration: const InputDecoration(
-                  constraints: BoxConstraints(maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
+                  constraints: BoxConstraints(
+                      maxWidth: 250,
+                      minWidth: 150,
+                      minHeight: 45,
+                      maxHeight: 50),
                   border: OutlineInputBorder(),
                   hintText: "Select Status",
                 ),
                 initialValue: initialValue,
                 items: const <DropdownMenuItem>[
-                  DropdownMenuItem(value: "processing", child: Text('Processing')),
+                  DropdownMenuItem(
+                      value: "processing", child: Text('Processing')),
                   DropdownMenuItem(value: "completed", child: Text('Completed'))
                 ],
                 onChanged: (value) {
@@ -399,9 +431,10 @@ class _LimsTableState extends State<LimsTable> {
             builder: (context, state) {
               var mappings = state.invoiceMappings;
 
-
-          if (mappings != null && mappings.isNotEmpty) {
-            var status = mappings.firstWhere((element) => element.testId == test.id).status;
+              if (mappings != null && mappings.isNotEmpty) {
+                var status = mappings
+                    .firstWhere((element) => element.testId == test.id)
+                    .status;
 
                 return commonBtn(
                   text: "Submit",
@@ -438,7 +471,8 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForTestStatus(Patient patient, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(Text("${patient.firstName} ${patient.middleName} ${patient.lastName}")),
+      DataCell(Text(
+          "${patient.firstName} ${patient.middleName} ${patient.lastName}")),
       DataCell(Text(patient.umrNumber)),
       const DataCell(Text("Test Name")),
       const DataCell(Text("Test Code")),
@@ -465,8 +499,11 @@ class _LimsTableState extends State<LimsTable> {
           // state.invoiceMappings?.firstWhere((element) => element.testId == test.id).status;
         },
         builder: (context, state) {
-          if (state.invoiceMappings != null && state.invoiceMappings!.isNotEmpty) {
-            var ptid = state.invoiceMappings?.firstWhere((element) => element.testId == test.id).ptid;
+          if (state.invoiceMappings != null &&
+              state.invoiceMappings!.isNotEmpty) {
+            var ptid = state.invoiceMappings
+                ?.firstWhere((element) => element.testId == test.id)
+                .ptid;
             return barCodeWidget(
               text: test.testName,
               barCode: "$ptid",
@@ -550,7 +587,8 @@ class _LimsTableState extends State<LimsTable> {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
       DataCell(Text(patient.umrNumber)),
-      DataCell(Text("${patient.firstName} ${patient.middleName} ${patient.lastName}")),
+      DataCell(Text(
+          "${patient.firstName} ${patient.middleName} ${patient.lastName}")),
       DataCell(Text(patient.consultedDoctor)),
       DataCell(Text(patient.insuraceNumber)),
       DataCell(Text(patient.mobileNumber.toString())),
