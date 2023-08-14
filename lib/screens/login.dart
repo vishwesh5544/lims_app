@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Form heading
-                            Text('LIMS', style: TextUtility.getBoldStyle(40.0, color: Colors.black)),
+                            Text('Scylex Labs', style: TextUtility.getBoldStyle(40.0, color: Colors.black)),
                             // Form sub heading
                             Text('Welcome Back', style: TextUtility.getBoldStyle(30.0, color: Colors.black)),
                             // Form instructions
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Forgot password section
                             _getForgetPasswordSection(),
                             const SizedBox(
-                              height: 220,
+                              height: 190,
                             ),
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
