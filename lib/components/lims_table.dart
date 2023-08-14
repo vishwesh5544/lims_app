@@ -39,6 +39,7 @@ class LimsTable extends StatefulWidget {
       this.onSelected,
       this.tableRowHeight,
       this.tableBorder,
+      this.color,
       super.key});
 
   final List<String> columnNames;
@@ -51,6 +52,7 @@ class LimsTable extends StatefulWidget {
   Function? onSelected;
   Widget? conditionalButton;
   double? tableRowHeight;
+  final Color? color;
   final TableBorder? tableBorder;
 
   @override
@@ -125,8 +127,8 @@ class _LimsTableState extends State<LimsTable> {
               headingRowHeight: 50,
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
-              dataRowColor:
-                  MaterialStateProperty.all(ColorProvider.lightGreyColor),
+              dataRowColor: MaterialStateProperty.all(
+                  widget.color ?? ColorProvider.lightGreyColor),
               columnSpacing: 40,
               border: widget.tableBorder ??
                   TableBorder(

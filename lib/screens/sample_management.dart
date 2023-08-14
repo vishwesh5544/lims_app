@@ -104,6 +104,7 @@ class _SampleManagementState extends State<SampleManagement> {
                           Visibility(
                             visible: state.testsList?.isNotEmpty ?? false,
                             child: LimsTable(
+                                color: Colors.white,
                                 tableRowHeight: 155,
                                 tableBorder: TableBorder(
                                   horizontalInside: getBorder(),

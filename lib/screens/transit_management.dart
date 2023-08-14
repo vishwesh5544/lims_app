@@ -102,6 +102,7 @@ class _TransitManagementState extends State<TransitManagement> {
                           Visibility(
                             visible: state.testsList?.isNotEmpty ?? false,
                             child: LimsTable(
+                                color: Colors.white,
                                 columnNames: columnNames,
                                 tableRowHeight: 155,
                                 tableBorder: TableBorder(

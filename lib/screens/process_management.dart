@@ -102,6 +102,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
                               Visibility(
                                 visible: state.testsList?.isNotEmpty ?? false,
                                 child: LimsTable(
+                                    color: Colors.white,
                                     columnNames: columnNames,
                                     tableType: TableType.process,
                                     tableRowHeight: 155,
