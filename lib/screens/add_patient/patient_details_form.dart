@@ -60,7 +60,10 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
       bloc.add(GenerateUmrNumber());
 
       if (bloc.state.isAddPatient && bloc.state.currentSelectedPriview != -1) {
-        userId = bloc.state.patientsList[bloc.state.currentSelectedPriview].id;
+        setState(() {
+          userId =
+              bloc.state.patientsList[bloc.state.currentSelectedPriview].id;
+        });
         bloc.add(GenderUpdated(
             bloc.state.patientsList[bloc.state.currentSelectedPriview].gender));
         formKey.currentState!.fields['gender']?.didChange(genderMapping[
@@ -168,7 +171,7 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
                 .toList(),
           ),
           commonBtn(
-              text: "Next",
+              text: userId == null ? "Next" : "Update",
               isEnable: true,
               calll: () {
                 if (!formKey.currentState!.validate()) {
