@@ -149,12 +149,18 @@ class _PatientManagementState extends State<PatientManagement> {
                                   padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      barCodeWidget(
-                                        text: '',
-                                        barCode: "$inoviceId",
-                                      )
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Invoice ID", style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
+                                          barCodeWidget(
+                                            text: '',
+                                            barCode: "$inoviceId",
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 );
@@ -167,7 +173,7 @@ class _PatientManagementState extends State<PatientManagement> {
                               dataRowMinHeight: 120,
                               dataRowMaxHeight: 120,
                               dividerThickness: 0.2,
-                              headingRowHeight: 75,
+                              headingRowHeight: 90,
                               headingRowColor: MaterialStateProperty.all(Colors.black),
                               headingTextStyle: const TextStyle(color: Colors.white),
                               dataRowColor: MaterialStateProperty.all(ColorProvider.lightGreyColor),
