@@ -164,6 +164,25 @@ class _PatientManagementState extends State<PatientManagement> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          BlocConsumer<InTransitBloc, InTransitState>(
+                            listener: (context, state) {},
+                            builder: (context, state) {
+                              final patientMapping = state.invoiceMappings
+                                  ?.where((element) =>
+                                      element.patientId == patient.id)
+                                  .toList();
+                              if (patientMapping != null &&
+                                  patientMapping.isNotEmpty) {
+                                var inoviceId = patientMapping.first.invoiceId;
+                                return barCodeWidget(
+                                  text: '',
+                                  barCode: "$inoviceId",
+                                );
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           DataTable(
                               dataRowMinHeight: 120,
                               dataRowMaxHeight: 120,

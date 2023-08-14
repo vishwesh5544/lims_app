@@ -330,6 +330,7 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'country',
         title: 'Country',
+        readOnly: true,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
         ],

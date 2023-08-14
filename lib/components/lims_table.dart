@@ -218,7 +218,7 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(Text(test.department)),
       DataCell(Text(test.sampleType)),
       DataCell(Text(test.turnAroundTime)),
-      DataCell(Text(test.price.toString())),
+      DataCell(Text(test.totalPrice.toString())),
       DataCell(_actionsRow(currentIndex, test))
     ]);
   }
