@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size(double.infinity, 500),
+        preferredSize: const Size(double.infinity, 800),
         child: Container(
           color: ColorProvider.blueDarkShade,
           padding: const EdgeInsets.symmetric(
@@ -78,9 +78,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Container(
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      'LIMS',
-                      style: TextUtility.getBoldStyle(28),
+                    child: SizedBox(
+                      height: 75,
+                      width: 180,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'LIMS ',
+                            style: TextUtility.getBoldStyle(28),
+                          ),
+                          Text(
+                            '@Powered by Risamsoft Inc',
+                            style: TextUtility.getBoldStyle(14),
+                          ),
+                        ],
+                      ),
                     )),
               ),
               logoutWidget()

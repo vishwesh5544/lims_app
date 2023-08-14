@@ -17,11 +17,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController =
-      TextEditingController(text: "admin@gmail.com");
+  final TextEditingController _emailController = TextEditingController(text: "admin@gmail.com");
 
-  final TextEditingController _passwordController =
-      TextEditingController(text: "12345678");
+  final TextEditingController _passwordController = TextEditingController(text: "12345678");
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -46,8 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   size: const Size(500, 650),
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
                       // Form Column
                       child: Form(
                         key: _formKey,
@@ -56,13 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Form heading
-                            Text('LIMS',
-                                style: TextUtility.getBoldStyle(40.0,
-                                    color: Colors.black)),
+                            Text('LIMS', style: TextUtility.getBoldStyle(40.0, color: Colors.black)),
                             // Form sub heading
-                            Text('Welcome Back',
-                                style: TextUtility.getBoldStyle(30.0,
-                                    color: Colors.black)),
+                            Text('Welcome Back', style: TextUtility.getBoldStyle(30.0, color: Colors.black)),
                             // Form instructions
                             const Text('Please enter your details to sign in'),
                             // Username/Email input field
@@ -72,12 +65,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Login button
                             _loginButton(context),
                             // Forgot password section
-                            _getForgetPasswordSection()
+                            _getForgetPasswordSection(),
+                            const SizedBox(
+                              height: 220,
+                            ),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('@Powered by Risamsoft Inc'),
+                              ],
+                            )
                           ]
-                              .map((el) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5.0),
-                                  child: el))
+                              .map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 5.0), child: el))
                               .toList(),
                         ),
                       ),
@@ -97,12 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, state) {
         return TextFormField(
           controller: _emailController,
-          onChanged: (value) =>
-              context.read<LoginBloc>().add(LoginEmailChanged(email: value)),
+          onChanged: (value) => context.read<LoginBloc>().add(LoginEmailChanged(email: value)),
           decoration: const InputDecoration(
-              labelText: "Username or Email",
-              border: OutlineInputBorder(),
-              hintText: "Enter username or email"),
+              labelText: "Username or Email", border: OutlineInputBorder(), hintText: "Enter username or email"),
         );
       },
     );
@@ -113,14 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, state) {
         return TextFormField(
           controller: _passwordController,
-          onChanged: (value) => context
-              .read<LoginBloc>()
-              .add(LoginPasswordChanged(password: value)),
+          onChanged: (value) => context.read<LoginBloc>().add(LoginPasswordChanged(password: value)),
           obscureText: true,
-          decoration: const InputDecoration(
-              labelText: "Password",
-              border: OutlineInputBorder(),
-              hintText: "Enter password"),
+          decoration:
+              const InputDecoration(labelText: "Password", border: OutlineInputBorder(), hintText: "Enter password"),
         );
       },
     );
@@ -145,8 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade700),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade700),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text('LOGIN', style: TextUtility.getBoldStyle(15.0)),
@@ -154,9 +145,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     var formState = _formKey.currentState;
                     if (formState != null && formState.validate()) {
-                      context.read<LoginBloc>().add(LoginSubmitted(
-                          email: _emailController.text,
-                          password: _passwordController.text));
+                      context
+                          .read<LoginBloc>()
+                          .add(LoginSubmitted(email: _emailController.text, password: _passwordController.text));
                     }
                   },
                 ),
@@ -171,19 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         RichText(
             text: TextSpan(children: [
-          TextSpan(
-              text: "Forgot Password?",
-              style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
+          TextSpan(text: "Forgot Password?", style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
           const WidgetSpan(
               child: SizedBox(
             width: 4,
           )),
           TextSpan(
               text: "Reset now",
-              style: const TextStyle(
-                  color: Colors.blue,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.blue, fontSize: 15.0, fontWeight: FontWeight.bold),
               recognizer: TapGestureRecognizer()..onTap = () {})
         ]))
       ],
