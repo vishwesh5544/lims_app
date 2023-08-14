@@ -4,7 +4,9 @@ import 'package:lims_app/utils/text_utility.dart';
 
 class CommonGreyFiled extends StatelessWidget {
   final String title, value;
-  const CommonGreyFiled({required this.title, required this.value, Key? key})
+  final double? width;
+  const CommonGreyFiled(
+      {required this.title, required this.value, Key? key, this.width})
       : super(key: key);
 
   @override
@@ -13,9 +15,10 @@ class CommonGreyFiled extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: TextUtility.getStyle(13)),
+        Text(title, style: TextUtility.getBoldStyle(13, color: Colors.black)),
         const SizedBox(height: 6),
         Container(
+          width: width,
           decoration: BoxDecoration(
               color: ColorProvider.lightGreyColor,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
@@ -26,9 +29,10 @@ class CommonGreyFiled extends StatelessWidget {
               constraints: const BoxConstraints(
                   maxWidth: 250, minWidth: 150, minHeight: 40, maxHeight: 45),
               border: const OutlineInputBorder(),
-              fillColor: Colors.grey,
+              fillColor: ColorProvider.lightGreyColor,
               hintText: value,
-              focusColor: Colors.grey,
+              hintStyle: const TextStyle(color: Colors.black),
+              focusColor: ColorProvider.lightGreyColor,
             ),
           ),
         )

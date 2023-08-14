@@ -5,23 +5,28 @@ import '../utils/barcode_utility.dart';
 
 Widget barCodeWidget({required String text, required String barCode}) {
   return Column(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           text,
-          style: const TextStyle(fontSize: 10),
+          style: const TextStyle(fontSize: 14),
         ),
+        const SizedBox(height: 15),
         Container(
           padding: const EdgeInsets.all(6),
-          margin: const EdgeInsets.all(3),
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 2),
-              borderRadius: const BorderRadius.all(Radius.circular(5))),
+            border: Border.all(color: Colors.black, width: 2),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
+          width: 160,
+          height: 80,
           child: SvgPicture.string(
             BarcodeUtility.getBarcodeSvgString(barCode),
-            width: 120,
-            height: 60,
+            fit: BoxFit.fill,
           ),
         )
       ]);

@@ -6,7 +6,7 @@ import '../utils/text_utility.dart';
 
 class CommonHeader extends StatelessWidget {
   String title;
-   CommonHeader({required this.title, Key? key}) : super(key: key);
+  CommonHeader({required this.title, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

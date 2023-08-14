@@ -31,8 +31,7 @@ class _TransitManagementState extends State<TransitManagement> {
     "Test Code",
     "Sample type",
     "Process Unit",
-    "Actions",
-    ""
+    "Actions"
   ];
 
   @override
@@ -65,64 +64,84 @@ class _TransitManagementState extends State<TransitManagement> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CommonHeader(title: "In Transit Management"),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: commonSearchArea(
-                          title: "UMR No./Patient Name",
-                          hint: "Search by URM No./Patient Name",
-                          textController: textController,
-                          onSubmit: (value) {
-                            bloc.add(SearchPatient(value));
-                          })),
+                  Center(
+                    child: FractionallySizedBox(
+                      widthFactor: 0.95,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 25),
+                            child: commonSearchArea(
+                              title: "UMR No./Patient Name",
+                              hint: "Search by URM No./Patient Name",
+                              textController: textController,
+                              onSubmit: (value) {
+                                bloc.add(SearchPatient(value));
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 25),
+                            child: Row(
+                              children: [
+                                CommonGreyFiled(
+                                    width: 275,
+                                    title: "UMR Number",
+                                    value: state.patient?.umrNumber ?? ""),
+                                const SizedBox(width: 25),
+                                CommonGreyFiled(
+                                  width: 275,
+                                  title: "Patient Name",
+                                  value:
+                                      "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}",
+                                ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: state.testsList?.isNotEmpty ?? false,
+                            child: LimsTable(
+                                columnNames: columnNames,
+                                tableRowHeight: 155,
+                                tableBorder: TableBorder(
+                                  horizontalInside: getBorder(),
+                                  right: getBorder(),
+                                  left: getBorder(),
+                                ),
+                                tableType: TableType.inTransit,
+                                onEditClick: (value) {},
+                                onSubmit: (test) {
+                                  int invoiceId = state.invoiceMappings!
+                                      .firstWhere((element) =>
+                                          element.testId == test.id)
+                                      .id!;
+                                  BlocProvider.of<InTransitBloc>(context).add(
+                                      UpdateInTransit(
+                                          invoiceId: invoiceId,
+                                          userId: state.patient!.id!,
+                                          status: 3));
+                                  ScreenHelper.showAlertPopup(
+                                      "Transit status updated successfully.",
+                                      context);
+                                },
+                                onPrintPdf: (Test test) {
+                                  var ptid = state.invoiceMappings
+                                      ?.firstWhere((invoice) =>
+                                          invoice.testId == test.id &&
+                                          invoice.patientId ==
+                                              state.patient!.id)
+                                      .ptid;
 
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 15),
-                    child: Row(
-                      children: [
-                        CommonGreyFiled(
-                            title: "UMR Number",
-                            value: state.patient?.umrNumber ?? ""),
-                        const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20)),
-                        CommonGreyFiled(
-                            title: "Patient Name",
-                            value:
-                                "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
-                      ],
+                                  PdfUtility.savePdf(context, ptid.toString());
+                                },
+                                rowData: getTestListForTransit(state)),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-
-                  Visibility(
-                    visible: state.testsList?.isNotEmpty ?? false,
-                    child: LimsTable(
-                        columnNames: columnNames,
-                        tableRowHeight: 130,
-                        tableType: TableType.inTransit,
-                        onEditClick: (value) {},
-                        onSubmit: (test) {
-                          int invoiceId = state.invoiceMappings!
-                              .firstWhere(
-                                  (element) => element.testId == test.id)
-                              .id!;
-                          BlocProvider.of<InTransitBloc>(context).add(
-                              UpdateInTransit(
-                                  invoiceId: invoiceId,
-                                  userId: state.patient!.id!,
-                                  status: 3));
-                          ScreenHelper.showAlertPopup(
-                              "Transit status updated successfully.", context);
-                        },
-                        onPrintPdf: (Test test) {
-                          var ptid = state.invoiceMappings
-                              ?.firstWhere((invoice) =>
-                                  invoice.testId == test.id &&
-                                  invoice.patientId == state.patient!.id)
-                              .ptid;
-
-                          PdfUtility.savePdf(context, ptid.toString());
-                        },
-                        rowData: getTestListForTransit(state)),
                   )
+
                   // Container(
                   //   margin: EdgeInsets.symmetric(vertical: 10),
                   //   child: commonBtn(text: "Update", isEnable: true, calll: (){

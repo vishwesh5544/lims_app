@@ -32,8 +32,7 @@ class _ProcessManagementState extends State<ProcessManagement> {
     "Sample type",
     "Process Unit",
     "Status",
-    "Submit",
-    ""
+    "Submit"
   ];
 
   @override
@@ -66,68 +65,85 @@ class _ProcessManagementState extends State<ProcessManagement> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CommonHeader(title: "Process Management"),
-                      Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: commonSearchArea(
-                              title: "UMR No./Patient Name",
-                              hint: "Search by URM No./Patient Name",
-                              textController: textController,
-                              onSubmit: (value) {
-                                bloc.add(SearchPatient(value));
-                              })),
+                      Center(
+                        child: FractionallySizedBox(
+                          widthFactor: 0.95,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 25),
+                                  child: commonSearchArea(
+                                      title: "UMR No./Patient Name",
+                                      hint: "Search by URM No./Patient Name",
+                                      textController: textController,
+                                      onSubmit: (value) {
+                                        bloc.add(SearchPatient(value));
+                                      })),
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 25),
+                                child: Row(
+                                  children: [
+                                    CommonGreyFiled(
+                                      width: 275,
+                                      title: "UMR Number",
+                                      value: state.patient?.umrNumber ?? "",
+                                    ),
+                                    const SizedBox(width: 25),
+                                    CommonGreyFiled(
+                                        width: 275,
+                                        title: "Patient Name",
+                                        value:
+                                            "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                visible: state.testsList?.isNotEmpty ?? false,
+                                child: LimsTable(
+                                    columnNames: columnNames,
+                                    tableType: TableType.process,
+                                    tableRowHeight: 155,
+                                    tableBorder: TableBorder(
+                                      horizontalInside: getBorder(),
+                                      right: getBorder(),
+                                      left: getBorder(),
+                                    ),
+                                    onEditClick: (value) {
+                                      status = value;
+                                    },
+                                    onSubmit: (test) {
+                                      int invoiceId = state.invoiceMappings!
+                                          .firstWhere((element) =>
+                                              element.testId == test.id)
+                                          .id!;
 
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 15),
-                        child: Row(
-                          children: [
-                            CommonGreyFiled(
-                              title: "UMR Number",
-                              value: state.patient?.umrNumber ?? "",
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20)),
-                            CommonGreyFiled(
-                                title: "Patient Name",
-                                value:
-                                    "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
-                          ],
+                                      bloc.add(UpdateInTransit(
+                                          invoiceId: invoiceId,
+                                          userId: state.patient!.id!,
+                                          status: int.parse(status)));
+
+                                      ScreenHelper.showAlertPopup(
+                                          "Process status updated successfully",
+                                          context);
+                                    },
+                                    onPrintPdf: (Test test) {
+                                      var ptid = state.invoiceMappings
+                                          ?.firstWhere((invoice) =>
+                                              invoice.testId == test.id &&
+                                              invoice.patientId ==
+                                                  state.patient!.id)
+                                          .ptid;
+
+                                      PdfUtility.savePdf(
+                                          context, ptid.toString());
+                                    },
+                                    rowData: getTestList(state)),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-
-                      Visibility(
-                        visible: state.testsList?.isNotEmpty ?? false,
-                        child: LimsTable(
-                            columnNames: columnNames,
-                            tableType: TableType.process,
-                            tableRowHeight: 130,
-                            onEditClick: (value) {
-                              status = value;
-                            },
-                            onSubmit: (test) {
-                              int invoiceId = state.invoiceMappings!
-                                  .firstWhere(
-                                      (element) => element.testId == test.id)
-                                  .id!;
-
-                              bloc.add(UpdateInTransit(
-                                  invoiceId: invoiceId,
-                                  userId: state.patient!.id!,
-                                  status: int.parse(status)));
-
-                              ScreenHelper.showAlertPopup(
-                                  "Process status updated successfully",
-                                  context);
-                            },
-                            onPrintPdf: (Test test) {
-                              var ptid = state.invoiceMappings
-                                  ?.firstWhere((invoice) =>
-                                      invoice.testId == test.id &&
-                                      invoice.patientId == state.patient!.id)
-                                  .ptid;
-
-                              PdfUtility.savePdf(context, ptid.toString());
-                            },
-                            rowData: getTestList(state)),
                       )
 
                       // Container(
