@@ -344,16 +344,14 @@ class _LimsTableState extends State<LimsTable> {
     totalFlex = totalFlex * 2;
     return DataRow(cells: [
       DataCell(SizedBox(
-        width:
-            widget.flex == null ? null : widget.flex![0] * width / totalFlex!,
+        width: widget.flex == null ? null : widget.flex![0] * width / totalFlex,
         child: Align(
           alignment: const FractionalOffset(0, 0.15),
           child: Text(currentIndex.toString()),
         ),
       )),
       DataCell(SizedBox(
-        width:
-            widget.flex == null ? null : widget.flex![1] * width / totalFlex!,
+        width: widget.flex == null ? null : widget.flex![1] * width / totalFlex,
         child: BlocConsumer<InTransitBloc, InTransitState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -375,20 +373,19 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(
         SizedBox(
           width:
-              widget.flex == null ? null : widget.flex![2] * width / totalFlex!,
+              widget.flex == null ? null : widget.flex![2] * width / totalFlex,
           child: Text(test.testCode),
         ),
       ),
       DataCell(
         SizedBox(
           width:
-              widget.flex == null ? null : widget.flex![3] * width / totalFlex!,
+              widget.flex == null ? null : widget.flex![3] * width / totalFlex,
           child: Text(test.testName),
         ),
       ),
       DataCell(SizedBox(
-        width:
-            widget.flex == null ? null : widget.flex![4] * width / totalFlex!,
+        width: widget.flex == null ? null : widget.flex![4] * width / totalFlex,
         child: BlocConsumer<InTransitBloc, InTransitState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -407,8 +404,7 @@ class _LimsTableState extends State<LimsTable> {
         ),
       )),
       DataCell(SizedBox(
-        width:
-            widget.flex == null ? null : widget.flex![5] * width / totalFlex!,
+        width: widget.flex == null ? null : widget.flex![5] * width / totalFlex,
         child: BlocConsumer<InTransitBloc, InTransitState>(
             listener: (context, state) {},
             builder: (context, state) {
@@ -464,8 +460,7 @@ class _LimsTableState extends State<LimsTable> {
             }),
       )),
       DataCell(SizedBox(
-        width:
-            widget.flex == null ? null : widget.flex![6] * width / totalFlex!,
+        width: widget.flex == null ? null : widget.flex![6] * width / totalFlex,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -563,7 +558,7 @@ class _LimsTableState extends State<LimsTable> {
           if (state.filteredLabs == null) {
             return Container();
           }
-          return Container(
+          return SizedBox(
             width: 400,
             child: FormBuilderDropdown<String>(
               name: 'processingUnit',

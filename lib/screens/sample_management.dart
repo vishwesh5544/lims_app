@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_svg/svg.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
@@ -8,7 +7,6 @@ import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/components/lims_table.dart";
 import "package:lims_app/models/test.dart";
-import "package:lims_app/utils/barcode_utility.dart";
 import "package:lims_app/utils/pdf_utility.dart";
 import "package:lims_app/utils/screen_helper.dart";
 import "package:lims_app/utils/update_status.dart";

@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 26,
             color: Colors.transparent,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             title,
             style: TextUtility.getStyle(18, color: Colors.white),

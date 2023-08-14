@@ -14,7 +14,6 @@ import 'package:lims_app/test_items/test_data.dart';
 import 'package:lims_app/utils/strings/button_strings.dart';
 import 'package:lims_app/utils/strings/route_strings.dart';
 import 'package:lims_app/utils/strings/search_header_strings.dart';
-import 'package:lims_app/utils/utils.dart';
 import '../components/barcode_widegt.dart';
 import '../utils/color_provider.dart';
 import '../utils/text_utility.dart';
@@ -48,7 +47,9 @@ class _PatientManagementState extends State<PatientManagement> {
           },
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: state.isAddPatient ? const AddPatient() : patientWidget(state)),
+              child: state.isAddPatient
+                  ? const AddPatient()
+                  : patientWidget(state)),
         );
       },
     );
@@ -68,8 +69,10 @@ class _PatientManagementState extends State<PatientManagement> {
                     buttonText: ButtonStrings.addPatient,
                     routeName: RouteStrings.addPatient,
                     onClick: () {
-                      BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true));
-                      BlocProvider.of<PatientBloc>(context).add(IsPatient(value: true));
+                      BlocProvider.of<PatientBloc>(context)
+                          .add(OnAddPatient(value: true));
+                      BlocProvider.of<PatientBloc>(context)
+                          .add(IsPatient(value: true));
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(builder: (context) => AddPatient()),);
@@ -81,20 +84,26 @@ class _PatientManagementState extends State<PatientManagement> {
               headerTitle: SearchHeaderStrings.patientsListTitle,
               placeholder: SearchHeaderStrings.searchPatientsPlaceholder,
               onClickSearch: (text) {
-                BlocProvider.of<PatientBloc>(context).add(OnSearch(value: text));
+                BlocProvider.of<PatientBloc>(context)
+                    .add(OnSearch(value: text));
               }),
           LimsTable(
               columnNames: TestData.patientsColumnsList(),
               tableType: TableType.addPatient,
               onEditClick: (value) {
-                BlocProvider.of<PatientBloc>(context).add(IsPatient(value: true));
-                BlocProvider.of<PatientBloc>(context).add(OnAddPatient(value: true, currentSelectedPriview: value));
+                BlocProvider.of<PatientBloc>(context)
+                    .add(IsPatient(value: true));
+                BlocProvider.of<PatientBloc>(context).add(
+                    OnAddPatient(value: true, currentSelectedPriview: value));
               },
               onViewClick: (value) {
                 _showPreviewDialog(value);
               },
               rowData: state.searchPatientsList),
-        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 7), child: el)).toList(),
+        ]
+            .map((el) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7), child: el))
+            .toList(),
       ),
     );
   }
@@ -102,7 +111,17 @@ class _PatientManagementState extends State<PatientManagement> {
   /// invoice dialog
   Future<void> _showPreviewDialog(Patient patient) async {
     BlocProvider.of<InTransitBloc>(context).add(SearchPatient(patient.emailId));
-    List<String> columns = ["#", "Test Name", "Sample Type", "Test Code", "Cost", "Tax%", "Total", "Barcode", ""];
+    List<String> columns = [
+      "#",
+      "Test Name",
+      "Sample Type",
+      "Test Code",
+      "Cost",
+      "Tax%",
+      "Total",
+      "Barcode",
+      ""
+    ];
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -110,11 +129,15 @@ class _PatientManagementState extends State<PatientManagement> {
             builder: (context, state) {
               return AlertDialog(
                   insetPadding: EdgeInsets.zero,
-                  titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
+                  titleTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
                   titlePadding: EdgeInsets.zero,
                   title: Container(
                     padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(color: ColorProvider.blueDarkShade),
+                    decoration:
+                        BoxDecoration(color: ColorProvider.blueDarkShade),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,7 +145,8 @@ class _PatientManagementState extends State<PatientManagement> {
                         const SizedBox(),
                         const Text('Test Details'),
                         InkWell(
-                          child: const Icon(Icons.cancel_rounded, color: Colors.white),
+                          child: const Icon(Icons.cancel_rounded,
+                              color: Colors.white),
                           onTap: () => Navigator.pop(context, "Cancel"),
                         )
                       ],
@@ -133,7 +157,8 @@ class _PatientManagementState extends State<PatientManagement> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1),
-                        borderRadius: const BorderRadius.all(Radius.circular(5))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -141,20 +166,29 @@ class _PatientManagementState extends State<PatientManagement> {
                           BlocConsumer<InTransitBloc, InTransitState>(
                             listener: (context, state) {},
                             builder: (context, state) {
-                              final patientMapping =
-                                  state.invoiceMappings?.where((element) => element.patientId == patient.id).toList();
-                              if (patientMapping != null && patientMapping.isNotEmpty) {
+                              final patientMapping = state.invoiceMappings
+                                  ?.where((element) =>
+                                      element.patientId == patient.id)
+                                  .toList();
+                              if (patientMapping != null &&
+                                  patientMapping.isNotEmpty) {
                                 var inoviceId = patientMapping.first.invoiceId;
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0, horizontal: 10.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text("Invoice ID", style: TextUtility.getBoldStyle(15.0, color: Colors.black)),
+                                          Text("Invoice ID",
+                                              style: TextUtility.getBoldStyle(
+                                                  15.0,
+                                                  color: Colors.black)),
                                           barCodeWidget(
                                             text: '',
                                             barCode: "$inoviceId",
@@ -174,18 +208,25 @@ class _PatientManagementState extends State<PatientManagement> {
                               dataRowMaxHeight: 150,
                               dividerThickness: 0.2,
                               headingRowHeight: 90,
-                              headingRowColor: MaterialStateProperty.all(Colors.black),
-                              headingTextStyle: const TextStyle(color: Colors.white),
-                              dataRowColor: MaterialStateProperty.all(ColorProvider.lightGreyColor),
+                              headingRowColor:
+                                  MaterialStateProperty.all(Colors.black),
+                              headingTextStyle:
+                                  const TextStyle(color: Colors.white),
+                              dataRowColor: MaterialStateProperty.all(
+                                  ColorProvider.lightGreyColor),
                               // border: TableBorder(horizontalInside: getBorder(),verticalInside: getBorder(),right: getBorder(),left: getBorder()),
-                              columns: columns.map((el) => DataColumn(label: Text(el))).toList(),
+                              columns: columns
+                                  .map((el) => DataColumn(label: Text(el)))
+                                  .toList(),
                               rows: state.testsList!.indexed.map((testMap) {
                                 final (index, test) = testMap;
 
                                 return DataRow(
                                     color: test.id == state.currentVisibleQrCode
-                                        ? MaterialStateProperty.all(ColorProvider.lightGreyColor)
-                                        : MaterialStateProperty.all(Colors.white),
+                                        ? MaterialStateProperty.all(
+                                            ColorProvider.lightGreyColor)
+                                        : MaterialStateProperty.all(
+                                            Colors.white),
                                     cells: [
                                       DataCell(Text("${index + 1}")),
                                       DataCell(Text(test.testName)),
@@ -196,29 +237,45 @@ class _PatientManagementState extends State<PatientManagement> {
                                       DataCell(Text("${test.totalPrice}")),
                                       DataCell(InkWell(
                                           onTap: () {
-                                            BlocProvider.of<InTransitBloc>(context)
-                                                .add(ViewQrCode(test.id == state.currentVisibleQrCode ? -1 : test.id!));
+                                            BlocProvider.of<InTransitBloc>(
+                                                    context)
+                                                .add(ViewQrCode(test.id ==
+                                                        state
+                                                            .currentVisibleQrCode
+                                                    ? -1
+                                                    : test.id!));
                                           },
                                           child: Text("View",
-                                              style: TextUtility.getBoldStyle(16,
-                                                  color: test.id == state.currentVisibleQrCode
+                                              style: TextUtility.getBoldStyle(
+                                                  16,
+                                                  color: test.id ==
+                                                          state
+                                                              .currentVisibleQrCode
                                                       ? Colors.red
-                                                      : ColorProvider.blueDarkShade)))),
+                                                      : ColorProvider
+                                                          .blueDarkShade)))),
                                       DataCell(
                                         Visibility(
-                                          visible: test.id == state.currentVisibleQrCode,
+                                          visible: test.id ==
+                                              state.currentVisibleQrCode,
                                           maintainSize: true,
                                           maintainAnimation: true,
                                           maintainState: true,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: BlocConsumer<InTransitBloc, InTransitState>(
+                                            child: BlocConsumer<InTransitBloc,
+                                                InTransitState>(
                                               listener: (context, state) {},
                                               builder: (context, state) {
-                                                if (state.invoiceMappings != null &&
-                                                    state.invoiceMappings!.isNotEmpty) {
-                                                  var ptid = state.invoiceMappings
-                                                      ?.firstWhere((element) => element.testId == test.id)
+                                                if (state.invoiceMappings !=
+                                                        null &&
+                                                    state.invoiceMappings!
+                                                        .isNotEmpty) {
+                                                  var ptid = state
+                                                      .invoiceMappings
+                                                      ?.firstWhere((element) =>
+                                                          element.testId ==
+                                                          test.id)
                                                       .ptid;
                                                   return barCodeWidget(
                                                     text: test.testName,
