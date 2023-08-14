@@ -183,9 +183,10 @@ class _PatientManagementState extends State<PatientManagement> {
                               columns: columns
                                   .map((el) => DataColumn(label: Text(el)))
                                   .toList(),
-                              rows: state.testsList!.map((test) {
+                              rows: state.testsList!.indexed.map((testMap) {
+                                final (index, test) = testMap;
                                 return DataRow(cells: [
-                                  DataCell(Text("${test.id}")),
+                                  DataCell(Text("${index + 1}")),
                                   DataCell(Text(test.testName)),
                                   DataCell(Text(test.sampleType)),
                                   DataCell(Text(test.testCode)),
