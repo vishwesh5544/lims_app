@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_form_builder/flutter_form_builder.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
@@ -322,7 +323,7 @@ class _LimsTableState extends State<LimsTable> {
           ),
           const SizedBox(height: 20),
           commonBtn(
-              text: "Get PDF",
+              text: "Print",
               isEnable: true,
               width: 120,
               calll: () {
@@ -405,10 +406,12 @@ class _LimsTableState extends State<LimsTable> {
                   hintText: "Select Status",
                 ),
                 initialValue: initialValue,
-                items: const <DropdownMenuItem>[
-                  DropdownMenuItem(
+                items: <DropdownMenuItem>[
+                  const DropdownMenuItem(
                       value: "processing", child: Text('Processing')),
-                  DropdownMenuItem(value: "completed", child: Text('Completed'))
+                  if (status != null && status > 3)
+                    const DropdownMenuItem(
+                        value: "completed", child: Text('Completed'))
                 ],
                 onChanged: (value) {
                   int intValue;
@@ -460,7 +463,7 @@ class _LimsTableState extends State<LimsTable> {
           ),
           const SizedBox(height: 20),
           commonBtn(
-              text: "Get PDF",
+              text: "Print",
               isEnable: true,
               calll: () {
                 widget.onPrintPdf!.call(test);
@@ -573,9 +576,9 @@ class _LimsTableState extends State<LimsTable> {
               }
             },
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           commonBtn(
-            text: "Get PDF",
+            text: "Print",
             isEnable: true,
             calll: () {
               widget.onPrintPdf!.call(test);
@@ -589,7 +592,14 @@ class _LimsTableState extends State<LimsTable> {
   DataRow _buildDataRowForPatient(Patient patient, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
-      DataCell(Text(patient.umrNumber)),
+      DataCell(Tooltip(
+        message: 'Tap to copy UMR Number',
+        child: GestureDetector(
+          onTap: () =>
+              Clipboard.setData(ClipboardData(text: patient.umrNumber)),
+          child: Text(patient.umrNumber),
+        ),
+      )),
       DataCell(Text(
           "${patient.firstName} ${patient.middleName} ${patient.lastName}")),
       DataCell(Text(patient.consultedDoctor)),

@@ -194,14 +194,14 @@ class _TestStatusState extends State<TestStatus> {
                                             SizedBox(
                                                 width: 80,
                                                 child: Text(statusText)),
-                                            commonIconBtn(
-                                                text: "Report",
-                                                icon: const Icon(
-                                                    Icons.print_outlined,
-                                                    color: Colors.white,
-                                                    size: 18),
-                                                isEnable: true,
-                                                calll: () {}),
+                                            // commonIconBtn(
+                                            //     text: "Report",
+                                            //     icon: const Icon(
+                                            //         Icons.print_outlined,
+                                            //         color: Colors.white,
+                                            //         size: 18),
+                                            //     isEnable: true,
+                                            //     calll: () {}),
                                           ],
                                         )),
                                       ]);

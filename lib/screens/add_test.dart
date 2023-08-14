@@ -312,7 +312,8 @@ class _AddTestState extends State<AddTest> {
                         ?.value as String,
                     temperature: temperatureEditingController.text,
                     typeOfTemperature: formKey.currentState!
-                        .fields['temperatureTypeValue']?.value as String,
+                            .fields['temperatureTypeValue']?.value ??
+                        '',
                     sampleType: formKey.currentState!.fields['sampleTypeValue']
                         ?.value as String,
                     vacutainer: vacutainerEditingController.text,
@@ -335,7 +336,8 @@ class _AddTestState extends State<AddTest> {
                         ?.value as String,
                     temperature: temperatureEditingController.text,
                     typeOfTemperature: formKey.currentState!
-                        .fields['temperatureTypeValue']?.value as String,
+                            .fields['temperatureTypeValue']?.value ??
+                        '',
                     sampleType: formKey.currentState!.fields['sampleTypeValue']
                         ?.value as String,
                     vacutainer: vacutainerEditingController.text,
@@ -391,8 +393,10 @@ class _AddTestState extends State<AddTest> {
             errorText: "Should start with TEST",
           ),
         ],
+        onSubmit: (v) {},
         onChange: (value) {
           bloc.add(TestCodeUpdated(value));
+          formKey.currentState!.fields['code']?.validate();
         },
         controller: testCodeEditingController));
   }
@@ -601,6 +605,7 @@ class _AddTestState extends State<AddTest> {
     return _buildBlocComponent(CommonEditText(
         title: 'Enter Temperature',
         name: 'temperature',
+        required: false,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(3),
