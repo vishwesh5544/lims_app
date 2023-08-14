@@ -778,7 +778,13 @@ class _AddTestState extends State<AddTest> {
         title: "Select department",
         name: 'departmentValue',
         hintText: AddTestStrings.selectDepartment,
-        list: const ["one", "two"],
+        list: const [
+          "Biochemistry",
+          "Hematology",
+          "Moclecular Dignostics",
+          "Serology & Immunology",
+          "Microbiology"
+        ],
         onSubmit: (value) {}));
   }
 
