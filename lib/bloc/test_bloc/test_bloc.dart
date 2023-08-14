@@ -75,7 +75,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
         );
 
         ResponseCallback<Test> response;
-        if(event.isUpdate) {
+        if (event.isUpdate) {
           response = await _testRepository.updateTest(test, test.id!);
         } else {
           response = await _testRepository.addTest(test);
@@ -86,22 +86,18 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       } on Exception catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
-    }
-
-    else if (event is OnSearch) {
+    } else if (event is OnSearch) {
       List<Test> data = [];
 
       for (Test patient in state.testsList) {
-        if(patient.testName.toLowerCase().contains(event.value.trim()) ||
-            patient.testCode.toLowerCase().contains(event.value.trim())){
+        if (patient.testName.toLowerCase().contains(event.value.trim()) ||
+            patient.testCode.toLowerCase().contains(event.value.trim())) {
           data.add(patient);
         }
       }
 
       yield state.copyWith(searchTestsList: data);
-    }
-    else if (event is OnAddTest) {
-
+    } else if (event is OnAddTest) {
       yield state.copyWith(isAddTest: event.value, currentSelectedPriview: event.currentSelectedPriview);
     }
   }
