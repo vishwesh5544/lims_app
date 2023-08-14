@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart';
+import 'package:lims_app/bloc/in_transit_bloc/in_transit_event.dart';
 import 'package:lims_app/screens/lab_management.dart';
 import 'package:lims_app/screens/login.dart';
 import 'package:lims_app/screens/patient_management.dart';
@@ -166,6 +169,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   currentIndex = value;
                 });
+                // TODO : Shouldn't be done like this
+                // This is done because we want to reset bloc when we move between mgmt pages
+                if ([2, 3, 4].contains(value)) {
+                  context.read<InTransitBloc>().add(ResetState());
+                }
               },
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
