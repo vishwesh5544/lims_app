@@ -144,7 +144,7 @@ class _TestStatusState extends State<TestStatus> {
                                       var test = state.testsList?.firstWhere(
                                           (test) => test.id == mapping.testId);
                                       var testName = test?.testName;
-                                      var testCode = test?.testName;
+                                      var testCode = test?.testCode;
                                       var statusText = "";
                                       if (mapping.status == 0) {
                                         statusText = "Patient Created";
