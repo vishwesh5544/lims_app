@@ -581,17 +581,19 @@ class _LimsTableState extends State<LimsTable> {
           );
         },
       )),
-      DataCell(Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          BlocBuilder<InTransitBloc, InTransitState>(
-            builder: (context, state) {
-              if (state.invoiceMappings != null &&
-                  state.invoiceMappings!.isNotEmpty) {
-                var currentMapping = state.invoiceMappings!
-                    .firstWhere((element) => element.testId == test.id);
-                return commonBtn(
-                  text: "Collect Sample",
+      DataCell(BlocBuilder<InTransitBloc, InTransitState>(
+        builder: (context, state) {
+          if (state.invoiceMappings != null &&
+              state.invoiceMappings!.isNotEmpty) {
+            var currentMapping = state.invoiceMappings!
+                .firstWhere((element) => element.testId == test.id);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                commonBtn(
+                  text: currentMapping.status > 1
+                      ? "Sample Collected"
+                      : "Collect Sample",
                   isEnable: currentMapping.status == 1,
                   calll: () async {
                     final result = await showAlertDialog(
@@ -603,21 +605,21 @@ class _LimsTableState extends State<LimsTable> {
                       widget.onSubmit!.call(test);
                     }
                   },
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
-          const SizedBox(height: 20),
-          commonBtn(
-            text: "Print",
-            isEnable: true,
-            calll: () {
-              widget.onPrintPdf!.call(test);
-            },
-          )
-        ],
+                ),
+                const SizedBox(height: 20),
+                commonBtn(
+                  text: "Print",
+                  isEnable: currentMapping.status > 1,
+                  calll: () {
+                    widget.onPrintPdf!.call(test);
+                  },
+                ),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        },
       )),
     ]);
   }
