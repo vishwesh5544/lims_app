@@ -153,7 +153,9 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       } else if (searchString.isNotEmpty) {
         // Search by name
         final namedPatientDetails = cachedPatientMappings
-            .where((element) => element.patient.firstName == searchString)
+            .where((element) =>
+                element.patient.firstName.toLowerCase() ==
+                searchString.toLowerCase())
             .toList();
         if (namedPatientDetails.isNotEmpty) {
           yield state.copyWith(
@@ -204,7 +206,10 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       yield state.copyWith(currentVisibleQrCode: event.value);
     } else if (event is ResetState) {
       yield state.copyWith(
-          filteredLabs: [], invoiceMappings: [], testsList: [], patient: null);
+          filteredLabs: [],
+          invoiceMappings: [],
+          testsList: [],
+          patient: null).copyWithNullPatient();
     } else if (event is FetchSearchResults) {
       var input = event.searchInput;
       int? inputAsInt = int.tryParse(input);

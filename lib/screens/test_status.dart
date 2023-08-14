@@ -28,7 +28,7 @@ class _TestStatusState extends State<TestStatus> {
 
   static List<String> columnNames = [
     "#",
-    "Patient Name",
+    "Patient\nName",
     "UMR Number",
     "Test Name",
     "Test Code",
@@ -148,8 +148,11 @@ class _TestStatusState extends State<TestStatus> {
                                         right: getBorder(),
                                         left: getBorder()),
                                     columns: columnNames
-                                        .map((name) =>
-                                            DataColumn(label: Text(name)))
+                                        .map((name) => DataColumn(
+                                                label: Text(
+                                              name,
+                                              maxLines: 2,
+                                            )))
                                         .toList(),
                                     rows: state.invoiceMappings!
                                         .map((InvoiceMapping mapping) {

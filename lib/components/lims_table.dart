@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_form_builder/flutter_form_builder.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_event.dart";
 import "package:lims_app/bloc/in_transit_bloc/in_transit_state.dart";
@@ -372,30 +373,57 @@ class _LimsTableState extends State<LimsTable> {
           }
         },
       )),
-      DataCell(DropdownButtonFormField(
-        icon: IconStore.downwardArrow,
-        decoration: const InputDecoration(
-          constraints: BoxConstraints(
-              maxWidth: 250, minWidth: 150, minHeight: 45, maxHeight: 50),
-          border: OutlineInputBorder(),
-          hintText: "Select Status",
-        ),
-        items: const <DropdownMenuItem>[
-          DropdownMenuItem(value: "processing", child: Text('Processing')),
-          DropdownMenuItem(value: "completed", child: Text('Completed'))
-        ],
-        onChanged: (value) {
-          int intValue;
-          if (value == "processing") {
-            intValue = 4;
-          } else if (value == "completed") {
-            intValue = 5;
-          } else {
-            intValue = 2;
-          }
-          widget.onEditClick.call("$intValue");
-        },
-      )),
+      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state.invoiceMappings != null &&
+                state.invoiceMappings!.isNotEmpty) {
+              var status = state.invoiceMappings
+                  ?.firstWhere((element) => element.testId == test.id)
+                  .status;
+              String? initialValue;
+              if (status != null) {
+                if (status == 4) {
+                  initialValue = "processing";
+                } else if (status == 5) {
+                  initialValue = "completed";
+                }
+              }
+
+              return FormBuilderDropdown(
+                name: 'status',
+                icon: IconStore.downwardArrow,
+                decoration: const InputDecoration(
+                  constraints: BoxConstraints(
+                      maxWidth: 250,
+                      minWidth: 150,
+                      minHeight: 45,
+                      maxHeight: 50),
+                  border: OutlineInputBorder(),
+                  hintText: "Select Status",
+                ),
+                initialValue: initialValue,
+                items: const <DropdownMenuItem>[
+                  DropdownMenuItem(
+                      value: "processing", child: Text('Processing')),
+                  DropdownMenuItem(value: "completed", child: Text('Completed'))
+                ],
+                onChanged: (value) {
+                  int intValue;
+                  if (value == "processing") {
+                    intValue = 4;
+                  } else if (value == "completed") {
+                    intValue = 5;
+                  } else {
+                    intValue = 2;
+                  }
+                  widget.onEditClick.call("$intValue");
+                },
+              );
+            } else {
+              return Container();
+            }
+          })),
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {

@@ -38,8 +38,8 @@ class _AddCentreState extends State<AddCentre> {
   final TextEditingController _addressOneController = TextEditingController();
   final TextEditingController _addressTwoController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _countryController =
+      TextEditingController(text: 'USA');
   final TextEditingController _postalCodeController = TextEditingController();
   List<LabTestDetail> selectedTestDetails = [];
   String unitTypeValue = "";
@@ -63,8 +63,8 @@ class _AddCentreState extends State<AddCentre> {
           bloc.state.labsList[bloc.state.currentSelectedPriview].addressTwo;
       _cityController.text =
           bloc.state.labsList[bloc.state.currentSelectedPriview].city;
-      _stateController.text =
-          bloc.state.labsList[bloc.state.currentSelectedPriview].state;
+      formKey.currentState!.fields['state']?.didChange(
+          bloc.state.labsList[bloc.state.currentSelectedPriview].state);
       _countryController.text =
           bloc.state.labsList[bloc.state.currentSelectedPriview].country;
       // _postalCodeController.text = bloc.state.labsList[bloc.state.currentSelectedPriview].;
@@ -202,7 +202,6 @@ class _AddCentreState extends State<AddCentre> {
     return CommonEditText(
         name: 'labEmail',
         title: 'Lab Email',
-        inputFormatters: FormFormatters.email,
         validators: [
           FormBuilderValidators.email(),
         ],
@@ -272,9 +271,10 @@ class _AddCentreState extends State<AddCentre> {
 
     return CommonEditText(
         name: 'addressLine2',
-        title: 'Postal Code',
+        title: 'Zip Code',
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+          LengthLimitingTextInputFormatter(6),
+          FilteringTextInputFormatter.digitsOnly,
         ],
         hintText: "Enter Code",
         onChange: (value) {},
@@ -309,15 +309,13 @@ class _AddCentreState extends State<AddCentre> {
     //         constraints: _commonBoxConstraint, border: const OutlineInputBorder(), hintText: "Enter Name"));
 
     // return _getColumnAndFormInput("State", textField);
-    return CommonEditText(
-        name: 'state',
-        title: 'State',
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-        ],
-        hintText: "Enter State Name",
-        onChange: (value) {},
-        controller: _stateController);
+    return CommonDropDown(
+      name: 'state',
+      title: 'State',
+      hintText: "Select State",
+      list: usStates,
+      onSubmit: (v) {},
+    );
   }
 
   Widget _countryField() {
@@ -484,7 +482,7 @@ class _AddCentreState extends State<AddCentre> {
                 addressTwo: _addressTwoController.text,
                 city: _cityController.text,
                 country: _countryController.text,
-                state: _stateController.text,
+                state: formKey.currentState!.fields['state']?.value ?? '',
                 testDetails: selectedTestDetails,
                 unitType: unitTypeValue));
           } else {

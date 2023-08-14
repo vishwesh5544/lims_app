@@ -404,7 +404,12 @@ class _PatientDetailsFormState extends State<PatientDetailsForm> {
         title: 'Insurance Number',
         controller: _insuranceNumberController,
         inputFormatters: [
+          LengthLimitingTextInputFormatter(15),
           FilteringTextInputFormatter.digitsOnly,
+        ],
+        validators: [
+          FormBuilderValidators.minLength(6,
+              errorText: 'Should be minimum 6 digits'),
         ],
         hintText: AddPatientStrings.enterInsuranceNumber,
         onChange: (value) {

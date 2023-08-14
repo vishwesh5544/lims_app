@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_form_builder/flutter_form_builder.dart";
+import "package:form_builder_validators/form_builder_validators.dart";
 import "package:lims_app/bloc/test_bloc/test_bloc.dart";
 import "package:lims_app/bloc/test_bloc/test_event.dart";
 import "package:lims_app/bloc/test_bloc/test_state.dart";
@@ -209,7 +210,6 @@ class _AddTestState extends State<AddTest> {
               _temperatureField(),
               _enterTemperatureDropdown(),
               _selectTypeDropdown(),
-              _enterDetailField()
             ]
                 .map((el) => Padding(
                     padding: const EdgeInsets.symmetric(
@@ -249,6 +249,16 @@ class _AddTestState extends State<AddTest> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [_tatTextField(), _tatDropDown(), _enterObservations()]
+                .map((el) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: el))
+                .toList(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [_enterDetailField()]
                 .map((el) => Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
@@ -373,6 +383,12 @@ class _AddTestState extends State<AddTest> {
         title: 'Enter Code',
         name: 'code',
         hintText: AddTestStrings.enterCode,
+        validators: [
+          FormBuilderValidators.match(
+            r"^TEST.*",
+            errorText: "Should start with TEST",
+          ),
+        ],
         onChange: (value) {
           bloc.add(TestCodeUpdated(value));
         },
@@ -427,7 +443,7 @@ class _AddTestState extends State<AddTest> {
 
     return _buildBlocComponent(CommonEditText(
         title: 'Vacutainer',
-        name: 'cacutainer',
+        name: 'vacutainer',
         hintText: AddTestStrings.enterDetail,
         onChange: (value) {
           bloc.add(VacutainerUpdated(value));
@@ -555,6 +571,7 @@ class _AddTestState extends State<AddTest> {
         title: 'Enter Volume',
         name: 'volume',
         inputFormatters: [
+          LengthLimitingTextInputFormatter(3),
           FilteringTextInputFormatter.allow(RegExp(r'^[0-9\.]+$')),
         ],
         hintText: AddTestStrings.enterVolume,
