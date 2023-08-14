@@ -1,3 +1,5 @@
+import '../../models/test.dart';
+
 abstract class TestEvent {}
 
 class FetchAllTests extends TestEvent {}
@@ -12,6 +14,15 @@ class OnSearch extends TestEvent {
   final String value;
 
   OnSearch({this.value = ''});
+}
+
+class FilterAvailableTests extends TestEvent {
+  // final List<Test> blacklistedTests;
+  final Test removalTest;
+
+  // FilterAvailableTests(this.blacklistedTests, this.removalTest);
+  FilterAvailableTests(this.removalTest);
+
 }
 
 class OnAddTest extends TestEvent {

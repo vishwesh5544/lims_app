@@ -37,14 +37,14 @@ class TestState {
       this.method = "",
       this.turnAroundTime = "",
       this.price = 0,
-        this.isAddTest = false,
-        this.currentSelectedPriview = -1,
+      this.isAddTest = false,
+      this.currentSelectedPriview = -1,
       this.taxPercentage = 0,
       this.totalPrice = 0,
       this.indications = "",
       this.searchField = "",
       this.testsList = const [],
-        this.searchTestsList = const [],
+      this.searchTestsList = const [],
       this.formStatus = const InitialFormStatus()});
 
   TestState copyWith(
@@ -65,9 +65,9 @@ class TestState {
       String? indications,
       String? searchField,
       List<Test>? testsList,
-        List<Test>? searchTestsList,
-        bool? isAddTest,
-        int? currentSelectedPriview = -1,
+      List<Test>? searchTestsList,
+      bool? isAddTest,
+      int? currentSelectedPriview = -1,
       FormSubmissionStatus? formStatus}) {
     return TestState(
         testCode: testCode ?? this.testCode,
@@ -82,8 +82,8 @@ class TestState {
         method: method ?? this.method,
         turnAroundTime: turnAroundTime ?? this.turnAroundTime,
         price: price ?? this.price,
-        isAddTest: isAddTest?? this.isAddTest,
-        currentSelectedPriview: currentSelectedPriview?? this.currentSelectedPriview,
+        isAddTest: isAddTest ?? this.isAddTest,
+        currentSelectedPriview: currentSelectedPriview ?? this.currentSelectedPriview,
         taxPercentage: taxPercentage ?? this.taxPercentage,
         totalPrice: totalPrice ?? this.totalPrice,
         indications: indications ?? this.indications,
