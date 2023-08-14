@@ -33,6 +33,7 @@ class LimsTable extends StatefulWidget {
       required this.rowData,
       required this.tableType,
       required this.onEditClick,
+      this.flex,
       this.conditionalButton,
       this.onViewClick,
       this.onSubmit,
@@ -41,7 +42,8 @@ class LimsTable extends StatefulWidget {
       this.tableRowHeight,
       this.tableBorder,
       this.color,
-      super.key});
+      super.key})
+      : assert(flex == null || columnNames.length == flex.length);
 
   final List<String> columnNames;
   final List<dynamic> rowData;
@@ -55,6 +57,7 @@ class LimsTable extends StatefulWidget {
   double? tableRowHeight;
   final Color? color;
   final TableBorder? tableBorder;
+  final List<int>? flex;
 
   @override
   State<LimsTable> createState() => _LimsTableState();
@@ -336,139 +339,174 @@ class _LimsTableState extends State<LimsTable> {
 
   ///Process managment
   DataRow _buildDataRowForProcess(Test test, int currentIndex) {
+    final width = MediaQuery.sizeOf(context).width;
+    var totalFlex = widget.flex?.fold(0, (a, b) => a + b) ?? 1;
+    totalFlex = totalFlex * 2;
     return DataRow(cells: [
-      DataCell(Align(
-        alignment: const FractionalOffset(0, 0.15),
-        child: Text(currentIndex.toString()),
+      DataCell(SizedBox(
+        width:
+            widget.flex == null ? null : widget.flex![0] * width / totalFlex!,
+        child: Align(
+          alignment: const FractionalOffset(0, 0.15),
+          child: Text(currentIndex.toString()),
+        ),
       )),
-      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state.invoiceMappings != null &&
-              state.invoiceMappings!.isNotEmpty) {
-            var ptid = state.invoiceMappings
-                ?.firstWhere((element) => element.testId == test.id)
-                .ptid;
-            return barCodeWidget(
-              text: test.testName,
-              barCode: "$ptid",
-            );
-          } else {
-            return Container();
-          }
-        },
-      )),
-      DataCell(Text(test.testCode)),
-      DataCell(Text(test.testName)),
-      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var mappings = state.invoiceMappings;
-
-          if (mappings != null && mappings.isNotEmpty) {
-            var name = mappings
-                .firstWhere((element) => element.testId == test.id)
-                .processingUnit;
-
-            return Text(name ?? "");
-          } else {
-            return Container();
-          }
-        },
-      )),
-      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
+      DataCell(SizedBox(
+        width:
+            widget.flex == null ? null : widget.flex![1] * width / totalFlex!,
+        child: BlocConsumer<InTransitBloc, InTransitState>(
           listener: (context, state) {},
           builder: (context, state) {
             if (state.invoiceMappings != null &&
                 state.invoiceMappings!.isNotEmpty) {
-              var status = state.invoiceMappings
+              var ptid = state.invoiceMappings
                   ?.firstWhere((element) => element.testId == test.id)
-                  .status;
-              String? initialValue;
-              if (status != null) {
-                if (status == 4) {
-                  initialValue = "processing";
-                } else if (status == 5) {
-                  initialValue = "completed";
-                }
-              }
-
-              return FormBuilderDropdown(
-                name: 'status',
-                icon: IconStore.downwardArrow,
-                decoration: const InputDecoration(
-                  constraints: BoxConstraints(
-                      maxWidth: 250,
-                      minWidth: 150,
-                      minHeight: 45,
-                      maxHeight: 50),
-                  border: OutlineInputBorder(),
-                  hintText: "Select Status",
-                ),
-                initialValue: initialValue,
-                items: <DropdownMenuItem>[
-                  const DropdownMenuItem(
-                      value: "processing", child: Text('Processing')),
-                  if (status != null && status > 3)
-                    const DropdownMenuItem(
-                        value: "completed", child: Text('Completed'))
-                ],
-                onChanged: (value) {
-                  int intValue;
-                  if (value == "processing") {
-                    intValue = 4;
-                  } else if (value == "completed") {
-                    intValue = 5;
-                  } else {
-                    intValue = 2;
-                  }
-                  widget.onEditClick.call("$intValue");
-                },
+                  .ptid;
+              return barCodeWidget(
+                text: test.testName,
+                barCode: "$ptid",
               );
             } else {
               return Container();
             }
-          })),
-      DataCell(Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          BlocConsumer<InTransitBloc, InTransitState>(
+          },
+        ),
+      )),
+      DataCell(
+        SizedBox(
+          width:
+              widget.flex == null ? null : widget.flex![2] * width / totalFlex!,
+          child: Text(test.testCode),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width:
+              widget.flex == null ? null : widget.flex![3] * width / totalFlex!,
+          child: Text(test.testName),
+        ),
+      ),
+      DataCell(SizedBox(
+        width:
+            widget.flex == null ? null : widget.flex![4] * width / totalFlex!,
+        child: BlocConsumer<InTransitBloc, InTransitState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            var mappings = state.invoiceMappings;
+
+            if (mappings != null && mappings.isNotEmpty) {
+              var name = mappings
+                  .firstWhere((element) => element.testId == test.id)
+                  .processingUnit;
+
+              return Text(name ?? "");
+            } else {
+              return Container();
+            }
+          },
+        ),
+      )),
+      DataCell(SizedBox(
+        width:
+            widget.flex == null ? null : widget.flex![5] * width / totalFlex!,
+        child: BlocConsumer<InTransitBloc, InTransitState>(
             listener: (context, state) {},
             builder: (context, state) {
-              var mappings = state.invoiceMappings;
-
-              if (mappings != null && mappings.isNotEmpty) {
-                var status = mappings
-                    .firstWhere((element) => element.testId == test.id)
+              if (state.invoiceMappings != null &&
+                  state.invoiceMappings!.isNotEmpty) {
+                var status = state.invoiceMappings
+                    ?.firstWhere((element) => element.testId == test.id)
                     .status;
+                String? initialValue;
+                if (status != null) {
+                  if (status == 4) {
+                    initialValue = "processing";
+                  } else if (status == 5) {
+                    initialValue = "completed";
+                  }
+                }
 
-                return commonBtn(
-                  text: "Submit",
-                  isEnable: status == 3 || status == 4,
-                  calll: () async {
-                    final result = await showAlertDialog(
-                      context,
-                      status == 3 ? "Process Sample" : "Submit Sample",
-                      "Are you sure you want to ${status == 3 ? "process" : "submit"} this sample?",
-                    );
-                    if (result) {
-                      widget.onSubmit!.call(test);
+                return FormBuilderDropdown(
+                  name: 'status',
+                  icon: IconStore.downwardArrow,
+                  decoration: const InputDecoration(
+                    constraints: BoxConstraints(
+                        maxWidth: 250,
+                        minWidth: 150,
+                        minHeight: 45,
+                        maxHeight: 50),
+                    border: OutlineInputBorder(),
+                    hintText: "Select Status",
+                  ),
+                  initialValue: initialValue,
+                  items: <DropdownMenuItem>[
+                    const DropdownMenuItem(
+                        value: "processing", child: Text('Processing')),
+                    if (status != null && status > 3)
+                      const DropdownMenuItem(
+                          value: "completed", child: Text('Completed'))
+                  ],
+                  onChanged: (value) {
+                    int intValue;
+                    if (value == "processing") {
+                      intValue = 4;
+                    } else if (value == "completed") {
+                      intValue = 5;
+                    } else {
+                      intValue = 2;
                     }
+                    widget.onEditClick.call("$intValue");
                   },
                 );
               } else {
                 return Container();
               }
-            },
-          ),
-          const SizedBox(height: 20),
-          commonBtn(
-              text: "Print",
-              isEnable: true,
-              calll: () {
-                widget.onPrintPdf!.call(test);
-              }),
-        ],
+            }),
+      )),
+      DataCell(SizedBox(
+        width:
+            widget.flex == null ? null : widget.flex![6] * width / totalFlex!,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            BlocConsumer<InTransitBloc, InTransitState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                var mappings = state.invoiceMappings;
+
+                if (mappings != null && mappings.isNotEmpty) {
+                  var status = mappings
+                      .firstWhere((element) => element.testId == test.id)
+                      .status;
+
+                  return commonBtn(
+                    text: "Submit",
+                    isEnable: status == 3 || status == 4,
+                    calll: () async {
+                      final result = await showAlertDialog(
+                        context,
+                        status == 3 ? "Process Sample" : "Submit Sample",
+                        "Are you sure you want to ${status == 3 ? "process" : "submit"} this sample?",
+                      );
+                      if (result) {
+                        widget.onSubmit!.call(test);
+                      }
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            commonBtn(
+                text: "Print",
+                isEnable: true,
+                calll: () {
+                  widget.onPrintPdf!.call(test);
+                }),
+          ],
+        ),
       )),
     ]);
   }
