@@ -87,70 +87,79 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          NavigationRail(
-            useIndicator: true,
-            backgroundColor: ColorProvider.blueDarkShade,
-            selectedIndex: currentIndex,
-            indicatorColor: Colors.black,
-            labelType: NavigationRailLabelType.all,
-            onDestinationSelected: (value) {
-              pageController.jumpToPage(value);
-            },
-            // style: SideMenuStyle(
-            //     // showTooltip: false,
-            //     compactSideMenuWidth: 100,
-            //     openSideMenuWidth: 200,
-            //     displayMode: SideMenuDisplayMode.open,
-            //     hoverColor: Colors.blue[100],
-            //     selectedHoverColor: Colors.blue[100],
-            //     selectedColor: ColorProvider.blueDarkShade,
-            //     selectedTitleTextStyle: const TextStyle(color: Colors.white),
-            //     selectedIconColor: Colors.white,
+          LayoutBuilder(builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: NavigationRail(
+                    useIndicator: true,
+                    backgroundColor: ColorProvider.blueDarkShade,
+                    selectedIndex: currentIndex,
+                    indicatorColor: Colors.black,
+                    labelType: NavigationRailLabelType.all,
+                    onDestinationSelected: (value) {
+                      pageController.jumpToPage(value);
+                    },
+                    // style: SideMenuStyle(
+                    //     // showTooltip: false,
+                    //     compactSideMenuWidth: 100,
+                    //     openSideMenuWidth: 200,
+                    //     displayMode: SideMenuDisplayMode.open,
+                    //     hoverColor: Colors.blue[100],
+                    //     selectedHoverColor: Colors.blue[100],
+                    //     selectedColor: ColorProvider.blueDarkShade,
+                    //     selectedTitleTextStyle: const TextStyle(color: Colors.white),
+                    //     selectedIconColor: Colors.white,
 
-            // decoration: BoxDecoration(
-            //   borderRadius: BorderRadius.all(Radius.circular(10)),
-            // ),
-            // backgroundColor: Colors.blueGrey[700]
-            // ),
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.all(Radius.circular(10)),
+                    // ),
+                    // backgroundColor: Colors.blueGrey[700]
+                    // ),
 
-            destinations: [
-              sideMenuItem(
-                  index: 0,
-                  title: "Patient Management",
-                  iconName: "ic_management",
-                  isSelected: currentIndex == 0),
-              sideMenuItem(
-                  index: 1,
-                  title: "Test Management",
-                  iconName: "ic_Layer",
-                  isSelected: currentIndex == 1),
-              sideMenuItem(
-                  index: 2,
-                  title: "Sample Management",
-                  iconName: "ic_chemistry",
-                  isSelected: currentIndex == 2),
-              sideMenuItem(
-                  index: 3,
-                  title: "In Transit Management",
-                  iconName: "ic_in_transit_mgmt",
-                  isSelected: currentIndex == 3),
-              sideMenuItem(
-                  index: 4,
-                  title: "Process Management",
-                  iconName: "ic_process_mgmt",
-                  isSelected: currentIndex == 4),
-              sideMenuItem(
-                  index: 5,
-                  title: "Lab Management",
-                  iconName: "ic_Lab_Report",
-                  isSelected: currentIndex == 5),
-              sideMenuItem(
-                  index: 6,
-                  title: "Test Status",
-                  iconName: "ic_processing_time",
-                  isSelected: currentIndex == 6),
-            ],
-          ),
+                    destinations: [
+                      sideMenuItem(
+                          index: 0,
+                          title: "Patient Management",
+                          iconName: "ic_management",
+                          isSelected: currentIndex == 0),
+                      sideMenuItem(
+                          index: 1,
+                          title: "Test Management",
+                          iconName: "ic_Layer",
+                          isSelected: currentIndex == 1),
+                      sideMenuItem(
+                          index: 2,
+                          title: "Sample Management",
+                          iconName: "ic_chemistry",
+                          isSelected: currentIndex == 2),
+                      sideMenuItem(
+                          index: 3,
+                          title: "In Transit Management",
+                          iconName: "ic_in_transit_mgmt",
+                          isSelected: currentIndex == 3),
+                      sideMenuItem(
+                          index: 4,
+                          title: "Process Management",
+                          iconName: "ic_process_mgmt",
+                          isSelected: currentIndex == 4),
+                      sideMenuItem(
+                          index: 5,
+                          title: "Lab Management",
+                          iconName: "ic_Lab_Report",
+                          isSelected: currentIndex == 5),
+                      sideMenuItem(
+                          index: 6,
+                          title: "Test Status",
+                          iconName: "ic_processing_time",
+                          isSelected: currentIndex == 6),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
           Expanded(
             child: PageView(
               onPageChanged: (value) {
