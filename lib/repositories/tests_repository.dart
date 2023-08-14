@@ -9,7 +9,6 @@ import 'package:lims_app/utils/strings/common_strings.dart';
 
 abstract class ITestRepository {
   Future<ResponseCallback<List<Test>>> getAllTests();
-
   Future<ResponseCallback<Test>> addTest(Test test);
   Future<ResponseCallback<Test>> updateTest(Test test, int id);
 }

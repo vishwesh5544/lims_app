@@ -2,24 +2,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lims_app/bloc/lab_bloc/lab_event.dart';
 import 'package:lims_app/bloc/lab_bloc/lab_state.dart';
 import 'package:lims_app/models/lab.dart';
+import 'package:lims_app/models/response_callback.dart';
 import 'package:lims_app/repositories/lab_repository.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
+import 'package:lims_app/utils/lims_logger.dart';
 
 class LabBloc extends Bloc<LabEvent, LabState> {
-  final LabRepository labRepository;
+  final LabRepository _labRepository;
 
-  LabBloc({required this.labRepository}) : super(LabState());
+  LabBloc({required LabRepository labRepository}) : _labRepository = labRepository, super(LabState());
 
   @override
   Stream<LabState> mapEventToState(LabEvent event) async* {
     if (event is FetchAllLabs) {
-      final res = await labRepository.getAllLabs();
+      final res = await _labRepository.getAllLabs();
       yield state.copyWith(labsList: res.data);
     } else if (event is AddCentreFormSubmitted) {
       yield state.copyWith(formStatus: FormSubmitting());
 
       try {
-        Lab newLab = Lab(
+        Lab lab = Lab(
+            id: event.id,
             unitType: event.unitType,
             testDetails: event.testDetails,
             state: event.state,
@@ -31,8 +34,15 @@ class LabBloc extends Bloc<LabEvent, LabState> {
             emailId: event.emailId,
             contactNumber: event.contactNumber);
 
-        final response = await labRepository.addLab(newLab);
+        ResponseCallback<Lab> response;
+        if (event.isUpdate) {
+          response = await _labRepository.updateLab(lab, lab.id!);
+        } else {
+          response = await _labRepository.addLab(lab);
+        }
+
         final createdLab = response.data;
+        LimsLogger.log("*** Lab Added Successfully => $createdLab");
         yield state.copyWith(
             id: createdLab?.id,
             labName: createdLab?.labName,
