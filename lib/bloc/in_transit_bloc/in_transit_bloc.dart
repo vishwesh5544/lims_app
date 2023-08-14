@@ -9,6 +9,7 @@ import 'package:lims_app/models/response_callback.dart';
 import 'package:lims_app/models/test.dart';
 import 'package:lims_app/repositories/in_transit_repository.dart';
 import 'package:lims_app/repositories/patient_repository.dart';
+import 'package:lims_app/utils/extensions.dart';
 import 'package:lims_app/utils/form_submission_status.dart';
 import 'package:lims_app/utils/update_status.dart';
 
@@ -22,11 +23,19 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
     required this.patientRepository,
   }) : super(InTransitState());
 
-  List<Test> cachedTests = <Test>[];
-  List<InvoiceMapping> cachedInvoiceMapping = <InvoiceMapping>[];
+  List<
+      ({
+        Patient patient,
+        List<Test> test,
+        List<InvoiceMapping> invoiceMappings
+      })> cachedPatientMappings = [];
 
-  Future<({List<Test> test, List<InvoiceMapping> invoiceMappings})>
-      getInvoiceMappingForPatient(Patient patient) async {
+  Future<
+      ({
+        Patient patient,
+        List<Test> test,
+        List<InvoiceMapping> invoiceMappings
+      })> getInvoiceMappingForPatient(Patient patient) async {
     final result = await Future.wait([
       inTransitRepository.getPatientByEmail(patient.emailId),
       inTransitRepository.getInvoiceMappingsForUser(patient.id!)
@@ -46,7 +55,7 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
         invoiceMappingsResponse.data!.isNotEmpty) {
       invoiceMappings.addAll(invoiceMappingsResponse.data!);
     }
-    return (test: tests, invoiceMappings: invoiceMappings);
+    return (patient: patient, test: tests, invoiceMappings: invoiceMappings);
   }
 
   @override
@@ -57,10 +66,6 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       final response = await inTransitRepository.getAllFilteredLabs();
       yield state.copyWith(filteredLabs: response.data);
     } else if (event is CacheAllPatient) {
-      yield state.copyWith(
-        testsList: cachedTests,
-        invoiceMappings: cachedInvoiceMapping,
-      );
       final patientsData = await patientRepository.getAllPatients();
       final patients = patientsData.data;
       if (patients == null || patients.isEmpty) {
@@ -68,61 +73,101 @@ class InTransitBloc extends Bloc<InTransitEvent, InTransitState> {
       } else {
         final result = await Future.wait(
             patients.map((e) => getInvoiceMappingForPatient(e)));
-        final tests = result.fold(
-            <Test>[], (previousValue, element) => previousValue + element.test);
-        final invoiceMappings = result.fold(
-          <InvoiceMapping>[],
-          (previousValue, element) => previousValue + element.invoiceMappings,
-        );
-        cachedTests = tests;
-        cachedInvoiceMapping = invoiceMappings;
-        yield state.copyWith(
-          testsList: tests,
-          invoiceMappings: invoiceMappings,
-        );
+        cachedPatientMappings = result;
       }
     } else if (event is SearchPatient) {
-      if (event.searchString.trim().isEmpty) {
-        yield state.copyWith(
-          testsList: cachedTests,
-          invoiceMappings: cachedInvoiceMapping,
-        );
-        final patientsData = await patientRepository.getAllPatients();
-        final patients = patientsData.data;
-        if (patients == null || patients.isEmpty) {
-          yield state.copyWith(testsList: [], patient: null);
-        } else {
-          final result = await Future.wait(
-              patients.map((e) => getInvoiceMappingForPatient(e)));
-          final tests = result.fold(<Test>[],
-              (previousValue, element) => previousValue + element.test);
-          final invoiceMappings = result.fold(
-            <InvoiceMapping>[],
-            (previousValue, element) => previousValue + element.invoiceMappings,
-          );
-          cachedTests = tests;
-          cachedInvoiceMapping = invoiceMappings;
-          yield state.copyWith(
-            testsList: tests,
-            invoiceMappings: invoiceMappings,
-          );
-        }
-      } else {
-        if (event.searchString.trim().isNotEmpty &&
-            event.searchString.trim().length > 3) {
-          final patientAndTestsResponse =
-              await inTransitRepository.getPatientByEmail(event.searchString);
-          yield state.copyWith(
-            testsList: patientAndTestsResponse.data?.tests,
-            patient: patientAndTestsResponse.data?.patient,
-          );
-        } else if (event.searchString.trim().isEmpty) {
-          yield state.copyWith(testsList: [], patient: null);
-        }
+      final searchString = event.searchString.trim();
+      if (searchString.isNotEmpty &&
+          (searchString.isValidEmail ||
+              searchString.toLowerCase().startsWith('umr'))) {
+        final patientAndTestsResponse =
+            await inTransitRepository.getPatientByEmail(event.searchString);
+        final invoiceMappingsResponse =
+            await inTransitRepository.getInvoiceMappingsForUser(
+                patientAndTestsResponse.data?.patient.id ?? state.patient!.id!);
 
-        final invoiceMappingsResponse = await inTransitRepository
-            .getInvoiceMappingsForUser(state.patient!.id!);
-        yield state.copyWith(invoiceMappings: invoiceMappingsResponse.data);
+        yield state.copyWith(
+          testsList: patientAndTestsResponse.data?.tests,
+          patient: patientAndTestsResponse.data?.patient,
+          invoiceMappings: invoiceMappingsResponse.data,
+        );
+      } else if (searchString.length == 12) {
+        //Search for invoiceid or ptid
+        final parsedValue = int.tryParse(searchString);
+        if (parsedValue != null) {
+          // Search for invoiceid
+          final inoviceIdPatientDetails = cachedPatientMappings
+              .where(
+                (patientMap) => patientMap.invoiceMappings
+                    .any((invoice) => invoice.invoiceId == parsedValue),
+              )
+              .toList();
+          // Search for ptid
+          final ptidPatientDetails = cachedPatientMappings
+              .where(
+                (patientMap) => patientMap.invoiceMappings.any(
+                  (invoice) =>
+                      invoice.ptid
+                          .toString()
+                          .substring(0, invoice.ptid.toString().length - 2) ==
+                      parsedValue
+                          .toString()
+                          .substring(0, parsedValue.toString().length - 2),
+                ),
+              )
+              .toList();
+          if (inoviceIdPatientDetails.isNotEmpty) {
+            final invoiceList = inoviceIdPatientDetails.first.invoiceMappings
+                .where((invoice) => invoice.invoiceId == parsedValue)
+                .toList();
+            yield state.copyWith(
+              testsList: inoviceIdPatientDetails.first.test,
+              patient: inoviceIdPatientDetails.first.patient,
+              invoiceMappings: invoiceList,
+            );
+          } else if (ptidPatientDetails.isNotEmpty) {
+            final invoiceList = ptidPatientDetails.first.invoiceMappings
+                .where((invoice) =>
+                    invoice.ptid
+                        .toString()
+                        .substring(0, invoice.ptid.toString().length - 2) ==
+                    parsedValue
+                        .toString()
+                        .substring(0, parsedValue.toString().length - 2))
+                .toList();
+            yield state.copyWith(
+              testsList: ptidPatientDetails.first.test,
+              patient: ptidPatientDetails.first.patient,
+              invoiceMappings: invoiceList,
+            );
+          } else {
+            yield state
+                .copyWith(
+                  testsList: [],
+                  patient: null,
+                  invoiceMappings: [],
+                )
+                .copyWithNullPatient();
+          }
+        }
+      } else if (searchString.isNotEmpty) {
+        // Search by name
+        final namedPatientDetails = cachedPatientMappings
+            .where((element) => element.patient.firstName == searchString)
+            .toList();
+        if (namedPatientDetails.isNotEmpty) {
+          yield state.copyWith(
+            testsList: namedPatientDetails.first.test,
+            patient: namedPatientDetails.first.patient,
+            invoiceMappings: namedPatientDetails.first.invoiceMappings,
+          );
+        } else {
+          yield state
+              .copyWith(testsList: [], patient: null).copyWithNullPatient();
+        }
+      } else if (searchString.isEmpty) {
+        yield state
+            .copyWith(testsList: [], patient: null).copyWithNullPatient();
       }
     } else if (event is UpdateInTransit) {
       // TODO: Update invoice mapping using user ID from repository, set state

@@ -25,8 +25,7 @@ class SampleManagement extends StatefulWidget {
 }
 
 class _SampleManagementState extends State<SampleManagement> {
-  TextEditingController textController =
-      TextEditingController(text: "sudovish@gmail.com");
+  TextEditingController textController = TextEditingController();
   late final InTransitBloc bloc;
   static List<String> columnNames = [
     "#",
@@ -37,8 +36,6 @@ class _SampleManagementState extends State<SampleManagement> {
   ];
 
   String processingUnit = "";
-
-  var inputToCheck;
 
   @override
   void initState() {
@@ -77,19 +74,7 @@ class _SampleManagementState extends State<SampleManagement> {
                           hint: "Search by URM No./Patient Name",
                           textController: textController,
                           onSubmit: (String value) {
-                            bloc.add(ResetState());
-                            if (value.length > 4) {
-                              var parsed = int.tryParse(value);
-
-                              if (parsed is int) {
-                                inputToCheck = parsed;
-                                bloc.add(CacheAllPatient());
-                                // bloc.add(FetchSearchResults(value));
-                              } else {
-                                inputToCheck = value;
-                                bloc.add(SearchPatient(value));
-                              }
-                            }
+                            bloc.add(SearchPatient(value));
                           })),
                   Container(
                     margin: const EdgeInsets.only(bottom: 15),
@@ -178,33 +163,13 @@ class _SampleManagementState extends State<SampleManagement> {
   }
 
   getTestList(InTransitState state) {
-    if (inputToCheck is int) {
-      final tests = <Test>[];
-      if (state.invoiceMappings != null && state.testsList != null) {
-        for (final invoice in state.invoiceMappings!) {
-          final test = state.testsList!
-              .where((test) =>
-                  test.id == invoice.testId &&
-                  invoice.status >= 1 &&
-                  (invoice.invoiceId == inputToCheck ||
-                      invoice.ptid.toString().substring(
-                              0, invoice.ptid.toString().length - 2) ==
-                          inputToCheck.toString().substring(
-                              0, inputToCheck.toString().length - 2)))
-              .toList();
-          tests.addAll(test);
-        }
+    return state.testsList!.where((test) {
+      final invoiceMappings = state.invoiceMappings?.where(
+          (invoice) => invoice.testId == test.id && invoice.status >= 1);
+      if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
+        return true;
       }
-      return tests.toSet().toList();
-    } else {
-      return state.testsList!.where((test) {
-        final invoiceMappings = state.invoiceMappings?.where(
-            (invoice) => invoice.testId == test.id && invoice.status >= 1);
-        if (invoiceMappings != null && invoiceMappings.isNotEmpty) {
-          return true;
-        }
-        return false;
-      }).toList();
-    }
+      return false;
+    }).toList();
   }
 }

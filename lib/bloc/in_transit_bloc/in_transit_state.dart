@@ -46,4 +46,17 @@ class InTransitState {
       updateStatus: updateStatus ?? this.updateStatus,
     );
   }
+
+  InTransitState copyWithNullPatient() {
+    return InTransitState(
+      searchResults: searchResults,
+      filteredLabs: filteredLabs,
+      invoiceMappings: invoiceMappings,
+      testsList: testsList,
+      patient: null,
+      formStatus: formStatus,
+      currentVisibleQrCode: currentVisibleQrCode,
+      updateStatus: updateStatus,
+    );
+  }
 }

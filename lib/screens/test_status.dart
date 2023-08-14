@@ -18,8 +18,7 @@ class TestStatus extends StatefulWidget {
 }
 
 class _TestStatusState extends State<TestStatus> {
-  TextEditingController textController =
-      TextEditingController(text: "sudovish@gmail.com");
+  TextEditingController textController = TextEditingController();
   late final InTransitBloc bloc;
 
   final TextEditingController _fromDatePickerTextController =

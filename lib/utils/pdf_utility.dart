@@ -7,7 +7,6 @@ import 'dart:html' as html;
 class PdfUtility {
   static void savePdf(BuildContext context, String barcodeString) async {
     pw.Document pdf = pw.Document();
-    var anchor;
 
     pdf.addPage(
       pw.Page(
@@ -22,7 +21,7 @@ class PdfUtility {
     Uint8List pdfInBytes = await pdf.save();
     var blob = html.Blob([pdfInBytes], 'application/pdf');
     var url = html.Url.createObjectUrlFromBlob(blob);
-    anchor = html.document.createElement('a') as html.AnchorElement
+    final anchor = html.document.createElement('a') as html.AnchorElement
       ..href = url
       ..style.display = 'none'
       ..download = 'export.pdf';
