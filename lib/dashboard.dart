@@ -11,6 +11,7 @@ import 'package:lims_app/screens/test_management.dart';
 import 'package:lims_app/screens/test_status.dart';
 import 'package:lims_app/screens/transit_management.dart';
 import 'package:lims_app/utils/color_provider.dart';
+import 'package:lims_app/utils/side_nav.dart';
 import 'package:lims_app/utils/text_utility.dart';
 import 'package:lims_app/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,79 +91,69 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          LayoutBuilder(builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: NavigationRail(
-                    useIndicator: true,
-                    backgroundColor: ColorProvider.blueDarkShade,
-                    selectedIndex: currentIndex,
-                    indicatorColor: Colors.black,
-                    labelType: NavigationRailLabelType.all,
-                    onDestinationSelected: (value) {
-                      pageController.jumpToPage(value);
-                    },
-                    // style: SideMenuStyle(
-                    //     // showTooltip: false,
-                    //     compactSideMenuWidth: 100,
-                    //     openSideMenuWidth: 200,
-                    //     displayMode: SideMenuDisplayMode.open,
-                    //     hoverColor: Colors.blue[100],
-                    //     selectedHoverColor: Colors.blue[100],
-                    //     selectedColor: ColorProvider.blueDarkShade,
-                    //     selectedTitleTextStyle: const TextStyle(color: Colors.white),
-                    //     selectedIconColor: Colors.white,
+          SideNav(
+            selectedTabBackgroundColor: Colors.black,
+            tabBackgroundColor: ColorProvider.blueDarkShade,
+            onChange: (value) {
+              pageController.jumpToPage(value);
+            },
+            tabsWidth: 200,
+            tabsHeight: 120,
+            // style: SideMenuStyle(
+            //     // showTooltip: false,
+            //     compactSideMenuWidth: 100,
+            //     openSideMenuWidth: 200,
+            //     displayMode: SideMenuDisplayMode.open,
+            //     hoverColor: Colors.blue[100],
+            //     selectedHoverColor: Colors.blue[100],
+            //     selectedColor: ColorProvider.blueDarkShade,
+            //     selectedTitleTextStyle: const TextStyle(color: Colors.white),
+            //     selectedIconColor: Colors.white,
 
-                    // decoration: BoxDecoration(
-                    //   borderRadius: BorderRadius.all(Radius.circular(10)),
-                    // ),
-                    // backgroundColor: Colors.blueGrey[700]
-                    // ),
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.all(Radius.circular(10)),
+            // ),
+            // backgroundColor: Colors.blueGrey[700]
+            // ),
 
-                    destinations: [
-                      sideMenuItem(
-                          index: 0,
-                          title: "Patient Management",
-                          iconName: "ic_management",
-                          isSelected: currentIndex == 0),
-                      sideMenuItem(
-                          index: 1,
-                          title: "Test Management",
-                          iconName: "ic_Layer",
-                          isSelected: currentIndex == 1),
-                      sideMenuItem(
-                          index: 2,
-                          title: "Sample Management",
-                          iconName: "ic_chemistry",
-                          isSelected: currentIndex == 2),
-                      sideMenuItem(
-                          index: 3,
-                          title: "In Transit Management",
-                          iconName: "ic_in_transit_mgmt",
-                          isSelected: currentIndex == 3),
-                      sideMenuItem(
-                          index: 4,
-                          title: "Process Management",
-                          iconName: "ic_process_mgmt",
-                          isSelected: currentIndex == 4),
-                      sideMenuItem(
-                          index: 5,
-                          title: "Lab Management",
-                          iconName: "ic_Lab_Report",
-                          isSelected: currentIndex == 5),
-                      sideMenuItem(
-                          index: 6,
-                          title: "Test Status",
-                          iconName: "ic_processing_time",
-                          isSelected: currentIndex == 6),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
+            tabs: [
+              sideMenuItem(
+                  index: 0,
+                  title: "Patient Management",
+                  iconName: "ic_management",
+                  isSelected: currentIndex == 0),
+              sideMenuItem(
+                  index: 1,
+                  title: "Test Management",
+                  iconName: "ic_Layer",
+                  isSelected: currentIndex == 1),
+              sideMenuItem(
+                  index: 2,
+                  title: "Sample Management",
+                  iconName: "ic_chemistry",
+                  isSelected: currentIndex == 2),
+              sideMenuItem(
+                  index: 3,
+                  title: "In Transit Management",
+                  iconName: "ic_in_transit_mgmt",
+                  isSelected: currentIndex == 3),
+              sideMenuItem(
+                  index: 4,
+                  title: "Process Management",
+                  iconName: "ic_process_mgmt",
+                  isSelected: currentIndex == 4),
+              sideMenuItem(
+                  index: 5,
+                  title: "Lab Management",
+                  iconName: "ic_Lab_Report",
+                  isSelected: currentIndex == 5),
+              sideMenuItem(
+                  index: 6,
+                  title: "Test Status",
+                  iconName: "ic_processing_time",
+                  isSelected: currentIndex == 6),
+            ],
+          ),
           Expanded(
             child: PageView(
               onPageChanged: (value) {
@@ -198,18 +189,23 @@ class _MyHomePageState extends State<MyHomePage> {
       String iconName = "ic_home",
       required String title,
       bool isSelected = false}) {
-    return NavigationRailDestination(
-      indicatorColor: Colors.black,
-      icon: Image.asset(
-        "assets/$iconName.png",
-        height: 26,
-        width: 26,
-        color: Colors.transparent,
-      ),
-      label: Text(
-        title,
-        style: TextUtility.getStyle(18, color: Colors.white),
-        textAlign: TextAlign.center,
+    return Tab(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            "assets/$iconName.png",
+            height: 26,
+            width: 26,
+            color: Colors.transparent,
+          ),
+          SizedBox(height: 10),
+          Text(
+            title,
+            style: TextUtility.getStyle(18, color: Colors.white),
+            textAlign: TextAlign.center,
+          )
+        ],
       ),
     );
   }
