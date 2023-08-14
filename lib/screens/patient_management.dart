@@ -170,8 +170,8 @@ class _PatientManagementState extends State<PatientManagement> {
                             },
                           ),
                           DataTable(
-                              dataRowMinHeight: 120,
-                              dataRowMaxHeight: 120,
+                              dataRowMinHeight: 150,
+                              dataRowMaxHeight: 150,
                               dividerThickness: 0.2,
                               headingRowHeight: 90,
                               headingRowColor: MaterialStateProperty.all(Colors.black),
