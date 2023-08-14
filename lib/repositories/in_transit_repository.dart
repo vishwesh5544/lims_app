@@ -51,7 +51,7 @@ class InTransitRepository implements IInTransitRepository {
       responseCallback.code = response.statusCode;
       var responseMap = jsonDecode(response.body);
       List<SearchResult> searchResults = [];
-      for (var el in responseMap["data"]) {
+      for (var el in responseMap) {
         var lab = SearchResult.fromJson(el);
         searchResults.add(lab);
       }
