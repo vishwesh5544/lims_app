@@ -36,11 +36,15 @@ class _LabManagementState extends State<LabManagement> {
       body: BlocConsumer<LabBloc, LabState>(
           listener: (context, state) {},
           builder: (context, state) {
-            return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: state.isAddNewCenter
-                    ? const AddCentre()
-                    : lagWidget(state));
+            return WillPopScope(
+              onWillPop: () async {
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter());
+                return true;
+              },
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: state.isAddNewCenter ? const AddCentre() : lagWidget(state)),
+            );
           }),
     ));
   }
@@ -56,8 +60,7 @@ class _LabManagementState extends State<LabManagement> {
                 buttonText: "Add Centre",
                 routeName: RouteStrings.addLab,
                 onClick: () {
-                  BlocProvider.of<LabBloc>(context)
-                      .add(OnAddCenter(value: true));
+                  BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true));
                 },
               ),
             ],
@@ -68,28 +71,17 @@ class _LabManagementState extends State<LabManagement> {
             onClickSearch: () {},
           ),
           LimsTable(
-              columnNames: const [
-                "#",
-                "Lab Name",
-                "Email Id",
-                "Contact Number",
-                "Action"
-              ],
+              columnNames: const ["#", "Lab Name", "Email Id", "Contact Number", "Action"],
               tableType: TableType.lab,
               onEditClick: (value) {
-                BlocProvider.of<LabBloc>(context).add(
-                    OnAddCenter(value: true, currentSelectedPriview: value));
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true, currentSelectedPriview: value));
               },
               onViewClick: (value) {
-                BlocProvider.of<LabBloc>(context).add(
-                    OnAddCenter(value: true, currentSelectedPriview: value));
+                BlocProvider.of<LabBloc>(context).add(OnAddCenter(value: true, currentSelectedPriview: value));
               },
               rowData: state.labsList),
           // redirectToTestMenu(),
-        ]
-            .map((el) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10), child: el))
-            .toList(),
+        ].map((el) => Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: el)).toList(),
       ),
     );
   }

@@ -7,10 +7,12 @@ class FetchAllLabs extends LabEvent {}
 class OnAddCenter extends LabEvent {
   final bool value;
   int currentSelectedPriview = -1;
+
   OnAddCenter({this.value = false, this.currentSelectedPriview = -1});
 }
 
 class AddCentreFormSubmitted extends LabEvent {
+  final int? id;
   final String labName;
   final String emailId;
   final String contactNumber;
@@ -21,9 +23,12 @@ class AddCentreFormSubmitted extends LabEvent {
   final String city;
   final String unitType;
   final List<LabTestDetail> testDetails;
+  final bool isUpdate;
 
   AddCentreFormSubmitted(
-      {required this.labName,
+      {this.id,
+      required this.isUpdate,
+      required this.labName,
       required this.emailId,
       required this.contactNumber,
       required this.addressOne,
