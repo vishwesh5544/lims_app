@@ -207,14 +207,11 @@ class _TestDetailsState extends State<TestDetails> {
         const Text('Select Test'),
         const SizedBox(height: 10),
         BlocConsumer<TestBloc, TestState>(
-          listener: (context, state) {
-
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             return DropdownButtonFormField(
               value: null,
               icon: IconStore.downwardArrow,
-
               decoration: InputDecoration(
                 hintStyle: TextUtility.getStyle(14, color: ColorProvider.darkGreyColor),
                 constraints: const BoxConstraints(maxWidth: 800, minWidth: 500, minHeight: 47, maxHeight: 60),
@@ -228,8 +225,8 @@ class _TestDetailsState extends State<TestDetails> {
               ),
               items: state.testsList.map((test) {
                 return DropdownMenuItem(
-                    value: test,
-                    child: Text(test.testName),
+                  value: test,
+                  child: Text(test.testName),
                 );
               }).toList(),
               onChanged: (value) {

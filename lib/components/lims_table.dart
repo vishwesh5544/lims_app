@@ -242,7 +242,7 @@ class _LimsTableState extends State<LimsTable> {
               barCode: "$ptid",
             );
           } else {
-            return Container();
+            return const Text('Loading...');
           }
         },
       )),
