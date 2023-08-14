@@ -716,7 +716,17 @@ class _AddTestState extends State<AddTest> {
       title: "Sample Type",
       name: 'sampleTypeValue',
       hintText: AddTestStrings.selectType,
-      list: const ["one", "two"],
+      list: const [
+        "Serum",
+        "Dry Spot Blood",
+        "Arterial Blood",
+        "Peripheral Blood",
+        "Amniotic Fluid",
+        "EDTA Whole Blood",
+        "3 Timed-Serum Samples",
+        "2 Timed-Serum Samples",
+        "CSF",
+      ],
       onSubmit: (value) {},
     ));
   }
