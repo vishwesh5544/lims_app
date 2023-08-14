@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lims_app/bloc/in_transit_bloc/in_transit_bloc.dart';
 import 'package:lims_app/bloc/lab_bloc/lab_bloc.dart';
 import 'package:lims_app/bloc/login_bloc/login_bloc.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
+            textTheme: GoogleFonts.robotoTextTheme()
           ),
           onGenerateRoute: LimsRouter.generateRoute,
           home: instance.getBool("isLogin") == true
