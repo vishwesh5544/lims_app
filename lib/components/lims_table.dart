@@ -129,7 +129,7 @@ class _LimsTableState extends State<LimsTable> {
               headingTextStyle: const TextStyle(color: Colors.white),
               dataRowColor: MaterialStateProperty.all(
                   widget.color ?? ColorProvider.lightGreyColor),
-              columnSpacing: 40,
+              columnSpacing: 0,
               border: widget.tableBorder ??
                   TableBorder(
                     horizontalInside: getBorder(),
@@ -179,12 +179,13 @@ class _LimsTableState extends State<LimsTable> {
   }
 
   Widget _actionsRow(int currentIndex, dynamic value) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+    return Row(children: [
       InkWell(
           onTap: () {
             widget.onEditClick.call(currentIndex - 1);
           },
           child: const Icon(Icons.note_alt_outlined)),
+      const SizedBox(width: 20),
       InkWell(
           onTap: () {
             widget.onViewClick!.call(value);
