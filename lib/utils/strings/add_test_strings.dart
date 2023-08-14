@@ -1,5 +1,6 @@
 class AddTestStrings {
   static const String title = "Add Test";
+  static const String update = "Update Test";
 
   static const String enterCode = "Enter Code";
   static const String enterTestName = "Enter Test Name";

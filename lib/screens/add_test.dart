@@ -32,12 +32,12 @@ class _AddTestState extends State<AddTest> {
   final vacutainerEditingController = TextEditingController();
   final volumeEditingController = TextEditingController();
   final temperatureEditingController = TextEditingController();
-  final methodEditingController = TextEditingController();
   final turnAroundTimeEditingController = TextEditingController();
   final priceEditingController = TextEditingController();
   final taxPercentageEditingController = TextEditingController();
   final totalPriceEditingController = TextEditingController();
   final indicationsEditingController = TextEditingController();
+  int? testId;
 
   @override
   void initState() {
@@ -46,6 +46,9 @@ class _AddTestState extends State<AddTest> {
       bloc = context.read<TestBloc>();
 
       if (bloc.state.isAddTest && bloc.state.currentSelectedPriview != -1) {
+        setState(() {
+          testId = bloc.state.testsList[bloc.state.currentSelectedPriview].id;
+        });
         bloc.add(TestCodeUpdated(
             bloc.state.testsList[bloc.state.currentSelectedPriview].testCode));
         bloc.add(TestNameUpdated(
@@ -100,8 +103,9 @@ class _AddTestState extends State<AddTest> {
             bloc.state.testsList[bloc.state.currentSelectedPriview].volume;
         temperatureEditingController.text = bloc
             .state.testsList[bloc.state.currentSelectedPriview].typeOfVolume;
-        methodEditingController.text =
-            bloc.state.testsList[bloc.state.currentSelectedPriview].temperature;
+        formKey.currentState!.fields['method']?.didChange(
+            bloc.state.testsList[bloc.state.currentSelectedPriview].method);
+
         turnAroundTimeEditingController.text = bloc
             .state.testsList[bloc.state.currentSelectedPriview].turnAroundTime
             .replaceAll('Hrs', '')
@@ -286,7 +290,7 @@ class _AddTestState extends State<AddTest> {
       builder: (context, state) {
         return commonBtn(
             isEnable: true,
-            text: AddTestStrings.title,
+            text: testId == null ? AddTestStrings.title : AddTestStrings.update,
             calll: () {
               if (!formKey.currentState!.validate()) {
                 return;
@@ -298,13 +302,10 @@ class _AddTestState extends State<AddTest> {
               int totalPrice = (price + (price * tax / 100)).ceil();
 
               AddTestFormSubmitted submitEvent;
-              if (/*bloc.state.isAddTest &&*/ bloc
-                      .state.currentSelectedPriview !=
-                  -1) {
+              if (testId != null) {
                 submitEvent = AddTestFormSubmitted(
                     isUpdate: true,
-                    id: bloc
-                        .state.testsList[bloc.state.currentSelectedPriview].id,
+                    id: testId,
                     testCode: testCodeEditingController.text,
                     testName: testNameEditingController.text,
                     department: formKey.currentState!.fields['departmentValue']
@@ -318,7 +319,7 @@ class _AddTestState extends State<AddTest> {
                     volume: volumeEditingController.text,
                     typeOfVolume: formKey.currentState!
                         .fields['volumeTypeValue']?.value as String,
-                    method: methodEditingController.text,
+                    method: formKey.currentState!.fields['method']?.value ?? '',
                     turnAroundTime: turnAroundTimeEditingController.text +
                         (formKey.currentState!.fields['tatType']?.value ?? ''),
                     price: price,
@@ -341,7 +342,7 @@ class _AddTestState extends State<AddTest> {
                     volume: volumeEditingController.text,
                     typeOfVolume: formKey.currentState!
                         .fields['volumeTypeValue']?.value as String,
-                    method: methodEditingController.text,
+                    method: formKey.currentState!.fields['method']?.value ?? '',
                     turnAroundTime: turnAroundTimeEditingController.text +
                         (formKey.currentState!.fields['tatType']?.value ?? ''),
                     price: price,
@@ -353,6 +354,7 @@ class _AddTestState extends State<AddTest> {
               bloc.add(submitEvent);
 
               BlocProvider.of<TestBloc>(context).add(OnAddTest());
+              BlocProvider.of<TestBloc>(context).add(FetchAllTests());
 
               ScreenHelper.showAlertPopup(
                   "Process status ${bloc.state.currentSelectedPriview != -1 ? 'added' : 'updated'} successfully",
@@ -463,14 +465,17 @@ class _AddTestState extends State<AddTest> {
 
     // return _getColumnAndFormInput("Enter method", blocComponent);
 
-    return _buildBlocComponent(CommonEditText(
+    return _buildBlocComponent(
+      CommonDropDown(
         title: 'Enter method',
         name: 'method',
         hintText: AddTestStrings.enterMethod,
-        onChange: (value) {
-          bloc.add(MethodUpdated(value));
+        onSubmit: (v) {
+          bloc.add(MethodUpdated(v));
         },
-        controller: methodEditingController));
+        list: const ['one', 'two'],
+      ),
+    );
   }
 
   Widget _priceField() {
