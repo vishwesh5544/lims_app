@@ -31,8 +31,7 @@ class _SampleManagementState extends State<SampleManagement> {
     "#",
     "Name of the Test",
     "Process Unit",
-    "Actions",
-    ""
+    "Actions"
   ];
 
   String processingUnit = "";
@@ -66,100 +65,100 @@ class _SampleManagementState extends State<SampleManagement> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CommonHeader(title: "Sample Management"),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: commonSearchArea(
-                          title: "UMR No./Patient Name",
-                          hint: "Search by URM No./Patient Name",
-                          textController: textController,
-                          onSubmit: (String value) {
-                            bloc.add(SearchPatient(value));
-                          })),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 15),
-                    child: Row(
-                      children: [
-                        CommonGreyFiled(
-                            title: "UMR Number",
-                            value: state.patient?.umrNumber ?? ""),
-                        const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20)),
-                        CommonGreyFiled(
-                            title: "Patient Name",
-                            value:
-                                "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
-                      ],
+                  CommonHeader(title: "Add New Sample"),
+                  Center(
+                    child: FractionallySizedBox(
+                      widthFactor: 0.95,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 25),
+                            child: commonSearchArea(
+                              title: "UMR No./Patient Name",
+                              hint: "Search by URM No./Patient Name",
+                              textController: textController,
+                              onSubmit: (String value) {
+                                bloc.add(SearchPatient(value));
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 25),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CommonGreyFiled(
+                                    width: 275,
+                                    title: "UMR Number",
+                                    value: state.patient?.umrNumber ?? ""),
+                                const SizedBox(width: 25),
+                                CommonGreyFiled(
+                                    width: 275,
+                                    title: "Patient Name",
+                                    value:
+                                        "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} ${state.patient?.lastName ?? ''}"),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: state.testsList?.isNotEmpty ?? false,
+                            child: LimsTable(
+                                tableRowHeight: 155,
+                                tableBorder: TableBorder(
+                                  horizontalInside: getBorder(),
+                                  right: getBorder(),
+                                  left: getBorder(),
+                                ),
+                                columnNames: columnNames,
+                                tableType: TableType.sample,
+                                onEditClick: (value) {
+                                  showToast(msg: value);
+                                  processingUnit = value;
+                                },
+                                onSubmit: (test) {
+                                  if (processingUnit.isNotEmpty) {
+                                    int invoiceId = state.invoiceMappings!
+                                        .firstWhere((element) =>
+                                            element.testId == test.id)
+                                        .id!;
+
+                                    BlocProvider.of<InTransitBloc>(context).add(
+                                        UpdateInTransit(
+                                            invoiceId: invoiceId,
+                                            userId: state.patient!.id!,
+                                            processingUnit: processingUnit,
+                                            status: 2));
+                                    ScreenHelper.showAlertPopup(
+                                        "Sample status updated successfully",
+                                        context);
+                                  } else {
+                                    ScreenHelper.showAlertPopup(
+                                        "Please select Processing Unit first!",
+                                        context);
+                                  }
+                                },
+                                onPrintPdf: (Test test) {
+                                  var ptid = state.invoiceMappings
+                                      ?.firstWhere((invoice) =>
+                                          invoice.testId == test.id &&
+                                          invoice.patientId ==
+                                              state.patient!.id)
+                                      .ptid;
+
+                                  PdfUtility.savePdf(context, ptid.toString());
+                                },
+                                rowData: getTestList(state)),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Visibility(
-                    visible: state.testsList?.isNotEmpty ?? false,
-                    child: LimsTable(
-                        tableRowHeight: 130,
-                        columnNames: columnNames,
-                        tableType: TableType.sample,
-                        onEditClick: (value) {
-                          showToast(msg: value);
-                          processingUnit = value;
-                        },
-                        onSubmit: (test) {
-                          if (processingUnit.isNotEmpty) {
-                            int invoiceId = state.invoiceMappings!
-                                .firstWhere(
-                                    (element) => element.testId == test.id)
-                                .id!;
-
-                            BlocProvider.of<InTransitBloc>(context).add(
-                                UpdateInTransit(
-                                    invoiceId: invoiceId,
-                                    userId: state.patient!.id!,
-                                    processingUnit: processingUnit,
-                                    status: 2));
-                            ScreenHelper.showAlertPopup(
-                                "Sample status updated successfully", context);
-                          } else {
-                            ScreenHelper.showAlertPopup(
-                                "Please select Processing Unit first!",
-                                context);
-                          }
-                        },
-                        onPrintPdf: (Test test) {
-                          var ptid = state.invoiceMappings
-                              ?.firstWhere((invoice) =>
-                                  invoice.testId == test.id &&
-                                  invoice.patientId == state.patient!.id)
-                              .ptid;
-
-                          PdfUtility.savePdf(context, ptid.toString());
-                        },
-                        rowData: getTestList(state)),
                   )
                 ],
               ),
             ),
           ));
     });
-  }
-
-  Widget _barCodeWidget({required String text, required String barCode}) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text),
-          Container(
-            padding: const EdgeInsets.all(6),
-            margin: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
-                borderRadius: const BorderRadius.all(Radius.circular(5))),
-            child: SvgPicture.string(
-              BarcodeUtility.getBarcodeSvgString(barCode),
-              width: 80,
-              height: 40,
-            ),
-          )
-        ]);
   }
 
   getTestList(InTransitState state) {

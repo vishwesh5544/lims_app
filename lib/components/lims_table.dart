@@ -37,6 +37,7 @@ class LimsTable extends StatefulWidget {
       this.onPrintPdf,
       this.onSelected,
       this.tableRowHeight,
+      this.tableBorder,
       super.key});
 
   final List<String> columnNames;
@@ -49,6 +50,7 @@ class LimsTable extends StatefulWidget {
   Function? onSelected;
   Widget? conditionalButton;
   double? tableRowHeight;
+  final TableBorder? tableBorder;
 
   @override
   State<LimsTable> createState() => _LimsTableState();
@@ -123,17 +125,23 @@ class _LimsTableState extends State<LimsTable> {
               headingRowColor: MaterialStateProperty.all(Colors.black),
               headingTextStyle: const TextStyle(color: Colors.white),
               dataRowColor: MaterialStateProperty.all(Colors.white),
-              border: TableBorder(
-                  horizontalInside: getBorder(),
-                  verticalInside: getBorder(),
-                  right: getBorder(),
-                  left: getBorder()),
+              columnSpacing: 40,
+              border: widget.tableBorder ??
+                  TableBorder(
+                    horizontalInside: getBorder(),
+                    verticalInside: getBorder(),
+                    right: getBorder(),
+                    left: getBorder(),
+                  ),
               columns: widget.columnNames
-                  .map((name) => DataColumn(
-                          label: Text(
+                  .map(
+                    (name) => DataColumn(
+                      label: Text(
                         name,
                         maxLines: 2,
-                      )))
+                      ),
+                    ),
+                  )
                   .toList(),
               rows: widget.rowData.map((value) {
                 var currentIndex = widget.rowData.indexOf(value) + 1;
@@ -182,24 +190,6 @@ class _LimsTableState extends State<LimsTable> {
     ]);
   }
 
-  // Widget _barCodeWidget({required String text, required String barCode}) {
-  //   return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-  //     Text(text, style: TextStyle(fontSize: 10)),
-  //     Container(
-  //       padding: const EdgeInsets.all(6),
-  //       margin: const EdgeInsets.all(3),
-  //       decoration: BoxDecoration(
-  //           border: Border.all(color: Colors.black, width: 2),
-  //           borderRadius: const BorderRadius.all(Radius.circular(5))),
-  //       child: SvgPicture.string(
-  //         BarcodeUtility.getBarcodeSvgString(barCode),
-  //         width: 80,
-  //         height: 40,
-  //       ),
-  //     )
-  //   ]);
-  // }
-
   DataRow _buildDataRowForLab(Lab lab, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
@@ -223,10 +213,6 @@ class _LimsTableState extends State<LimsTable> {
     ]);
   }
 
-  // barCodeWidget(
-  // text: test.testName,
-  // barCode: "${test.id}",
-  // )
   DataRow _buildDataRowForTestBarCode(Test test, int currentIndex) {
     return DataRow(cells: [
       DataCell(Text(currentIndex.toString())),
@@ -258,7 +244,10 @@ class _LimsTableState extends State<LimsTable> {
   ///in tansit managment
   DataRow _buildDataRowForTransit(Test test, int currentIndex) {
     return DataRow(cells: [
-      DataCell(Text(currentIndex.toString())),
+      DataCell(Align(
+        alignment: const FractionalOffset(0, 0.15),
+        child: Text(currentIndex.toString()),
+      )),
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -294,50 +283,59 @@ class _LimsTableState extends State<LimsTable> {
           }
         },
       )),
-      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var mappings = state.invoiceMappings;
+      DataCell(Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlocConsumer<InTransitBloc, InTransitState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              var mappings = state.invoiceMappings;
 
-          if (mappings != null && mappings.isNotEmpty) {
-            var status = mappings
-                .firstWhere((element) => element.testId == test.id)
-                .status;
+              if (mappings != null && mappings.isNotEmpty) {
+                var status = mappings
+                    .firstWhere((element) => element.testId == test.id)
+                    .status;
 
-            return commonBtn(
-              text: "Approve Transit",
-              isEnable: status == 2,
-              width: 120,
-              calll: () async {
-                final result = await showAlertDialog(
-                  context,
-                  "Approve Transit",
-                  "Are you sure you want to approve this transit?",
+                return commonBtn(
+                  text: "Approve Transit",
+                  isEnable: status == 2,
+                  width: 120,
+                  calll: () async {
+                    final result = await showAlertDialog(
+                      context,
+                      "Approve Transit",
+                      "Are you sure you want to approve this transit?",
+                    );
+                    if (result) {
+                      widget.onSubmit!.call(test);
+                    }
+                  },
                 );
-                if (result) {
-                  widget.onSubmit!.call(test);
-                }
-              },
-            );
-          } else {
-            return Container();
-          }
-        },
+              } else {
+                return Container();
+              }
+            },
+          ),
+          const SizedBox(height: 20),
+          commonBtn(
+              text: "Get PDF",
+              isEnable: true,
+              width: 120,
+              calll: () {
+                widget.onPrintPdf!.call(test);
+              })
+        ],
       )),
-      DataCell(commonBtn(
-          text: "To Pdf",
-          isEnable: true,
-          width: 120,
-          calll: () {
-            widget.onPrintPdf!.call(test);
-          }))
     ]);
   }
 
   ///Process managment
   DataRow _buildDataRowForProcess(Test test, int currentIndex) {
     return DataRow(cells: [
-      DataCell(Text(currentIndex.toString())),
+      DataCell(Align(
+        alignment: const FractionalOffset(0, 0.15),
+        child: Text(currentIndex.toString()),
+      )),
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -424,41 +422,47 @@ class _LimsTableState extends State<LimsTable> {
               return Container();
             }
           })),
-      DataCell(BlocConsumer<InTransitBloc, InTransitState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var mappings = state.invoiceMappings;
+      DataCell(Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlocConsumer<InTransitBloc, InTransitState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              var mappings = state.invoiceMappings;
 
-          if (mappings != null && mappings.isNotEmpty) {
-            var status = mappings
-                .firstWhere((element) => element.testId == test.id)
-                .status;
+              if (mappings != null && mappings.isNotEmpty) {
+                var status = mappings
+                    .firstWhere((element) => element.testId == test.id)
+                    .status;
 
-            return commonBtn(
-              text: "Submit",
-              isEnable: status == 3 || status == 4,
-              calll: () async {
-                final result = await showAlertDialog(
-                  context,
-                  status == 3 ? "Process Sample" : "Submit Sample",
-                  "Are you sure you want to ${status == 3 ? "process" : "submit"} this sample?",
+                return commonBtn(
+                  text: "Submit",
+                  isEnable: status == 3 || status == 4,
+                  calll: () async {
+                    final result = await showAlertDialog(
+                      context,
+                      status == 3 ? "Process Sample" : "Submit Sample",
+                      "Are you sure you want to ${status == 3 ? "process" : "submit"} this sample?",
+                    );
+                    if (result) {
+                      widget.onSubmit!.call(test);
+                    }
+                  },
                 );
-                if (result) {
-                  widget.onSubmit!.call(test);
-                }
-              },
-            );
-          } else {
-            return Container();
-          }
-        },
+              } else {
+                return Container();
+              }
+            },
+          ),
+          const SizedBox(height: 20),
+          commonBtn(
+              text: "Get PDF",
+              isEnable: true,
+              calll: () {
+                widget.onPrintPdf!.call(test);
+              }),
+        ],
       )),
-      DataCell(commonBtn(
-          text: "To Pdf",
-          isEnable: true,
-          calll: () {
-            widget.onPrintPdf!.call(test);
-          }))
     ]);
   }
 
@@ -481,7 +485,14 @@ class _LimsTableState extends State<LimsTable> {
   ///Sample Management
   DataRow _buildDataRowForSampleManagement(Test test, int currentIndex) {
     return DataRow(cells: [
-      DataCell(Text(currentIndex.toString())),
+      DataCell(
+        Align(
+          alignment: const FractionalOffset(0, 0.15),
+          child: Text(
+            currentIndex.toString(),
+          ),
+        ),
+      ),
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {
           // state.invoiceMappings?.firstWhere((element) => element.testId == test.id).status;
@@ -504,63 +515,86 @@ class _LimsTableState extends State<LimsTable> {
       DataCell(BlocConsumer<InTransitBloc, InTransitState>(
         listener: (context, state) {},
         builder: (context, state) {
-          return DropdownButtonFormField(
-              items: state.filteredLabs?.map((Lab lab) {
-                return DropdownMenuItem(
+          if (state.filteredLabs == null) {
+            return Container();
+          }
+          return Container(
+            width: 400,
+            child: FormBuilderDropdown<String>(
+              name: 'processingUnit',
+              decoration: const InputDecoration(
+                labelText: 'Select Processing Unit',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(),
+                ),
+              ),
+              items: state.filteredLabs!.map((Lab lab) {
+                return DropdownMenuItem<String>(
                   value: lab.labName,
                   child: Text(lab.labName),
                 );
               }).toList(),
               onChanged: (value) {
                 widget.onEditClick(value);
-              });
-        },
-      )),
-      DataCell(BlocBuilder<InTransitBloc, InTransitState>(
-        builder: (context, state) {
-          if (state.invoiceMappings != null &&
-              state.invoiceMappings!.isNotEmpty) {
-            var currentMapping = state.invoiceMappings!
-                .firstWhere((element) => element.testId == test.id);
-            return commonBtn(
-              text: "Collect Sample",
-              isEnable: currentMapping.status == 1,
-              calll: () async {
-                final result = await showAlertDialog(
-                  context,
-                  "Collect Sample",
-                  "Are you sure you want to collect sample for ${test.testName}?",
-                );
-                if (result) {
-                  widget.onSubmit!.call(test);
-                }
               },
-            );
-          } else {
-            return Container();
-          }
+            ),
+          );
         },
       )),
-      DataCell(commonBtn(
-          text: "To Pdf",
-          isEnable: true,
-          calll: () {
-            widget.onPrintPdf!.call(test);
-          }))
+      DataCell(Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlocBuilder<InTransitBloc, InTransitState>(
+            builder: (context, state) {
+              if (state.invoiceMappings != null &&
+                  state.invoiceMappings!.isNotEmpty) {
+                var currentMapping = state.invoiceMappings!
+                    .firstWhere((element) => element.testId == test.id);
+                return commonBtn(
+                  text: "Collect Sample",
+                  isEnable: currentMapping.status == 1,
+                  calll: () async {
+                    final result = await showAlertDialog(
+                      context,
+                      "Collect Sample",
+                      "Are you sure you want to collect sample for ${test.testName}?",
+                    );
+                    if (result) {
+                      widget.onSubmit!.call(test);
+                    }
+                  },
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          commonBtn(
+            text: "Get PDF",
+            isEnable: true,
+            calll: () {
+              widget.onPrintPdf!.call(test);
+            },
+          )
+        ],
+      )),
     ]);
   }
 
   DataRow _buildDataRowForPatient(Patient patient, int currentIndex) {
-    return DataRow(cells: [
-      DataCell(Text(currentIndex.toString())),
-      DataCell(Text(patient.umrNumber)),
-      DataCell(Text(
-          "${patient.firstName} ${patient.middleName} ${patient.lastName}")),
-      DataCell(Text(patient.consultedDoctor)),
-      DataCell(Text(patient.insuraceNumber)),
-      DataCell(Text(patient.mobileNumber.toString())),
-      DataCell(Text(patient.emailId)),
-      DataCell(_actionsRow(currentIndex, patient))
-    ]);
+    return DataRow(
+      cells: [
+        DataCell(Text(currentIndex.toString())),
+        DataCell(Text(patient.umrNumber)),
+        DataCell(Text(
+            "${patient.firstName} ${patient.middleName} ${patient.lastName}")),
+        DataCell(Text(patient.consultedDoctor)),
+        DataCell(Text(patient.insuraceNumber)),
+        DataCell(Text(patient.mobileNumber.toString())),
+        DataCell(Text(patient.emailId)),
+        DataCell(_actionsRow(currentIndex, patient))
+      ],
+    );
   }
 }

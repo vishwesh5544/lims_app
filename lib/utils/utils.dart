@@ -88,19 +88,22 @@ commonBtn(
             calll.call();
           }
         : null,
-    child: Container(
-        height: 45,
-        width: width,
-        decoration: BoxDecoration(
-            border: Border.all(color: ColorProvider.blueDarkShade, width: 2),
-            color: isEnable ? bgColor : Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(5))),
-        child: Center(
-            child: Text(
-          text,
-          style: TextUtility.getStyle(16,
-              color: isEnable ? Colors.white : Colors.black),
-        ))),
+    child: Material(
+      elevation: 10,
+      child: Container(
+          height: 40,
+          width: width,
+          decoration: BoxDecoration(
+              border: Border.all(color: ColorProvider.blueDarkShade, width: 2),
+              color: isEnable ? bgColor : Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
+          child: Center(
+              child: Text(
+            text,
+            style: TextUtility.getStyle(14,
+                color: isEnable ? Colors.white : Colors.black),
+          ))),
+    ),
   );
 }
 
@@ -147,7 +150,7 @@ commonSearchArea(
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: TextUtility.getStyle(13)),
+      Text(title, style: TextUtility.getBoldStyle(13, color: Colors.black)),
       Container(
         margin: const EdgeInsets.only(top: 6),
         child: SizedBox.fromSize(
@@ -170,10 +173,14 @@ commonSearchArea(
                 filled: true,
                 hintText: hint,
                 suffixIcon: InkWell(
-                    onTap: () {
-                      onSubmit.call(textController.text.trim());
-                    },
-                    child: const Icon(Icons.search)),
+                  onTap: () {
+                    onSubmit.call(textController.text.trim());
+                  },
+                  child: const Icon(
+                    Icons.search,
+                    color: Color(0xFF707070),
+                  ),
+                ),
                 enabledBorder: TextUtility.getBorderStyle(),
                 disabledBorder: TextUtility.getBorderStyle(),
                 errorBorder: TextUtility.getBorderStyle(),
