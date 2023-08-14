@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Forgot password section
                             _getForgetPasswordSection(),
                             const SizedBox(
-                              height: 190,
+                              height: 150,
                             ),
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.center,

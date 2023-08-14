@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'LIMS ',
+                            'Scylex Labs',
                             style: TextUtility.getBoldStyle(28),
                           ),
                           Text(
