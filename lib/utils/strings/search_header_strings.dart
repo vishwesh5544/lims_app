@@ -4,6 +4,6 @@ class SearchHeaderStrings {
   static const searchPatientsPlaceholder = "Search Patients";
 
   /// test strings
-  static const testsListTitle = "List of Tests";
+  static const testsListTitle = "List of Invesitgations";
   static const searchTestsPlaceholder = "Search Tests";
 }
