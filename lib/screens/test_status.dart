@@ -87,27 +87,6 @@ class _TestStatusState extends State<TestStatus> {
                                   }
                                 }),
 
-                            ///from date
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: datePicker(
-                                  onClick: () {
-                                    _selectDate();
-                                  },
-                                  datePickerTextController:
-                                      _fromDatePickerTextController),
-                            ),
-
-                            ///to date
-                            datePicker(
-                                datePickerTextController:
-                                    _toDatePickerTextController,
-                                title: "To Date",
-                                onClick: () {
-                                  _selectDate();
-                                }),
-
                             Container(
                               margin: const EdgeInsets.only(left: 10),
                               child: commonBtn(
