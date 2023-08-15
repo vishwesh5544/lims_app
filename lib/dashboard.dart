@@ -197,11 +197,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  sideMenuItem(
-      {required int index,
-      String iconName = "ic_home",
-      required String title,
-      bool isSelected = false}) {
+  sideMenuItem({required int index,
+    String iconName = "ic_home",
+    required String title,
+    bool isSelected = false}) {
     return Tab(
       child: Column(
         mainAxisSize: MainAxisSize.min,

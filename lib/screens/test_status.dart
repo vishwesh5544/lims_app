@@ -21,10 +21,8 @@ class _TestStatusState extends State<TestStatus> {
   TextEditingController textController = TextEditingController();
   late final InTransitBloc bloc;
 
-  final TextEditingController _fromDatePickerTextController =
-      TextEditingController();
-  final TextEditingController _toDatePickerTextController =
-      TextEditingController();
+  final TextEditingController _fromDatePickerTextController = TextEditingController();
+  final TextEditingController _toDatePickerTextController = TextEditingController();
 
   static List<String> columnNames = [
     "#",
@@ -58,8 +56,7 @@ class _TestStatusState extends State<TestStatus> {
                 return true;
               },
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -75,8 +72,7 @@ class _TestStatusState extends State<TestStatus> {
                             ///search
                             commonSearchArea(
                                 title: "Search Status",
-                                hint:
-                                    "Search by Patient Name/UMR/ Test/ Processing Unit/ Sample Collection Centre",
+                                hint: "Search by Patient Name/UMR/ Test/ Processing Unit/ Sample Collection Centre",
                                 textController: textController,
                                 onSubmit: (value) {
                                   bloc.add(SearchPatient(value));
@@ -89,20 +85,11 @@ class _TestStatusState extends State<TestStatus> {
 
                             Container(
                               margin: const EdgeInsets.only(left: 10),
-                              child: commonBtn(
-                                  text: "Search", isEnable: true, calll: () {}),
+                              child: commonBtn(text: "Search", isEnable: true, calll: () {}),
                             ),
                           ],
                         ),
                       ),
-
-                      // LimsTable(columnNames: columnNames,
-                      //     tableType: TableType.inTransit,
-                      //     onEditClick: (value){
-                      //
-                      //     },
-                      //     rowData: state.searchTestsList),
-
                       SizedBox(
                         width: double.infinity,
                         child: ListView(
@@ -114,12 +101,9 @@ class _TestStatusState extends State<TestStatus> {
                               children: [
                                 DataTable(
                                     // dataRowHeight: 85,
-                                    headingRowColor:
-                                        MaterialStateProperty.all(Colors.black),
-                                    headingTextStyle:
-                                        const TextStyle(color: Colors.white),
-                                    dataRowColor:
-                                        MaterialStateProperty.all(Colors.white),
+                                    headingRowColor: MaterialStateProperty.all(Colors.black),
+                                    headingTextStyle: const TextStyle(color: Colors.white),
+                                    dataRowColor: MaterialStateProperty.all(Colors.white),
                                     dividerThickness: 0.2,
                                     border: TableBorder(
                                         horizontalInside: getBorder(),
@@ -133,16 +117,25 @@ class _TestStatusState extends State<TestStatus> {
                                               maxLines: 2,
                                             )))
                                         .toList(),
-                                    rows: state.invoiceMappings!
-                                        .map((InvoiceMapping mapping) {
+                                    rows: state.invoiceMappings!.map((InvoiceMapping mapping) {
+                                      if (state.patient == null ||
+                                          state.invoiceMappings!.isEmpty ||
+                                          state.testsList!.isEmpty) {
+                                        return const DataRow(cells: [
+                                          DataCell(SizedBox(height: 0, width: 0,)),
+                                          DataCell(SizedBox(height: 0, width: 0,)),
+                                          DataCell(SizedBox(height: 0, width: 0,)),
+                                          DataCell(SizedBox(height: 0, width: 0,)),
+                                          DataCell(SizedBox(height: 0, width: 0,)),
+                                          DataCell(SizedBox(height: 0, width: 0,)),
+                                        ]);
+                                      }
                                       var invoiceId = mapping.id;
                                       var patientName =
                                           "${state.patient?.firstName ?? ''} ${state.patient?.middleName ?? ''} "
                                           "${state.patient?.lastName ?? ''}";
-                                      var umrNumber =
-                                          state.patient?.umrNumber ?? "";
-                                      var test = state.testsList?.firstWhere(
-                                          (test) => test.id == mapping.testId);
+                                      var umrNumber = state.patient?.umrNumber ?? "";
+                                      var test = state.testsList?.firstWhere((test) => test.id == mapping.testId);
                                       var testName = test?.testName;
                                       var testCode = test?.testCode;
                                       var statusText = "";
@@ -170,9 +163,7 @@ class _TestStatusState extends State<TestStatus> {
                                         DataCell(Text("$testCode")),
                                         DataCell(Row(
                                           children: [
-                                            SizedBox(
-                                                width: 80,
-                                                child: Text(statusText)),
+                                            SizedBox(width: 80, child: Text(statusText)),
                                             // commonIconBtn(
                                             //     text: "Report",
                                             //     icon: const Icon(
@@ -209,13 +200,9 @@ class _TestStatusState extends State<TestStatus> {
 
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1995),
-        lastDate: DateTime.now());
+        context: context, initialDate: DateTime.now(), firstDate: DateTime(1995), lastDate: DateTime.now());
     if (pickedDate != null) {
-      _fromDatePickerTextController.text =
-          DateFormat(dateFormat).format(pickedDate);
+      _fromDatePickerTextController.text = DateFormat(dateFormat).format(pickedDate);
       // String dateText = _fromDatePickerTextController.text;
       // bloc.add(DobUpdated(dateText));
       // var age = AgeCalculator.age(pickedDate).years;
